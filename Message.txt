@@ -1,0 +1,166 @@
+Advaitecs
+
+Naressh garu, Hope you had a good week end. The syllabus looks good. I am not sure if we are covering the following points which my team has provided as feedback to be included for training. - 
+
+1.AI/LLM Integration – Learn how to add simple AI features to your full-stack apps using an LLM API.
+
+2.Advanced PostgreSQL – Learn how to handle real-world data with joins, relationships, indexes, and pagination.
+
+3.Backend Architecture & Security – Learn how to structure and secure your backend like a real-world application.
+
+4.Testing & Debugging – Learn how to test your code and find and fix common problems.
+
+5.Git, GitHub & Deployment – Learn how to manage your code with Git and put your project live.
+
+Request you to provide your comments on these. Also I am thinking for the first batch you can conduct the course as per your schedule. We will initiate the project efforts after completing the training. We are thinking of starting the first batch from Nov 1st week. Hope this works with your schedule. Appreciate if you can provide a quote and send it to Pranitha and me. Please also send your email address. Should you have any questions, please feel free to call me. Thank you and looking forward to working as a team.
+
+=====================================
+https://www.advaitecs.com/contact
+Contact Information
+Reach out to us directly through any of the following channels.
+
+Phone
++91 96039 92299
+Email
+support@advaitecs.com
+Address
+Advaitecs Private Limited
+Vijayawada, Andhra Pradesh, India
+Business Hours
+Mon – Fri: 9:00 AM – 5:00 PM
+(India Standard Time)
+=====================================
+A/c Number: 1417172000000803
+AccountName: venkata naresh g
+Branch : Peda Waltair,Visakhapatnam
+IFSC Code: KVBL0001417
+PAN:AMRPG2851N
+=====================================
+Instructor / Trainer Details
+Instructor: GV Naressh
+Mobile: +91 9949570732
+Email: gvnaressh@gmail.com
+Address: Plot 186, Sector 12, Adarsh Nagar, MVP Colony, Visakhapatnam – 530017, Andhra Pradesh
+Payment / Bank Details
+
+These are useful, but I recommend putting them toward the end of the quotation, under a section such as Payment Details / Bank Details, rather than on the front page.
+
+Account Name: Venkata Naresh G
+Account Number: 1417172000000803
+Bank Branch: Peda Waltair, Visakhapatnam
+IFSC Code: KVBL0001417
+PAN: AMRPG2851N
+=====================================
+Quotation – React JS Full-Stack Development with PostgreSQL
+
+
+Good Morning Sir,
+
+Thank you for your detailed message. 
+It was indeed nice speaking with you, and I appreciate the opportunity to work with your team.
+
+The proposed plan for the first batch works well with my schedule. 
+I am comfortable conducting training as per the proposed schedule, with first batch starting in the first week of November or even mid of October is fine. 
+
+As discussed, I have attached quotation for React JS Full-Stack Development with PostgreSQL training program for your review.
+
+The training fee is ₹10,000 per student. This has been considered based on the overall course requirements, including the additional industry-oriented topics requested by your technical team, such as:
+
+AI/LLM Integration
+Advanced PostgreSQL
+Backend Architecture & Security
+Testing & Debugging
+Git, GitHub & Deployment
+
+The quotation includes complete course content, proposed training schedule, duration, learning outcomes, deliverables, and other relevant details.
+
+Please review attached quotation, and if you have any questions or would like any changes to the training plan or course content, I would be happy to discuss them.
+
+I look forward to working together with you and the team and making the training program successful.
+
+I will also share the quotation with Pranitha Madam for her reference, sir.
+
+Thank you once again for the opportunity.
+
+Best regards,
+GV Naressh
+Mobile: +91 9949570732
+Email: gvnaressh@gmail.com
+
+
+
+
+=====================================
+Good Evening Abhishek,
+
+Regarding the additional industry-oriented topics (Modules 11–15), I would like to clarify a few points before proceeding so that I can align the training and hands-on examples with your development team's requirements.
+
+For Modules 1, 2 and 3, under Additional topics, could you please confirm the following:
+
+1. AI / LLM Integration
+For the AI/LLM integration examples, shall I use the Google Gemini API (free API key/version) for the hands-on demonstrations?
+Alternatively, if your team already has API keys/access to any other LLM API such as OpenAI or another provider, please share the preferred API so that I can use the same.
+
+2. Advanced PostgreSQL
+For the PostgreSQL examples, I will cover relationships, joins, indexes, filtering, sorting, pagination, aggregation, etc.
+Should the backend/database integration examples be implemented using JavaScript or TypeScript?
+
+3. Backend Architecture & Security
+For the Express.js backend architecture and security topics—including controllers, services, middleware, validation, authentication, authorization, password hashing, JWT, CORS, and secure API design—would you prefer the implementation in JavaScript or TypeScript?
+
+Also, for the React frontend components, please confirm whether the development team would like the hands-on examples to use JSX (JavaScript) or TSX (TypeScript).
+
+Once I have these preferences, I can structure the additional topics accordingly and ensure that the examples are aligned with your team's development environment.
+
+Thanks & Good Day.
+
+
+
+Good Evening Abhishek,
+ 
+I am GV Naressh, instructor for React Js Fullstack Training.
+ 
+Regarding the additional industry-oriented topics (Modules 11–15), I would like to clarify a few points before proceeding so that I can align the training and hands-on examples with your development team's requirements.
+
+For Modules 1, 2 and 3, under Additional topics, could you please confirm the following:
+
+1. *AI / LLM Integration*
+For the AI/LLM integration examples, shall I use the Google Gemini API (free API key/version) for the hands-on demonstrations?
+Alternatively, if your team already has API keys/access to any other LLM API such as OpenAI or another provider, please share the preferred API so that I can use the same.
+
+2. *Advanced PostgreSQL*
+For the PostgreSQL examples, I will cover relationships, joins, indexes, filtering, sorting, pagination, aggregation, etc.
+Should the backend/database integration examples be implemented using JavaScript or TypeScript?
+
+3. *Backend Architecture & Security*
+For the Express.js backend architecture and security topics—including controllers, services, middleware, validation, authentication, authorization, password hashing, JWT, CORS, and secure API design—would you prefer the implementation in JavaScript or TypeScript?
+
+Also, for the React frontend components, please confirm whether the development team would like the hands-on examples to use JSX (JavaScript) or TSX (TypeScript).
+
+Once I have these preferences, I can structure the additional topics accordingly and ensure that the examples are aligned with your team's development environment.
+
+Thanks & Good Day.
+GV Naressh
++91 9949570732
+
+=================================================================================
+Hello sir, hope you are doing well 
+
+1. You can use the Gemini Free API keys for their training, so the kids themselves can create their own api key and use it. But we will use both Google ai sdk and open ai sdk, so they will know the difference between LLM services and sdk, like for example they can use OpenAI sdk and connect to Gemini API , or gemini Sdk they will use and connect to build.nvidia api (which is free)
+2. The backend development we will start with js so they can know how they whole workflow actually works, then swiftly showing them use of typescript while demonstrating a capstone project, we can give them homework that learn about typescript yourself after our demonstration
+3. same we will follo for react, 1st we will start with JSX and then once we explain them all basics, we will introduce TSX . Also after explaining all react and node server connection, we need to show them how nextJs works at the end. There in NextJs we will demonstrate in Tsx and TS.
+Also we need to teach some additional tools like Postman for api testing. Zod for schema validation. ORMs like drizzle. Axios for fetching APIs. Redux and Zustand both for state management. Difference and usecases of local storage, session storage and cookies.
+
+And I think Git Github docker all these are there in the document so we need these also.
+
+
+
+
+
+
+
+
+
+
+
+

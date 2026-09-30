@@ -1,0 +1,124 @@
+ ➕ Additional Industry-Oriented Topics
+
+Module 11 – AI/LLM Integration 🤖
+1.AI/LLM Integration – Learn how to add simple AI features to your full-stack apps using an LLM API.
+Learn how to integrate simple AI capabilities into full-stack applications using an LLM API.
+
+Topics Covered
+● Introduction to AI & Large Language Models (LLMs)
+● LLM APIs and API Integration
+● Sending Prompts and Receiving Responses
+● Building a Simple AI Feature in React
+● Backend Integration with LLM APIs
+● Environment Variables & API Key Security
+● Practical AI Use Cases in Full-Stack Applications
+
+Outcome
+✔ Add practical AI-powered features to modern React + Express applications.
+
+---
+
+Module 12 – Advanced PostgreSQL 🗄️
+2.Advanced PostgreSQL – Learn how to handle real-world data with joins, relationships, indexes, and pagination.
+Learn how to work with real-world relational data efficiently.
+
+Topics Covered
+● Database Relationships
+● Primary Keys & Foreign Keys
+● One-to-One Relationships
+● One-to-Many Relationships
+● Many-to-Many Relationships
+● SQL Joins – INNER, LEFT & RIGHT JOIN
+● Aggregate Functions
+● GROUP BY & HAVING
+● Indexes & Query Optimization
+● Sorting & Filtering
+● Pagination
+● Practical Database Queries
+
+Outcome
+✔ Design and query real-world PostgreSQL databases efficiently.
+
+---
+
+Module 13 – Backend Architecture & Security 🔐
+3.Backend Architecture & Security – Learn how to structure and secure your backend like a real-world application.
+Learn how to structure and secure backend applications using real-world development practices.
+
+Topics Covered
+● Backend Project Architecture
+● Controllers, Services & Routes
+● Middleware
+● Centralized Error Handling
+● Request Validation
+● Authentication & Authorization
+● Password Hashing
+● JWT Security
+● CORS
+● Environment Variables
+● Secure API Design
+● Common Backend Security Practices
+
+Outcome
+✔ Build structured, maintainable, and secure Express.js backend applications.
+
+---
+
+Module 14 – Testing & Debugging 🧪
+4.Testing & Debugging – Learn how to test your code and find and fix common problems.
+Learn practical techniques to test applications and identify and fix common problems.
+
+Topics Covered
+● Introduction to Software Testing
+● Unit Testing Fundamentals
+● API Testing
+● Testing React Components
+● Testing Backend APIs
+● Debugging React Applications
+● Debugging Node.js / Express Applications
+● Browser Developer Tools
+● Network Tab & API Debugging
+● Error Handling & Troubleshooting
+● Common Development Issues & Solutions
+
+Outcome
+✔ Identify, troubleshoot, and fix common frontend and backend application issues.
+
+---
+
+Module 15 – Git, GitHub & Deployment 🚀
+5.Git, GitHub & Deployment – Learn how to manage your code with Git and put your project live.
+Learn how to manage source code professionally and deploy full-stack applications.
+
+Topics Covered
+● Git Fundamentals
+● Repository Creation
+● Git init, add, commit & status
+● Branching & Merging
+● GitHub Repository Management
+● Push & Pull Operations
+● Pull Requests
+● Working with `.gitignore`
+● Environment Variables in Deployment
+● Frontend Deployment
+● Backend Deployment
+● PostgreSQL Database Deployment
+● Production Configuration
+● Basic CI/CD Concepts
+
+Outcome
+✔ Manage projects using Git/GitHub and deploy a complete full-stack application to a live environment.
+
+ Updated Technology Coverage
+
+You can also add these technologies to your existing Technologies Covered section:
+
+● AI / LLM APIs
+● Advanced PostgreSQL & SQL
+● Backend Architecture & Security
+● Testing & Debugging
+● Git & GitHub
+● Cloud / Application Deployment
+● Production Environment Configuration
+
+This makes the overall program look like a complete Full-Stack + AI + Database + Security + Testing + DevOps-oriented training program, while preserving your original 10 modules and treating the client's requirements as additional topics.
