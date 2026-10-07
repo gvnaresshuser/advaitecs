@@ -101,3 +101,39 @@ PostgreSQL JOIN Demonstration
 	
 	
 	1. SQL Query → 2. Concept Explanation → 3. Actual Result
+---------------------------------------------------------------
+PostgreSQL JOIN Demonstrations
+│
+├── INNER JOIN
+├── LEFT JOIN
+├── RIGHT JOIN
+├── FULL OUTER JOIN
+├── CROSS JOIN
+├── NATURAL JOIN
+├── SELF JOIN
+│
+├── Employees Without Department
+├── Departments Without Employees
+│
+├── Employee → Project
+└── Employee → Department → Project
+---------------------------------------------------------------	
+	
+	Select JOIN → See SQL Query → Read JOIN Explanation → See Actual PostgreSQL Result
+And the project covers:
+- INNER JOIN
+- LEFT JOIN
+- RIGHT JOIN
+- FULL OUTER JOIN
+- CROSS JOIN
+- NATURAL JOIN
+- SELF JOIN
+- Employees without Department
+- Departments without Employees
+- Employee + Projects
+- Employee + Department + Projects
+- Reusable React DataTable
+- Axios API layer
+- React + TypeScript
+- Tailwind CSS
+- Express + PostgreSQL integration
