@@ -1,0 +1,38 @@
+Please continue the `advanced-fullstack-app` project from exactly where we stopped.
+
+Current status:
+- React + TypeScript + Vite frontend is working.
+- Express + TypeScript + PostgreSQL backend is working.
+- Authentication is complete and tested.
+- Users module CRUD is fully working and tested:
+  - List Users ✅
+  - Search Users ✅
+  - Create User ✅
+  - View User ✅
+  - Edit User ✅
+  - Delete User ✅
+  - Validation ✅
+  - Error handling ✅
+  - Responsive Tailwind UI ✅
+- Backend already has the pagination API:
+  `GET /api/users/pagination?page=1&limit=10`
+- Do not disturb or rewrite the existing working functionality unnecessarily.
+
+Next task:
+Implement **Users Pagination UI** using the existing backend pagination endpoint.
+
+Requirements:
+1. Inspect the existing code structure before making changes.
+2. Reuse the existing API, types, styling, and components where possible.
+3. Add pagination to the Users page.
+4. Display current page, total users, total pages, Previous and Next buttons.
+5. Disable Previous on the first page and Next on the last page.
+6. Keep Search, Add, View, Edit, and Delete working.
+7. Use Tailwind CSS.
+8. Keep the UI compact, clean, responsive, and usable on mobile/tablet/desktop.
+9. Avoid unnecessary whitespace in code.
+10. Add proper loading and error handling.
+11. Run frontend/backend builds after changes.
+12. Test the complete Users workflow and make sure there are no TypeScript or runtime errors.
+
+Do not move to another module until the Users pagination feature is fully tested and working.

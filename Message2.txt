@@ -1,0 +1,67 @@
+For 5 days/week × 12 weeks:
+- 12 weeks = 60 training days
+- 1.5 hours/session
+- Total training hours = 60 × 1.5 = 90 hours
+- In months, 12 weeks ≈ 2.76 months, so practically about 3 months.
+------------------------------------
+If you charge ₹50,000 per month:
+- 5 days/week × 4 weeks = 20 sessions/month
+- Each session = 1.5 hours
+- Monthly training hours = 20 × 1.5 = 30 hours
+- ₹50,000 ÷ 20 sessions = ₹2,500 per session
+- ₹50,000 ÷ 30 hours = ₹1,667 per hour approximately
+So:
+₹2,500 per 1.5-hour session
+or
+≈ ₹1,667 per training hour
+For the full 12-week / 90-hour program, at ₹50,000/month, your total would be approximately ₹1.5 lakh.
+------------------------------------
+this is from Abhishek
+Week 1: Core React, Hooks & Context
+Day	Topics & Practical Application
+Day 1	Introduction to React, SPA Architecture, JSX, and Functional Components.
+Day 2	Virtual DOM (VDOM), Diffing Algorithm & Reconciliation, followed by Props and State with the useState hook.
+Day 3	Event Handling, Conditional Rendering, and Lists & Keys. Demonstrate these alongside basic hooks (useEffect, useRef).
+Day 4	Advanced hooks (useMemo, useCallback, useReducer, useLayoutEffect) and Custom Hooks (useFetch, useHttp, useToggle, useLocalStorage).
+Day 5	Context API & useContext. Dedicate the full session to explaining the props drilling problem and how Context resolves it.
+Week 2: UI Tools & 4-Day Hands-on Project
+Day	Topics & Practical Application
+Day 6	UI Enhancements & Feedback: Standalone setup and usage of Loading Indicators, Toast Notifications, and SweetAlert2.
+Day 7	Project Kickoff (Day 1/4) — Routing & Core Layout: Introduce BrowserRouter (Route setup, Link, Navigation) and Tailwind CSS simultaneously while setting up the project structure and primary pages.
+Day 8	Project (Day 2/4) — Dynamic Routes & UI Integration: Build out Dynamic Routes & Route Parameters, Programmatic Navigation, and integrate loading states and toast notifications directly into component workflows.
+Day 9	Project (Day 3/4) — Feature Expansion & State Management: Integrate global state/Context API into the project flow, apply responsive Tailwind styling across screens, and handle complex component interactions.
+Day 10	Project Completion (Day 4/4) & Polish: Finalize all remaining feature pages, refine responsive design, perform live debugging, and wrap up the complete frontend application.
+------------------------------------
+Hi Naressh garu,
+
+We received some feedback from Abhishek regarding the 12-week plan.
+
+He feels that the content planned for Weeks 2, 3, and 4 can potentially be covered within 2 weeks. This would save one week, which could then be used to include Next.js in the final week, helping complete the Full Stack curriculum more comprehensively.
+
+He has also suggested a revised 2-week structure, with the project starting from Day 7 and spanning 4 full days, without a buffer day.
+
+Could you please review these comments and revise the 12-week plan accordingly? Once updated, please share the revised plan with us for review.
+------------------------------------
+for training fee: 50k per month, for <=10 students, and for every extra student after 10, that is from 11th student onwards, extra 10k per student
+------------------------------------
+
+Subject: Revised 12-Week Training Plan
+
+Good Morning Madam,
+
+Thank you for sharing Abhishek’s feedback and suggestions regarding the 12-week training plan.
+
+I have carefully reviewed the comments and revised the training structure accordingly. I have consolidated the content planned for Weeks 2, 3, and 4, and incorporated the suggested 4-day hands-on project starting from Day 7 without a buffer day.
+
+I have also utilized the saved week to include Next.js in the final week, making the overall curriculum more comprehensive and aligned with the Full-Stack development requirements.
+
+Please find the revised 12-week training plan attached for your review. I would be happy to incorporate any further suggestions or changes based on your feedback.
+
+Thank you for the opportunity and continued support.
+
+Best regards,
+
+GV Naressh
+React JS / Full-Stack Trainer
+📞 +91 9949570732
+✉️ gvnaressh@gmail.com

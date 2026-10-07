@@ -1,0 +1,16 @@
+3.Backend Architecture & Security – Learn how to structure and secure your backend like a real-world application.
+Learn how to structure and secure backend applications using real-world development practices.
+
+Topics Covered
+● Backend Project Architecture
+● Controllers, Services & Routes
+● Middleware
+● Centralized Error Handling
+● Request Validation
+● Authentication & Authorization
+● Password Hashing
+● JWT Security
+● CORS
+● Environment Variables
+● Secure API Design
+● Common Backend Security Practices

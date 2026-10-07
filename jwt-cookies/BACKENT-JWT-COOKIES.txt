@@ -1,0 +1,1238 @@
+**********************************************************
+npm install express pg jsonwebtoken bcrypt cookie-parser cors helmet zod dotenv
+npm install -D typescript tsx @types/node @types/express @types/pg @types/jsonwebtoken @types/bcrypt @types/cookie-parser @types/cors
+**********************************************************
+Check installation
+npm list --depth=0
+
+Check TypeScript
+npx tsc --version
+
+Step 7 — Check Node
+node --version
+
+backend/
+└── src/
+    ├── app.ts
+    ├── server.ts
+    │
+    ├── config/
+    │   └── env.ts
+    │
+    ├── db/
+    │   └── pool.ts
+    │
+    ├── controllers/
+    │   ├── auth.controller.ts
+    │   ├── user.controller.ts
+    │   └── project.controller.ts
+    │
+    ├── services/
+    │   ├── auth.service.ts
+    │   ├── user.service.ts
+    │   └── project.service.ts
+    │
+    ├── repositories/
+    │   ├── user.repository.ts
+    │   └── project.repository.ts
+    │
+    ├── middleware/
+    │   ├── auth.middleware.ts
+    │   ├── validate.middleware.ts
+    │   ├── error.middleware.ts
+    │   ├── not-found.middleware.ts
+    │   └── cors.middleware.ts
+    │
+    ├── routes/
+    │   ├── auth.routes.ts
+    │   ├── user.routes.ts
+    │   └── project.routes.ts
+    │
+    ├── validators/
+    │   ├── auth.validator.ts
+    │   ├── user.validator.ts
+    │   └── project.validator.ts
+    │
+    ├── utils/
+    │   ├── jwt.ts
+    │   ├── password.ts
+    │   └── cookies.ts
+    │
+    └── types/
+        └── auth.types.ts
+		
+		
+		
+		
+Create the folders
+mkdir src\controllers src\services src\repositories src\middleware src\routes src\validators src\utils src\types		
+		
+Create the files		
+type nul > src\controllers\auth.controller.ts
+type nul > src\controllers\user.controller.ts
+type nul > src\controllers\project.controller.ts
+
+type nul > src\services\auth.service.ts
+type nul > src\services\user.service.ts
+type nul > src\services\project.service.ts
+
+type nul > src\repositories\user.repository.ts
+type nul > src\repositories\project.repository.ts
+
+type nul > src\middleware\auth.middleware.ts
+type nul > src\middleware\validate.middleware.ts
+type nul > src\middleware\error.middleware.ts
+type nul > src\middleware\not-found.middleware.ts
+type nul > src\middleware\cors.middleware.ts
+
+type nul > src\routes\auth.routes.ts
+type nul > src\routes\user.routes.ts
+type nul > src\routes\project.routes.ts
+
+type nul > src\validators\auth.validator.ts
+type nul > src\validators\user.validator.ts
+type nul > src\validators\project.validator.ts
+
+type nul > src\utils\jwt.ts
+type nul > src\utils\password.ts
+type nul > src\utils\cookies.ts
+
+type nul > src\types\auth.types.ts
+		
+		
+User registration
+Password hashing
+Login
+JWT access token
+JWT refresh token
+HTTP-only cookies
+Logout
+Refresh-token revocation
+Authentication
+Role-based authorization
+Admin/User roles
+Bearer authentication later		
+		
+		
+Let's test bcrypt before integrating it
+Rather than immediately connecting this to registration, let's create a small temporary test.
+From the backend folder run:
+node -e "const bcrypt=require('bcrypt'); bcrypt.hash('Password@123',12).then(h=>console.log(h))"
+
+You should get something similar to:
+Microsoft Windows [Version 10.0.26100.8246]
+(c) Microsoft Corporation. All rights reserved.
+
+E:\Advaitecs\jwt-cookies\backend>node -e "const bcrypt=require('bcrypt'); bcrypt.hash('Password@123',12).then(h=>console.log(h))"
+$2b$12$CpCiqozsBSEttc.sETI3f.Q987mN1I4jNQrl2/KMyU70tTiACvXfO
+
+E:\Advaitecs\jwt-cookies\backend>		
+		
+----------------------------------------------------------------
+user.repository.ts
+One particularly useful query
+We are also deliberately demonstrating an INNER JOIN here:
+SELECT r.name
+FROM roles_advaitecs_jwt_cookies r
+INNER JOIN user_roles_advaitecs_jwt_cookies ur
+  ON ur.role_id = r.id
+WHERE ur.user_id = $1;	
+----------------------------------------------------------------
+                    LOGIN
+                      │
+                      ▼
+              Find User by Email
+                      │
+                      ▼
+              bcrypt.compare()
+                      │
+              ┌───────┴───────┐
+              │               │
+           Invalid          Valid
+              │               │
+           401 Error           ▼
+                       Generate Access Token
+                              +
+                       Generate Refresh Token
+                              │
+                              ▼
+                    HTTP-only Cookies
+                              │
+                              ▼
+                         Frontend
+----------------------------------------------------------------
+Why two tokens?
+
+| Token 		| Purpose 					| Lifetime 	 |
+|---------------|---------------------------|------------|
+| Access Token 	| Access protected APIs 	| 2 minutes  |
+| Refresh Token | Obtain a new access token | 15 minutes |
+----------------------------------------------------------------
+┌─────────────────────────────────────────┐
+│ Browser Cookies                         │
+├─────────────────────────────────────────┤
+│ accessToken                              │
+│   └── short-lived JWT                    │
+│                                         │
+│ refreshToken                             │
+│   └── longer-lived JWT                   │
+└─────────────────────────────────────────┘
+----------------------------------------------------------------
+And importantly:
+ACCESS_COOKIE_HTTP_ONLY=true
+REFRESH_COOKIE_HTTP_ONLY=true
+
+means JavaScript running in the browser cannot access these cookies through:
+document.cookie
+
+That is an important protection against token theft through many XSS scenarios.
+----------------------------------------------------------------
+Access Cookie
+├── Name
+├── HTTP-only
+├── Secure
+├── SameSite
+├── Path
+└── Max-Age
+
+Refresh Cookie
+├── Name
+├── HTTP-only
+├── Secure
+├── SameSite
+├── Path
+└── Max-Age		
+----------------------------------------------------------------
+# For production deployment:
+for HTTPS production:
+ACCESS_COOKIE_SECURE=true
+REFRESH_COOKIE_SECURE=true
+----------------------------------------------------------------
+Important security demonstration
+This is the important part:
+setAccessTokenCookie(
+  res,
+  result.accessToken,
+);
+
+setRefreshTokenCookie(
+  res,
+  result.refreshToken,
+);
+
+But the response contains only:
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "Naresh",
+      "email": "naresh@example.com",
+      "isActive": true,
+      "roles": ["USER"]
+    }
+  }
+}
+
+There is no:
+"accessToken": "..."
+
+and no:
+"refreshToken": "..."
+
+The browser receives the tokens as cookies.
+----------------------------------------------------------------
+Thunder Client.
+Request
+POST http://localhost:5000/api/auth/login
+
+Headers
+Content-Type: application/json
+
+Body → JSON
+Use the same credentials with which you registered:
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+
+Expected response
+You should receive something similar to:
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "Naresh",
+      "email": "naresh@example.com",
+      "isActive": true,
+      "roles": [
+        "USER"
+      ]
+    }
+  }
+}
+
+Very important 🔐
+You should NOT see:
+"accessToken": "eyJ..."
+
+or:
+"refreshToken": "eyJ..."
+
+in the JSON response.
+Instead, look at the response Headers.
+You should see one or two:
+Set-Cookie
+
+containing:
+accessToken=eyJ...
+
+and:
+refreshToken=eyJ...
+
+Because we configured:
+ACCESS_COOKIE_HTTP_ONLY=true
+REFRESH_COOKIE_HTTP_ONLY=true
+
+the cookies should be marked:
+HttpOnly
+
+You should also see:
+SameSite=Lax
+
+and:
+Max-Age=120
+
+for the access token, and:
+Max-Age=900
+
+for the refresh token.
+One more important observation
+Our access cookie has:
+ACCESS_COOKIE_PATH=/
+
+So it can accompany protected API requests.
+Our refresh cookie has:
+REFRESH_COOKIE_PATH=/api/auth
+
+So the browser will send the refresh token only to the authentication endpoints.
+That's a very nice security/design demonstration
+----------------------------------------------------------------
+If login succeeds
+Please verify the cookies in your browser/Postman cookie manager.
+Then tell me what you see, especially whether both accessToken and refreshToken are present.
+If everything is correct, our next stage will be:
+----------------------------------------------------------------	
+Never store the raw refresh token in PostgreSQL. Store only its hash.
+----------------------------------------------------------------
+Refresh JWT
+    ↓
+SHA-256 hash
+    ↓
+PostgreSQL
+----------------------------------------------------------------
+Later, during refresh:
+Cookie Refresh JWT
+       ↓
+Hash it
+       ↓
+Find hash in DB
+       ↓
+Check expiry/revocation
+       ↓
+Issue new tokens
+----------------------------------------------------------------
+Refresh Token Hash Utility
+We need a secure one-way hash for the refresh token.
+Open:
+backend/src/utils/password.ts
+
+Do not replace the existing bcrypt functions.
+Add this import at the top:
+import crypto from "node:crypto";
+
+Then add this function at the bottom:
+export const hashRefreshToken = (
+  token: string,
+): string => {
+  return crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+};
+
+So the file will contain both:
+bcrypt
+  ↓
+Password hashing
+
+SHA-256
+  ↓
+Refresh-token hashing
+
+Why not bcrypt for the refresh token?
+The refresh token is already a high-entropy random JWT.
+For database lookup we want:
+same token
+   ↓
+same SHA-256 hash
+   ↓
+fast database lookup
+
+This is different from password storage, where bcrypt's deliberately slow hashing is desirable.
+----------------------------------------------------------------
+Generate Refresh JWT
+       ↓
+SHA-256 hash
+       ↓
+Store hash + expiry in PostgreSQL
+       ↓
+Set refreshToken HTTP-only cookie
+----------------------------------------------------------------		
+That will give us a proper server-side refresh session rather than merely putting a refresh JWT into a cookie.
+----------------------------------------------------------------
+                 LOGIN
+                   │
+                   ▼
+             Verify Password
+                   │
+                   ▼
+        ┌──────────┴──────────┐
+        │                     │
+        ▼                     ▼
+   Access JWT            Refresh JWT
+        │                     │
+        │                SHA-256 Hash
+        │                     │
+        │                     ▼
+        │               PostgreSQL
+        │                     │
+        ▼                     ▼
+ accessToken cookie     refresh session
+----------------------------------------------------------------
+Read refresh token from HTTP-only cookie
+Verify JWT
+Hash refresh token
+Find token in PostgreSQL
+Check expiry/revocation
+Load user and roles
+Rotate the refresh token
+Generate a new access token
+Set new cookies
+Return a clean response
+----------------------------------------------------------------
+HTTP-only refresh cookie
+          │
+          ▼
+    verifyRefreshToken()
+          │
+          ▼
+       type=refresh?
+          │
+          ▼
+   SHA-256 hash token
+          │
+          ▼
+   Find token in PostgreSQL
+          │
+          ├── Not found → reject
+          ├── Revoked   → reject
+          └── Expired   → reject
+          │
+          ▼
+      Find user
+          │
+          ▼
+      Find roles
+          │
+          ▼
+   Revoke OLD token
+          │
+          ▼
+ Generate NEW access token
+          │
+          ▼
+ Generate NEW refresh token
+          │
+          ▼
+ Store NEW refresh-token hash
+          │
+          ▼
+      Return result
+----------------------------------------------------------------
+POST /api/auth/refresh
+        ↓
+HTTP-only refreshToken cookie
+        ↓
+refresh controller
+        ↓
+refreshSession()
+        ↓
+Verify JWT
+        ↓
+Check PostgreSQL session
+        ↓
+Check revoked / expired
+        ↓
+Revoke OLD refresh token
+        ↓
+Generate NEW access token
+        ↓
+Generate NEW refresh token
+        ↓
+Store NEW refresh-token hash
+        ↓
+Set NEW HTTP-only cookies
+----------------------------------------------------------------	
+
+This is the important part of refresh-token rotation.
+------------------------------------------------------------
+OLD refresh token
+       ↓
+    REVOKED
+       ↓
+NEW refresh token
+       ↓
+Stored in DB
+       ↓
+Sent as HTTP-only cookie
+------------------------------------------------------------
+One thing to watch for
+Your refresh cookie has:
+REFRESH_COOKIE_PATH=/api/auth
+
+So the browser will send it to:
+/api/auth/refresh
+
+but not to unrelated APIs such as:
+/api/projects
+/api/users
+
+That is a nice security feature in our design.
+------------------------------------------------------------
+✅ Registration
+✅ Login
+✅ Access-token generation
+✅ Refresh-token generation
+✅ HTTP-only cookies
+✅ Refresh token stored as SHA-256 hash
+✅ Refresh token stored in PostgreSQL
+✅ POST /api/auth/refresh
+✅ Refresh-token verification
+✅ Expiry checking
+✅ Revocation checking
+✅ Refresh-token rotation
+✅ New access + refresh tokens
+------------------------------------------------------------
+The logout flow will:
+Current refreshToken cookie
+        ↓
+Find its SHA-256 hash in PostgreSQL
+        ↓
+Revoke the refresh-token record
+        ↓
+Clear accessToken cookie
+        ↓
+Clear refreshToken cookie
+        ↓
+Return "Logout successful"
+------------------------------------------------------------
+This gives us the complete authentication lifecycle:
+Register → Login → Access → Refresh → Rotate → Logout
+------------------------------------------------------------
+After logout, we'll move to the very important authentication middleware, where we'll support:
+1. HTTP-only Cookie authentication — our primary approach
+2. Bearer Token authentication — our secondary teaching/demo approach
+That will let us protect real API endpoints.
+------------------------------------------------------------
+Our logout flow is now
+
+POST /api/auth/logout
+        ↓
+Read refreshToken cookie
+        ↓
+Hash refresh token
+        ↓
+Find token in PostgreSQL
+        ↓
+Revoke token
+        ↓
+Clear accessToken cookie
+        ↓
+Clear refreshToken cookie
+        ↓
+Logout successful
+------------------------------------------------------------
+Then test the complete lifecycle 🔐
+Once typecheck passes, we will test:
+LOGIN
+  ↓
+Access + Refresh cookies
+  ↓
+REFRESH
+  ↓
+Old refresh token revoked
+New refresh token created
+  ↓
+LOGOUT
+  ↓
+Refresh token revoked
+Both cookies cleared
+  ↓
+Try REFRESH again
+  ↓
+❌ Refresh rejected
+
+That last test is particularly important because it proves that logout actually invalidates the session, rather than merely deleting the browser cookies.
+----------------------------------------------------------------
+Logging out doesn't merely remove the cookie. It invalidates the refresh session on the server as well.
+----------------------------------------------------------------
+┌───────────────┐
+│   REGISTER    │
+└───────┬───────┘
+        ↓
+┌───────────────┐
+│     LOGIN     │
+└───────┬───────┘
+        ↓
+  HTTP-only Cookies
+  Access + Refresh
+        ↓
+┌───────────────┐
+│    ACCESS     │
+└───────┬───────┘
+        ↓
+┌───────────────┐
+│    REFRESH    │
+└───────┬───────┘
+        ↓
+  Rotate Refresh Token
+        ↓
+┌───────────────┐
+│    LOGOUT     │
+└───────┬───────┘
+        ↓
+ Revoke DB Session
+        ↓
+ Clear Cookies
+----------------------------------------------------------------
+ext major stage: Authentication Middleware
+Now we will build:
+src/middleware/auth.middleware.ts
+
+with two authentication mechanisms:
+Priority 1 — HTTP-only Cookie
+Cookie
+  ↓
+accessToken
+  ↓
+verify JWT
+  ↓
+Authenticated user
+
+Priority 2 — Bearer Token
+Authorization: Bearer <access-token>
+
+Authorization header
+       ↓
+Extract Bearer token
+       ↓
+Verify JWT
+       ↓
+Authenticated user
+----------------------------------------------------------------
+Incoming Request
+      │
+      ▼
+Authentication Middleware
+      │
+      ├── Valid token → req.user populated
+      │
+      └── Invalid/missing token → rejected
+----------------------------------------------------------------	
+                    Request
+                       │
+                       ▼
+             Is accessToken cookie
+                available?
+                 /       \
+               YES        NO
+                │          │
+                │      Authorization
+                │         header?
+                │        /       \
+                │      YES        NO
+                │       │          │
+                └───────┘          ▼
+                    │          401 Unauthorized
+                    ▼
+              Access Token	
+----------------------------------------------------------------
+Priority is intentional
+We decided earlier:
+1️⃣ HTTP-only Cookie — primary
+Cookie: accessToken=...
+
+2️⃣ Bearer Token — secondary
+Authorization: Bearer eyJ...
+
+This allows us to demonstrate both approaches using the same backend.
+Important
+We are not verifying the JWT yet.
+For now:
+Request
+  ↓
+Extract token
+  ↓
+Token exists?
+  ↓
+YES → next()
+
+In the next step we'll add:
+verifyAccessToken()
+       ↓
+JWT signature verification
+       ↓
+expiration check
+       ↓
+type === "access"
+       ↓
+req.user = ...
+
+That separation is useful for teaching because students can clearly see the difference between token extraction and token authentication.
+----------------------------------------------------------------
+Request
+   ↓
+Find access token
+   ↓
+Cookie first
+   ↓
+Bearer header second
+   ↓
+Token found?
+   │
+   ├── NO → 401 Authentication required
+   │
+   ▼
+verifyAccessToken()
+   │
+   ├── Invalid → 401
+   ├── Expired → 401
+   └── Valid
+        ↓
+   type === "access"?
+        ↓
+      req.user
+        ↓
+      next()
+----------------------------------------------------------------
+And most importantly:
+req.user = {
+  userId: payload.userId,
+  email: payload.email,
+  roles: payload.roles,
+};
+----------------------------------------------------------------
+Test A — HTTP-only Cookie Authentication
+1. Login
+POST http://localhost:5000/api/auth/login
+
+Use your existing valid credentials.
+Make sure Postman receives:
+accessToken
+refreshToken
+
+2. Call /me
+GET http://localhost:5000/api/auth/me
+
+Do not add an Authorization header.
+Because the accessToken cookie is already stored by Postman, it should be sent automatically.
+Expected response:
+{
+  "success": true,
+  "message": "Authenticated user",
+  "data": {
+    "user": {
+      "userId": 1,
+      "email": "your-email@example.com",
+      "roles": [
+        "USER"
+      ]
+    }
+  }
+}
+
+This proves:
+HTTP-only Cookie
+       ↓
+accessToken
+       ↓
+authenticate()
+       ↓
+verifyAccessToken()
+       ↓
+req.user
+       ↓
+/api/auth/me
+
+🔑 Test B — Bearer Authentication
+Now we want to demonstrate our secondary authentication mechanism.
+For this test, obtain an access token. Since our login response intentionally doesn't expose it, use the token from the cookie only for this classroom/demo test.
+In Postman, send:
+GET http://localhost:5000/api/auth/me
+
+Add this header:
+Authorization: Bearer YOUR_ACCESS_TOKEN
+
+For this test, remove/disable the accessToken cookie so that we know the request is really using Bearer authentication.
+Expected response:
+{
+  "success": true,
+  "message": "Authenticated user",
+  "data": {
+    "user": {
+      "userId": 1,
+      "email": "your-email@example.com",
+      "roles": [
+        "USER"
+      ]
+    }
+  }
+}
+
+🎓 This gives us a very useful teaching comparison
+Authentication	Source	Status
+Cookie	accessToken HTTP-only cookie	✅ Primary
+Bearer	Authorization: Bearer ...	✅ Secondary
+Neither	No credentials	❌ 401
+
+
+And our middleware deliberately follows:
+Cookie
+  ↓
+if not available
+  ↓
+Bearer
+  ↓
+if not available
+  ↓
+401
+
+Finally, test unauthenticated access
+Clear both cookies and remove the Authorization header.
+Call:
+GET http://localhost:5000/api/auth/me
+
+Expected:
+{
+  "success": false,
+  "message": "Authentication required"
+}
+
+Once Cookie, Bearer, and unauthenticated tests all behave correctly, tell me done please.
+----------------------------------------------------------------	
+🔑 Test B — Bearer Authentication
+1. Login and obtain an access token
+POST http://localhost:5000/api/auth/login
+
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+
+For the classroom/demo, copy the accessToken from the cookie and save it temporarily.
+2. First test /api/auth/me using the cookie
+GET http://localhost:5000/api/auth/me
+
+No body and no Authorization header.
+Expected:
+{
+  "success": true,
+  "message": "Authenticated user",
+  "data": {
+    "user": {
+      "userId": 1,
+      "email": "naresh@example.com",
+      "roles": [
+        "USER"
+      ]
+    }
+  }
+}
+
+This proves Cookie Authentication.
+3. Delete all cookies
+In Thunder Client:
+Manage Cookies
+       ↓
+Delete accessToken
+Delete refreshToken
+
+Then call:
+GET http://localhost:5000/api/auth/me
+
+Expected:
+401 Unauthorized
+
+with:
+{
+  "success": false,
+  "message": "Authentication required"
+}
+
+This proves that the endpoint is genuinely protected.
+4. Now use the saved access token as Bearer
+Add:
+Authorization: Bearer xxxxxxxxx
+
+Then:
+GET http://localhost:5000/api/auth/me
+
+Expected:
+{
+  "success": true,
+  "message": "Authenticated user",
+  "data": {
+    "user": {
+      "userId": 1,
+      "email": "naresh@example.com",
+      "roles": [
+        "USER"
+      ]
+    }
+  }
+}
+
+🎓 Excellent teaching conclusion
+You can now demonstrate:
+                 /api/auth/me
+                       │
+              authenticate()
+                       │
+              ┌────────┴────────┐
+              │                 │
+        HTTP-only Cookie    Bearer Token
+              │                 │
+         accessToken       Authorization
+              │                 │
+              └────────┬────────┘
+                       ↓
+               verifyAccessToken()
+                       ↓
+                   req.user
+                       ↓
+                   SUCCESS
+
+And importantly:
+No Cookie
+   +
+No Bearer Token
+   ↓
+401 Unauthorized
+
+So your Cookie-first + Bearer-second authentication design is working exactly as intended.
+----------------------------------------------------------------
+✅ Register
+✅ Login
+✅ HTTP-only Access Cookie
+✅ HTTP-only Refresh Cookie
+✅ Refresh Token Rotation
+✅ PostgreSQL Refresh Sessions
+✅ Logout + Server-side Revocation
+✅ Access Token Verification
+✅ Cookie Authentication
+✅ Bearer Authentication
+✅ Protected /api/auth/me
+----------------------------------------------------------------
+Next — Role-Based Authorization
+Now we can build the next security layer:
+Authentication
+      ↓
+Who are you?
+      ↓
+req.user
+      ↓
+Authorization
+      ↓
+What are you allowed to do?
+
+We'll create an authorization middleware such as:
+authorize("ADMIN")
+
+and demonstrate:
+USER
+  ↓
+/api/admin
+  ↓
+403 Forbidden ❌
+
+ADMIN
+  ↓
+/api/admin
+  ↓
+200 OK ✅
+----------------------------------------------------------------
+The important teaching distinction is:
+Authentication = Who are you?
+Authorization = What are you allowed to do?
+----------------------------------------------------------------
+Create authorize.middleware.ts
+Create:
+E:\Advaitecs\jwt-cookies\backend\src\middleware\authorize.middleware.ts
+----------------------------------------------------------------		
+USER → 403 Forbidden
+ADMIN → 200 OK.
+----------------------------------------------------------------
+Now let's test Role-Based Authorization
+First run:
+npm run typecheck
+
+If that is clean, don't assign ADMIN yet.
+Let's first prove that a normal USER is rejected.
+Test 1 — Normal USER
+You already have:
+naresh@example.com
+Password@123
+
+1. Login using:
+POST http://localhost:5000/api/auth/login
+
+2. Then call:
+GET http://localhost:5000/api/auth/admin
+
+Because your user currently has only the USER role, we should get:
+{
+  "success": false,
+  "message": "Access forbidden"
+}
+
+This is an important demonstration:
+Authentication answers: "Who are you?"
+Authorization answers: "Are you allowed to do this?"
+----------------------------------------------------------------
+Login as ADMIN
+In Thunder Client:
+POST
+http://localhost:5000/api/auth/login
+
+Body:
+{
+  "email": "admin@example.com",
+  "password": "Admin@123"
+}
+
+Because the login response doesn't expose the token—the token is stored in the HTTP-only cookie—Thunder Client should receive the accessToken and refreshToken cookies.
+Step 4 — Test the ADMIN endpoint
+Now call:
+GET http://localhost:5000/api/auth/admin
+
+Expected response:
+{
+  "success": true,
+  "message": "Welcome Admin",
+  "data": {
+    "user": {
+      "userId": 2,
+      "email": "admin@example.com",
+      "roles": ["ADMIN"]
+    }
+  }
+}
+
+🎯 This completes our first RBAC demonstration:
+                 Request
+                    │
+                    ▼
+             authenticate()
+                    │
+              JWT valid?
+              /          \
+            NO            YES
+            │              │
+           401             ▼
+                    authorize("ADMIN")
+                           │
+                    ADMIN role?
+                    /       \
+                  NO         YES
+                  │           │
+                 403          ▼
+                         adminOnly()
+                             │
+                            200
+----------------------------------------------------------------
+| User | GET `/api/projects` | DELETE `/api/projects/1` |
+|---|---|---|
+| USER | ✅ 200 | ❌ 403 |
+| ADMIN | ✅ 200 | ✅ 200 |
+----------------------------------------------------------------
+Final ADMIN test
+Now login as:
+Email:    admin@example.com
+Password: Admin@123
+
+Then call:
+DELETE http://localhost:5000/api/projects/1
+
+Expected:
+{
+  "success": true,
+  "message": "Project 1 deleted successfully"
+}
+
+This will complete our simple JWT + RBAC demonstration.
+----------------------------------------------------------------	
+Access token expires
+       ↓
+Axios interceptor detects 401
+       ↓
+"Session expired. Refreshing..."
+       ↓
+POST /api/auth/refresh
+       ↓
+New access token cookie
+       ↓
+Retry original request
+       ↓
+Success ✅
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------		
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------			
+		
+******************
+npm run typecheck
+npm run build
+npm run dev
+******************
+		
+		
+		
+		
+Login as ADMIN
+In Thunder Client:
+POST
+http://localhost:5000/api/auth/login
+
+Body:
+{
+  "email": "admin@example.com",
+  "password": "Admin@123"
+}
+
+------------------------------------------------------------
+Login as Normal USER
+
+1. Login using:
+POST http://localhost:5000/api/auth/login
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+----------------------------------------------------------------
+PORT=5000
+
+DATABASE_URL=postgresql://neondb_owner:npg_e8piHMrYL0wy@ep-noisy-sea-aexpfwkt-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require	
+
+JWT_SECRET=a958e14b76bff8d73a84e3ca9fcf9d197b6f5c242fae4a1133645cad5e4d6361
+#https://jwtsecrets.com/#generator
+JWT_EXPIRES_IN=1h
+
+FRONTEND_URL=http://localhost:5173
+
+NODE_ENV=development		
+-------------------------------------------
+
+E:\Advaitecs\jwt-cookies\backend>npm list --depth=0
+week-7-advanced-postgresql-backend@1.0.0 E:\Advaitecs\jwt-cookies\backend
++-- @types/bcrypt@6.0.0
++-- @types/cookie-parser@1.4.10
++-- @types/cors@2.8.19
++-- @types/express@5.0.6
++-- @types/jsonwebtoken@9.0.10
++-- @types/node@24.19.1
++-- @types/pg@8.23.1
++-- bcrypt@6.0.0
++-- cookie-parser@1.4.7
++-- cors@2.8.6
++-- dotenv@17.4.2
++-- express@5.2.1
++-- helmet@8.3.0
++-- jsonwebtoken@9.0.3
++-- pg@8.23.1
++-- ts-node-dev@2.0.0
++-- tsx@4.23.15
++-- typescript@5.9.3
+`-- zod@4.6.5
+----------------------------------------------------------------
+
+E:\Advaitecs\jwt-cookies\backend>npx tsc --version
+Version 5.9.3
+----------------------------------------------------------------
+E:\Advaitecs\jwt-cookies\backend>node --version
+v24.15.0
+----------------------------------------------------------------
+E:\Advaitecs\jwt-cookies\backend>
+-----------------------------------------------
+http://localhost:5000/api/health
+{
+  "success": true,
+  "message": "JWT Cookies API is running"
+}
+
+http://localhost:5000/api/health/db
+{
+  "success": true,
+  "message": "PostgreSQL connection successful",
+  "data": {
+    "current_time": "2026-10-07T02:27:41.238Z"
+  }
+}
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------		
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------	
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------		
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------

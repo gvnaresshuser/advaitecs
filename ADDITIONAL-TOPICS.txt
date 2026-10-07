@@ -109,6 +109,21 @@ Topics Covered
 Outcome
 ✔ Manage projects using Git/GitHub and deploy a complete full-stack application to a live environment.
 
+
+FILES AND FOLDERS LOCATION:
+==========================
+11111111111111
+E:\Advaitecs-gitstuff\git-sample-js-project
+
+22222222222222
+E:\Advaitecs-gitstuff\git-related
+E:\Advaitecs-gitstuff\git-related-OTHERS\GIT-STEPS.txt
+
+
+
+
+
+
  Updated Technology Coverage
 
 You can also add these technologies to your existing Technologies Covered section:

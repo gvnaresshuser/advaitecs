@@ -1,0 +1,392 @@
+******************************************************
+npm create vite@latest frontend -- --template react-ts
+npm install axios
+npm install tailwindcss @tailwindcss/vite
+npm install axios react-router-dom zustand
+npm install react-router-dom
+******************************************************
+
+
+React Frontend Integration
+
+📱 Mobile-first responsive design
+💻 Tablet and desktop layouts
+🧩 Reusable components
+🔐 Login/Register authentication
+👥 Users
+📁 Projects
+✅ Tasks
+🔎 Search/filter/pagination
+🔄 Loading and error states
+🍪 HTTP-only cookie authentication
+⚡ Compact code — no unnecessary blank lines
+🎨 Professional dashboard-style UI
+♻️ Reusable API and UI components
+No unnecessary complexity
+
+Now we can connect:
+React + TypeScript + Vite
+          ↓
+      API Client
+          ↓
+     Authentication
+          ↓
+     TanStack Query
+          ↓
+       Express API
+          ↓
+      PostgreSQL
+	  
+API client / Axios configuration
+Authentication state and login/register
+HTTP-only cookie handling
+Protected routes
+Users screen
+Projects screen
+Tasks screen
+Search / filtering / pagination
+Loading and error states
+TanStack Query cache management
+Final UI polish
+
+---------------------------------------------
+Create the React + TypeScript + Vite frontend
+From your advanced-fullstack-app folder:
+npm create vite@latest frontend -- --template react-ts
+cd frontend
+npm install
+npm install axios
+
+Install Tailwind CSS
+Since we're using the current Tailwind setup:
+npm install tailwindcss @tailwindcss/vite
+---------------------------------------------
+
+frontend structure
+
+advanced-fullstack-app/
+│
+├── frontend/
+│   ├── src/
+│   │   ├── api/
+│   │   │   ├── axios.ts
+│   │   │   ├── authApi.ts
+│   │   │   ├── userApi.ts
+│   │   │   ├── projectApi.ts
+│   │   │   └── taskApi.ts
+│   │   │
+│   │   ├── components/
+│   │   │   ├── common/
+│   │   │   ├── layout/
+│   │   │   ├── users/
+│   │   │   ├── projects/
+│   │   │   └── tasks/
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── Login.tsx
+│   │   │   ├── Register.tsx
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Users.tsx
+│   │   │   ├── Projects.tsx
+│   │   │   └── Tasks.tsx
+│   │   │
+│   │   ├── store/
+│   │   │   └── authStore.ts
+│   │   │
+│   │   ├── types/
+│   │   │   ├── auth.types.ts
+│   │   │   ├── user.types.ts
+│   │   │   ├── project.types.ts
+│   │   │   └── task.types.ts
+│   │   │
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   └── index.css
+│   │
+│   ├── .env
+│   ├── .env.example
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── vite.config.ts
+│
+└── backend/
+
+
+Create folders
+mkdir src\api src\components\common src\components\layout src\components\users src\components\projects src\components\tasks src\pages src\store src\types
+
+Create API files
+type nul > src\api\axios.ts
+type nul > src\api\authApi.ts
+type nul > src\api\userApi.ts
+type nul > src\api\projectApi.ts
+type nul > src\api\taskApi.ts
+
+Create page files
+type nul > src\pages\Login.tsx
+type nul > src\pages\Register.tsx
+type nul > src\pages\Dashboard.tsx
+type nul > src\pages\Users.tsx
+type nul > src\pages\Projects.tsx
+type nul > src\pages\Tasks.tsx
+
+4. Create store file
+type nul > src\store\authStore.ts
+
+5. Create type files
+type nul > src\types\auth.types.ts
+type nul > src\types\user.types.ts
+type nul > src\types\project.types.ts
+type nul > src\types\task.types.ts
+
+6. Create environment files
+type nul > .env
+type nul > .env.example
+
+Verify the complete structure
+Run:
+tree /F
+tree src /F
+
+E:\Advaitecs\advanced-fullstack-app\frontend>mkdir src\api src\components\common src\components\layout src\components\users src\components\projects src\components\tasks src\pages src\store src\types
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\api\axios.ts
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\api\authApi.ts
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\api\userApi.ts
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\api\projectApi.ts
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\api\taskApi.ts
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\pages\Login.tsx
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\pages\Register.tsx
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\pages\Dashboard.tsx
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\pages\Users.tsx
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\pages\Projects.tsx
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\pages\Tasks.tsx
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\store\authStore.ts
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\types\auth.types.ts
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\types\user.types.ts
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\types\project.types.ts
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > src\types\task.types.ts
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > .env
+
+E:\Advaitecs\advanced-fullstack-app\frontend>type nul > .env.example
+
+
+
+E:\Advaitecs\advanced-fullstack-app\frontend>tree src /F
+Folder PATH listing for volume DATA
+Volume serial number is 0ED0-D3D0
+E:\ADVAITECS\ADVANCED-FULLSTACK-APP\FRONTEND\SRC
+│   App copy.tsx
+│   App.css
+│   App.tsx
+│   index copy.css
+│   index.css
+│   main.tsx
+│
+├───api
+│       authApi.ts
+│       axios.ts
+│       projectApi.ts
+│       taskApi.ts
+│       userApi.ts
+│
+├───assets
+│       hero.png
+│       react.svg
+│       vite.svg
+│
+├───components
+│   ├───common
+│   ├───layout
+│   ├───projects
+│   ├───tasks
+│   └───users
+├───pages
+│       Dashboard.tsx
+│       Login.tsx
+│       Projects.tsx
+│       Register.tsx
+│       Tasks.tsx
+│       Users.tsx
+│
+├───store
+│       authStore.ts
+│
+└───types
+        auth.types.ts
+        project.types.ts
+        task.types.ts
+        user.types.ts
+
+
+E:\Advaitecs\advanced-fullstack-app\frontend>
+
+Create the Layout components
+Create these files:
+type nul > src\components\layout\Navbar.tsx
+type nul > src\components\layout\Sidebar.tsx
+type nul > src\components\layout\MainLayout.tsx
+
+Application starts
+       ↓
+Check existing login session
+       ↓
+GET /api/auth/me
+       ↓
+┌─────────────────────┐
+│ Authenticated?      │
+└─────────┬───────────┘
+          │
+     Yes  │  No
+      ↓   │   ↓
+ Dashboard Login
+ 
+ 
+ 
+Create a test account
+Go to:
+http://localhost:5173/register
+
+
+USE THESE FOR TESTING:
+---------------------
+Enter:
+Name:     Test User
+Email:    test@example.com
+Mobile:   9876543210
+Password: Test@12345
+
+Click Register.
+
+
+-----------------------------
+gvnaressh@gmail.com
+Gvnaressh3695
+
+test@example.com
+Test@12345
+-----------------------------
+ 
+ 
+| Feature | Backend | Frontend | Status |
+|---|---:|---:|---|
+| List Users | ✅ | ✅ | Working |
+| Search Users | — | ✅ | Working |
+| Create User | ✅ | ✅ | Working |
+| View User | ✅ | ✅ | Working |
+| Edit User | ✅ | ✅ | Working |
+| Delete User | ✅ | ✅ | Working |
+| Validation | ✅ | ✅ | Working |
+| Error Handling | ✅ | ✅ | Working |
+| Responsive Tailwind UI | — | ✅ | Working |
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------
+
+E:\Advaitecs\advanced-fullstack-app\frontend>npm run build
+
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+src/pages/Login.tsx:1:10 - error TS1484: 'FormEvent' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+
+1 import { FormEvent, useState } from "react";
+           ~~~~~~~~~
+
+src/pages/Register.tsx:1:10 - error TS1484: 'FormEvent' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+
+1 import { FormEvent, useState } from "react";
+           ~~~~~~~~~
+
+
+Found 2 errors.
+
+
+E:\Advaitecs\advanced-fullstack-app\frontend>
+SOLUTION:
+========
+1. Fix Login.tsx
+Change:
+import { FormEvent, useState } from "react";
+
+to:
+import { useState } from "react";
+import type { FormEvent } from "react";
+
+2. Fix Register.tsx
+Change:
+import { FormEvent, useState } from "react";
+
+to:
+import { useState } from "react";
+import type { FormEvent } from "react";
+===============================================================
+E:\Advaitecs\advanced-fullstack-app\frontend>npm run build
+
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.1 building client environment for production...
+✓ 94 modules transformed.
+computing gzip size...
+dist/index.html                   0.45 kB │ gzip:   0.29 kB
+dist/assets/index-JJA-lSTa.css   13.59 kB │ gzip:   3.53 kB
+dist/assets/index-DcXt6l1o.js   316.98 kB │ gzip: 102.55 kB
+
+✓ built in 6.20s
+[PLUGIN_TIMINGS] JavaScript callbacks ran for 5.3s of this 6.0s build (88%).
+The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):
+  - plugin @tailwindcss/vite:generate:build transform (48%, 2.9s, 1 call)
+  - plugin vite:css-post renderChunk (36%, 2.2s, 1 call)
+Additional callback time came from callbacks under 1s.
+See https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.
+
+
+E:\Advaitecs\advanced-fullstack-app\frontend>
+===============================================================

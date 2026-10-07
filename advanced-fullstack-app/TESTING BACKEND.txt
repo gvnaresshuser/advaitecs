@@ -1,0 +1,1201 @@
+TESTING BACKEND:
+---------------
+npm run build
+
+npm run dev
+
+Start the backend
+From:
+E:\Advaitecs\advanced-fullstack-app\backend
+
+run:
+npm run dev
+
+You should see:
+✅ PostgreSQL connected successfully
+🚀 Server running at http://localhost:5000
+
+2. Test Health Check
+Request
+GET http://localhost:5000/api/health
+
+Expected
+{
+  "success": true,
+  "message": "Backend API is running"
+}
+------------------------------------------------
+
+E:\Advaitecs\advanced-fullstack-app\backend>npm run dev
+
+> advanced-fullstack-backend@1.0.0 dev
+> tsx watch src/server.ts
+
+(node:11612) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ PostgreSQL connected successfully
+🚀 Server running at http://localhost:5000
+
+------------------------------------------------
+
+Perfect. Since the build is clean, **Thunder Client is the right next step**. Let's test the middleware systematically.
+
+ 1. Start the backend
+
+From:
+
+```text
+E:\Advaitecs\advanced-fullstack-app\backend
+```
+
+run:
+
+```cmd
+npm run dev
+```
+
+You should see:
+
+```text
+✅ PostgreSQL connected successfully
+🚀 Server running at http://localhost:5000
+```
+
+---
+
+ 2. Test Health Check
+
+# Request
+
+```text
+GET http://localhost:5000/api/health
+```
+
+# Expected
+
+```json
+{
+  "success": true,
+  "message": "Backend API is running"
+}
+```
+
+This confirms:
+
+```text
+Express
+   ↓
+PostgreSQL
+   ↓
+Server
+```
+
+are working.
+
+---
+
+# 3. Test Zod Validation
+
+This is the most important test now.
+
+# Request
+
+```text
+POST http://localhost:5000/api/auth/register
+```
+
+Body → JSON:
+
+```json
+{
+  "name": "N",
+  "email": "wrong-email",
+  "password": "123"
+}
+```
+
+# Expected response
+
+HTTP:
+
+```text
+400 Bad Request
+```
+
+Something similar to:
+
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "errors": [
+    {
+      "field": "name",
+      "message": "Name must be at least 2 characters long"
+    },
+    {
+      "field": "email",
+      "message": "Please provide a valid email address"
+    },
+    {
+      "field": "password",
+      "message": "Password must be at least 6 characters long"
+    }
+  ]
+}
+```
+
+This proves:
+
+```text
+Thunder Client
+      ↓
+POST /register
+      ↓
+validate(registerSchema)
+      ↓
+Zod
+      ↓
+❌ Invalid
+      ↓
+400 Response
+```
+
+The controller should **not execute**.
+
+---
+
+# 4. Test Valid Registration
+
+Now try:
+
+```json
+{
+  "name": "Test User",
+  "email": "testuser@adviatecs.com",
+  "password": "Test@12345"
+}
+```
+
+# Expected
+
+```text
+201 Created
+```
+
+with something like:
+
+```json
+{
+  "success": true,
+  "message": "User registered successfully",
+  "data": {
+    "id": "...",
+    "name": "Test User",
+    "email": "testuser@adviatecs.com",
+    "created_at": "..."
+  }
+}
+```
+
+Notice that the response **does not contain `password_hash`**.
+
+That's intentional.
+
+---
+
+# 5. Test Login
+
+# Request
+
+```text
+POST http://localhost:5000/api/auth/login
+```
+
+Body:
+
+```json
+{
+  "email": "test@example.com",
+  "password": "Test@12345"
+}
+```
+
+Expected:
+
+```text
+200 OK
+```
+
+and:
+
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": "...",
+      "name": "Test User",
+      "email": "testuser@adviatecs.com"
+    },
+    "accessToken": "..."
+  }
+}
+```
+
+Because we're using cookies, Thunder Client should also receive the:
+
+```text
+accessToken
+```
+
+HTTP-only cookie.
+
+---
+
+# 6. Test `/api/auth/me`
+
+# Request
+
+```text
+GET http://localhost:5000/api/auth/me
+```
+
+Because `/me` uses:
+
+```ts
+authMiddleware
+```
+
+it should require authentication.
+
+If Thunder Client preserves the cookie from the login request, you should get:
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "...",
+    "name": "Test User",
+    "email": "testuser@adviatecs.com"
+  }
+}
+```
+
+---
+
+# 7. Test Authentication Protection
+
+Open a new request:
+
+```text
+GET http://localhost:5000/api/projects
+```
+
+If you remove the authentication cookie and don't provide a Bearer token, expected:
+
+```text
+401 Unauthorized
+```
+
+```json
+{
+  "success": false,
+  "message": "Authentication required"
+}
+```
+
+This confirms:
+
+```text
+/api/projects
+      ↓
+authMiddleware
+      ↓
+No JWT
+      ↓
+401
+```
+
+---
+
+# 8. Test 404 Middleware
+
+Try a URL that doesn't exist:
+
+```text
+GET http://localhost:5000/api/hello
+```
+
+Expected:
+
+```text
+404 Not Found
+```
+
+```json
+{
+  "success": false,
+  "message": "Route not found: GET /api/hello"
+}
+```
+
+That proves your:
+
+```ts
+notFoundMiddleware
+```
+
+is working.
+
+---
+
++++++++++++++++++
+Test Login
+# Request
+```text
+POST http://localhost:5000/api/auth/login
+```
+Body:
+```json
+{
+  "email": "testuser@adviatecs.com",
+  "password": "Test@12345"
+}
+```
++++++++++++++++++
+
+ 9. Test Project Query Validation
+
+For example:
+
+```text
+GET http://localhost:5000/api/projects/pagination?page=abc&limit=500
+```
+
+Expected:
+
+```text
+400 Bad Request
+```
+
+because:
+
+```text
+page → must be a number
+limit → maximum 100
+```
+
+Then try:
+
+```text
+GET http://localhost:5000/api/projects/pagination?page=1&limit=5
+```
+
+That should pass validation.
+
+---
+
+ 10. Test Task Query Validation
+
+Try:
+
+```text
+GET http://localhost:5000/api/tasks/filter?status=INVALID&priority=HIGH
+```
+
+Expected:
+
+```text
+400 Bad Request
+```
+
+because:
+
+```text
+status
+```
+
+must be one of:
+
+```text
+TODO
+IN_PROGRESS
+DONE
+```
+
+Try the valid version:
+
+```text
+GET http://localhost:5000/api/tasks/filter?status=DONE&priority=HIGH
+```
+
+That should pass validation.
+
+---
+
+# Your middleware testing checklist
+
+```text
+☑ npm run build
+☑ Server starts
+☑ PostgreSQL connection
+☑ GET /api/health
+☑ Invalid registration → 400
+☑ Valid registration → 201
+☑ Login → JWT + cookie
+☑ /api/auth/me → authenticated user
+☑ Protected route without token → 401
+☑ Unknown route → 404
+☑ Invalid query parameters → 400
+☑ Valid query parameters → successful response
+```
+
+**One important note:** your existing seeded users have placeholder password hashes such as `DEMO_HASH_NARESH`, so **don't use those accounts for the login test**. Use the new user you register through `/api/auth/register`.
+
+Once these tests pass, we will have completed a very important part of the backend architecture:
+
+```text
+PostgreSQL
+    ↓
+Repository
+    ↓
+Service
+    ↓
+Controller
+    ↓
+Validation
+    ↓
+Authentication
+    ↓
+Centralized Error Handling
+    ↓
+REST API
+```
+
+That means we have successfully verified:
+
+✅ TypeScript build
+✅ Express server
+✅ PostgreSQL connection
+✅ CORS
+✅ JSON parsing
+✅ Cookie parsing
+✅ Zod request validation
+✅ User registration
+✅ Password hashing
+✅ JWT generation
+✅ HTTP-only cookie
+✅ Bearer/cookie authentication
+✅ Protected routes
+✅ /auth/me
+✅ 401 authentication handling
+✅ 404 handling
+✅ Centralized error handling
+
+-----------------------------------------
+USER API TESTING:
+================
+Complete API Testing
+We'll test in this order:
+1. Users API
+2. Projects API
+3. Tasks API
+4. Authentication
+5. Relationships / JOIN endpoints
+6. Pagination / Search / Filtering
+7. Error scenarios
+
+1. Users API
+First authenticate in Thunder Client using your working login.
+Then test:
+GET http://localhost:5000/api/users
+
+Expected:
+{
+  "success": true,
+  "data": [...]
+}
+
+Then:
+GET http://localhost:5000/api/users/<USER_ID>
+
+GET http://localhost:5000/api/users/71ee26e2-84ab-419c-896e-9f1de57f7e9a
+
+Use an actual UUID from the users response.
+Also test your existing user query endpoints:
+GET http://localhost:5000/api/users/profiles
+
+GET http://localhost:5000/api/users/roles
+
+And pagination:
+GET http://localhost:5000/api/users/pagination?page=1&limit=5
+
+You should see:
+{
+  "success": true,
+  "data": [],
+  "pagination": {
+    "page": 1,
+    "limit": 5,
+    "total": 8,
+    "totalPages": 2
+  }
+}
+
+2. Projects API
+Test:
+GET http://localhost:5000/api/projects
+
+Then:
+GET http://localhost:5000/api/projects/owners
+
+GET http://localhost:5000/api/projects/summary
+
+GET http://localhost:5000/api/projects/minimum-tasks?count=3
+
+Search:
+GET http://localhost:5000/api/projects/search?q=AI
+
+Pagination:
+GET http://localhost:5000/api/projects/pagination?page=1&limit=2
+
+For an individual project:
+GET http://localhost:5000/api/projects/<PROJECT_ID>
+GET http://localhost:5000/api/projects/4c4430dd-45a5-47d2-bda2-cbbf7aaf4921
+
+And project members:
+GET http://localhost:5000/api/projects/<PROJECT_ID>/members
+
+GET http://localhost:5000/api/projects/4c4430dd-45a5-47d2-bda2-cbbf7aaf4921/members
+
+This verifies the relationships:
+users
+   │
+   ├── project owner
+   │
+   └── project members
+          │
+          ↓
+       projects
+
+3. Tasks API
+Test:
+GET http://localhost:5000/api/tasks
+
+Then:
+GET http://localhost:5000/api/tasks/details
+
+Individual task:
+GET http://localhost:5000/api/tasks/<TASK_ID>
+GET http://localhost:5000/api/tasks/fa86a34e-b5a4-45f5-b940-f70d143b008b
+
+Tasks for a project:
+GET http://localhost:5000/api/tasks/project/<PROJECT_ID>
+GET http://localhost:5000/api/tasks/project/4c4430dd-45a5-47d2-bda2-cbbf7aaf4921
+
+Tasks assigned to a user:
+GET http://localhost:5000/api/tasks/user/<USER_ID>
+GET http://localhost:5000/api/tasks/user/f6d6bf2b-75c2-45ae-8417-26daae3bc533
+
+
+Search:
+GET http://localhost:5000/api/tasks/search?q=API
+
+Filter:
+GET http://localhost:5000/api/tasks/filter?status=DONE&priority=HIGH
+
+Pagination:
+GET http://localhost:5000/api/tasks/pagination?page=1&limit=5
+
+Status summary:
+GET http://localhost:5000/api/tasks/summary/status
+
+Priority summary:
+GET http://localhost:5000/api/tasks/summary/priority
+
+Tasks with comments:
+GET http://localhost:5000/api/tasks/comments
+
+Projects having at least 3 tasks:
+GET http://localhost:5000/api/tasks/projects/minimum?count=3
+
+4. Authentication Tests
+We already verified registration and login, but now test the complete authentication flow.
+Without authentication
+Remove the cookie/Bearer token and try:
+GET /api/projects
+
+Expected:
+401 Authentication required
+
+With cookie
+Login:
+POST /api/auth/login
+
+Then:
+GET /api/auth/me
+
+Expected:
+{
+  "success": true,
+  "data": {
+    "id": "...",
+    "name": "...",
+    "email": "..."
+  }
+}
+
+Logout
+POST http://localhost:5000/api/auth/logout
+
+Expected:
+{
+  "success": true,
+  "message": "Logout successful"
+}
+
+Then test:
+GET /api/auth/me
+
+It should return:
+401
+
+5. Relationship Testing
+This is particularly useful for your Advanced PostgreSQL training.
+For example:
+Project
+   ↓
+Tasks
+   ↓
+Assigned User
+   ↓
+Comments
+   ↓
+Commented By User
+
+Your endpoint:
+GET /api/tasks/comments
+
+should demonstrate this multi-table relationship.
+Similarly:
+GET /api/projects/<PROJECT_ID>/members
+
+demonstrates:
+projects
+     ↓
+project_members
+     ↓
+users
+
+And:
+GET /api/users/profiles
+
+demonstrates the 1:1 relationship:
+users
+  │
+  │ 1 : 1
+  ↓
+user_profiles
+
+6. Query Features
+At this point you'll also be demonstrating the PostgreSQL concepts we built into the application:
+JOIN
+INNER JOIN
+LEFT JOIN
+GROUP BY
+COUNT()
+HAVING
+ORDER BY
+WHERE
+LIKE / ILIKE
+LIMIT
+OFFSET
+
+For example:
+GET /api/projects/search?q=AI
+
+→ Search
+GET /api/projects/pagination?page=2&limit=5
+
+→ Pagination
+GET /api/tasks/filter?status=DONE&priority=HIGH
+
+→ Filtering
+GET /api/projects/minimum-tasks?count=3
+
+→ GROUP BY + HAVING
+
+Let's go one module at a time:
+             API TESTING
+                  │
+       ┌──────────┼──────────┐
+       ↓          ↓          ↓
+     USERS     PROJECTS     TASKS
+       │          │          │
+       ↓          ↓          ↓
+     Verify     Verify     Verify
+     response   response   response
+
+Start with Users
+Please test these four first:
+GET /api/users
+GET /api/users/:id
+GET /api/users/profiles
+GET /api/users/roles					  
+
+
+Backend milestone completed
+
+                    ADVANCED FULL-STACK APP
+                             │
+                    ┌────────┴────────┐
+                    │                 │
+                FRONTEND           BACKEND
+                                      │
+                         ┌────────────┴────────────┐
+                         │                         │
+                    Express + TS             PostgreSQL
+                         │                         │
+              ┌──────────┼──────────┐              │
+              │          │          │              │
+            Routes    Controllers Services     Database
+                         │          │              │
+                         └────┬─────┘              │
+                              │                     │
+                         Repositories ──────────────┘
+                              │
+                         Raw SQL / pg
+						 
+TASKS TESTING:
+=============
+-----------------------------
+gvnaressh@gmail.com
+Gvnaressh3695
+
+test@example.com
+Test@12345
+-----------------------------
+
+Logged-in user → creates the task → backend automatically records that user as created_by.		
+
+POST http://localhost:5000/api/auth/login
+```
+Body:
+```json
+{
+  "email": "gvnaressh@gmail.com",
+  "password": "Gvnaressh3695"
+}
+```	 
+
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": "9555c576-04eb-445b-9021-14f3c1b9a817",
+      "name": "NARESSH GV",
+      "email": "gvnaressh@gmail.com"
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NTU1YzU3Ni0wNGViLTQ0NWItOTAyMS0xNGYzYzFiOWE4MTciLCJpYXQiOjE3OTA4NjI4NjIsImV4cCI6MTc5MDg2NjQ2Mn0.LjKNlo_2K6PUsHvblRP0Jk-ZMsEeu4kpX3vEvyFZmeY"
+  }
+}
+
+Next: Create a task
+Use:
+POST http://localhost:5000/api/tasks
+
+Body:
+{
+  "projectId": "a5e8e4e3-219b-4881-8083-860de44ed11f",
+  "title": "Implement Task Management UI",
+  "description": "Create responsive task management screens",
+  "status": "TODO",
+  "priority": "HIGH"
+}
+
+
+{
+  "success": true,
+  "message": "Task created successfully",
+  "data": {
+    "id": "d4c6890b-043b-43c9-8b8e-1a94c98b3669",
+    "project_id": "a5e8e4e3-219b-4881-8083-860de44ed11f",
+    "assigned_to": null,
+    "created_by": "9555c576-04eb-445b-9021-14f3c1b9a817",
+    "title": "Implement Task Management UI",
+    "description": "Create responsive task management screens",
+    "status": "TODO",
+    "priority": "HIGH",
+    "due_date": null,
+    "created_at": "2026-10-01T14:05:14.042Z",
+    "updated_at": "2026-10-01T14:05:14.042Z"
+  }
+}
+
+Next: Test assignment + UPDATE
+
+6c742128-5756-4c0a-9f4c-b2d6ab2515e5
+
+Task ID:
+d4c6890b-043b-43c9-8b8e-1a94c98b3669
+
+And you are logged in as:
+gvnaressh@gmail.com
+created_by:
+9555c576-04eb-445b-9021-14f3c1b9a817
+
+Step 2 — Assign the task to Test User
+Use Thunder Client:
+PUT http://localhost:5000/api/tasks/d4c6890b-043b-43c9-8b8e-1a94c98b3669
+
+Because our current updateTask() implementation updates all task fields, send the complete task body, not just assignedTo:
+{
+  "assignedTo": "6c742128-5756-4c0a-9f4c-b2d6ab2515e5",
+  "title": "Implement Task Management UI",
+  "description": "Create responsive task management screens",
+  "status": "TODO",
+  "priority": "HIGH"
+}
+
+
+{
+  "success": true,
+  "message": "Task updated successfully",
+  "data": {
+    "id": "d4c6890b-043b-43c9-8b8e-1a94c98b3669",
+    "project_id": "a5e8e4e3-219b-4881-8083-860de44ed11f",
+    "assigned_to": "6c742128-5756-4c0a-9f4c-b2d6ab2515e5",
+    "created_by": "9555c576-04eb-445b-9021-14f3c1b9a817",
+    "title": "Implement Task Management UI",
+    "description": "Create responsive task management screens",
+    "status": "TODO",
+    "priority": "HIGH",
+    "due_date": null,
+    "created_at": "2026-10-01T14:05:14.042Z",
+    "updated_at": "2026-10-01T14:10:54.410Z"
+  }
+}
+
+created_by  = 9555c576-04eb-445b-9021-14f3c1b9a817
+assigned_to = 6c742128-5756-4c0a-9f4c-b2d6ab2515e5
+
+GV Naressh
+    │
+    │ creates
+    ▼
+  Task
+    │
+    │ assigned to
+    ▼
+Test User
+
+
+
+
+Training Management
+Application for managing training batches
+
+a5e8e4e3-219b-4881-8083-860de44ed11f
+
+Created by: Naresh
+
+naresh@adviatecs.com
+
+Created: 10/1/2026
+
+
+
+created_by  → who created the task
+assigned_to → who is assigned to work on the task
+
+
+                    USERS
+               ┌─────────────┐
+               │   Naresh    │
+               │   Arjun     │
+               │  Pranitha   │
+               └──────┬──────┘
+                      │
+          ┌───────────┼───────────────┐
+          │           │               │
+        owns        creates        assigned to
+          │           │               │
+          ▼           ▼               ▼
+      PROJECT       TASK          TASK
+          │
+          │ contains
+          ▼
+        TASK
+		
+USER
+Naresh
+  │
+  │ owner
+  ▼
+PROJECT
+Training Management
+  │
+  │ project_id
+  ▼
+TASK
+"Create Login Page"
+  │
+  ├── created_by  → Naresh
+  │
+  └── assigned_to → Arjun
+
+
+users_adviatecs
+      │
+      │ 1
+      ├───────────────< projects_adviatecs
+      │                  owner_id
+      │
+      │ 1
+      ├───────────────< tasks_adviatecs
+      │                  created_by
+      │
+      │ 1
+      └───────────────< tasks_adviatecs
+                         assigned_to
+
+projects_adviatecs
+      │ 1
+      └───────────────< tasks_adviatecs
+                         project_id
+
+
+
+| Relationship | Column | Meaning |
+|---|---|---|
+| User → Project | `projects.owner_id` | Who owns the project |
+| Project → Task | `tasks.project_id` | Which project the task belongs to |
+| User → Task | `tasks.created_by` | Who created the task |
+| User → Task | `tasks.assigned_to` | Who is assigned to work on the task |		
+
+One important point
+Project owner and task creator are independent.
+
+Naresh owns Project A
+Pranitha creates a task in Project A
+Arjun is assigned to that task				 
+
+Project.owner_id     = Naresh
+Task.project_id      = Project A
+Task.created_by      = Pranitha
+Task.assigned_to     = Arjun
+
+
+
+SELECT id,title,created_by
+FROM tasks_adviatecs
+WHERE created_by IS NULL;
+
+DELETE FROM tasks_adviatecs
+WHERE created_by IS NULL;
+
+
+Test User
+TODO
+HIGH
+Implement Task Management UI
+Create responsive task management screens
+
+Project: Training Management
+
+Assigned to: Test User
+
+test@example.com
+
+Created by: NARESSH GV
+
+
+"All users can see tasks, but only the creator can edit/delete them, while assigned users can work on/view them."
+
+then your current display is correct.
+
+
+
+Naressh    → sees tasks assigned to Naressh
+Test User  → sees tasks assigned to Test User
+
+| User | Sees task? | Edit | Delete |
+|---|---|---|---|
+| Task creator | If assigned to them | ✅ | ✅ |
+| Assigned user | If assigned to them | ❌ | ❌ |
+| Other users | ❌ | ❌ | ❌ |
+
+
+
+Frontend
+   ↓
+GET /api/tasks/pagination?page=1&limit=6
+   ↓
+authMiddleware
+   ↓
+req.user.id
+   ↓
+taskController
+   ↓
+taskService.getTasksPaginated(page, limit, userId)
+   ↓
+taskRepository.findPaginated(page, limit, userId)
+   ↓
+WHERE
+    assigned_to = userId
+    OR
+    created_by = userId
+	
+	
+	
+	| User | Created by | Assigned to | Visible? |
+|---|---|---|---|
+| Naressh | Naressh | Test User | ✅ Naressh |
+| Test User | Naressh | Test User | ✅ Test User |
+| Naressh | Test User | Naressh | ✅ Naressh |
+| Test User | Test User | Naressh | ✅ Test User |
+| Other User | Naressh | Test User | ❌ |
+
+
+
+Visibility:
+created_by OR assigned_to
+
+Edit/Delete:
+created_by ONLY
+
+
+GET /api/tasks/pagination?page=1&limit=6
+              │
+              ▼
+       authMiddleware
+              │
+              ▼
+        req.user.id
+              │
+              ▼
+       taskController
+              │
+              ▼
+getTasksPaginated(page, limit, userId)
+              │
+              ▼
+       taskService
+              │
+              ▼
+findPaginated(page, limit, userId)
+              │
+              ▼
+WHERE
+    assigned_to = userId
+    OR
+    created_by = userId
+	
+Users see tasks they created or tasks assigned to them, but only the creator can edit or delete them.	
+
+
+Yes. The problem is clear from your screenshots: you select 08-10-2026, but after saving it becomes 07/10/2026.
+This is a PostgreSQL DATE → Node.js Date timezone conversion issue, not a problem with your date picker.
+
+
+Final project status
+
+| Module | Status |
+|---|---|
+| React + TypeScript + Vite | ✅ Complete |
+| Tailwind CSS | ✅ Complete |
+| Responsive UI | ✅ Complete |
+| Express + TypeScript | ✅ Complete |
+| PostgreSQL | ✅ Complete |
+| Environment configuration | ✅ Complete |
+| Authentication / JWT / Cookies | ✅ Complete |
+| Registration / Login / Logout | ✅ Tested |
+| Protected routes | ✅ Complete |
+| Users CRUD | ✅ Tested |
+| User validation | ✅ Tested |
+| Projects CRUD | ✅ Tested |
+| Project ownership | ✅ Tested |
+| Project search | ✅ Tested |
+| Project pagination | ✅ Tested |
+| Tasks CRUD | ✅ Tested |
+| Task validation | ✅ Tested |
+| Task status / priority | ✅ Complete |
+| Task assignment | ✅ Tested |
+| Task creator/ownership | ✅ Tested |
+| Task visibility | ✅ Implemented |
+| Task Edit/Delete authorization | ✅ Tested |
+| Assigned user display | ✅ Working |
+| Creator display | ✅ Working |
+| Due-date handling | ✅ Fixed |
+| Search & pagination | ✅ Working |
+| Responsive cards/modals | ✅ Working |
+| Frontend production build | ✅ Passed |
+| Backend build | ✅ Passed during development |
+| API testing with Thunder Client | ✅ Completed |
+
+
+Task visibility model
+The final behavior is also clear:
+User can SEE a task when:
+
+assigned_to = logged-in user
+        OR
+created_by = logged-in user
+
+But:
+User can EDIT/DELETE a task only when:
+
+created_by = logged-in user
+
+That gives us a clean distinction between task ownership and task assignment.
+📅 Due-date issue
+The date problem has also been resolved by keeping PostgreSQL DATE values as date strings rather than allowing timezone conversion.
+So a database value such as:
+2026-10-08
+
+remains:
+2026-10-08
+
+instead of becoming the previous day because of timezone conversion.
+🏁 Final conclusion
+Yes — I would consider this project DONE from the application-development and training-project perspective.
+
+
+React
+  ↓
+TypeScript
+  ↓
+Tailwind CSS
+  ↓
+Axios
+  ↓
+Zustand
+  ↓
+Express
+  ↓
+TypeScript
+  ↓
+JWT Authentication
+  ↓
+Middleware
+  ↓
+Validation
+  ↓
+Service Layer
+  ↓
+Repository Layer
+  ↓
+PostgreSQL
+
+
+Advanced Full-Stack training/demo project.

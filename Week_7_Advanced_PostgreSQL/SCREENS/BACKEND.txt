@@ -1,0 +1,269 @@
+Then build the Backend
+I would keep the backend much smaller than your existing advanced-fullstack-app.
+Something like:
+
+mkdir backend
+cd backend
+npm init -y
+
+code .
+
+backend/
+└── src/
+    │
+    ├── app.ts
+    ├── server.ts
+    │
+    ├── config/
+    │   └── env.ts
+    │
+    ├── db/
+    │   └── pool.ts
+    │
+    ├── controllers/
+    │   ├── department.controller.ts
+    │   ├── employee.controller.ts
+    │   └── project.controller.ts
+    │
+    ├── repositories/
+    │   ├── department.repository.ts
+    │   ├── employee.repository.ts
+    │   └── project.repository.ts
+    │
+    └── routes/
+        ├── department.routes.ts
+        ├── employee.routes.ts
+        └── project.routes.ts
+
+===========================================================		
+Create the folders
+
+mkdir src
+mkdir src\config
+mkdir src\db
+mkdir src\controllers
+mkdir src\repositories
+mkdir src\routes
+
+2. Create the files using type nul
+
+type nul > src\app.ts
+type nul > src\server.ts
+
+type nul > src\config\env.ts
+
+type nul > src\db\pool.ts
+
+type nul > src\controllers\department.controller.ts
+type nul > src\controllers\employee.controller.ts
+type nul > src\controllers\project.controller.ts
+
+type nul > src\repositories\department.repository.ts
+type nul > src\repositories\employee.repository.ts
+type nul > src\repositories\project.repository.ts
+
+type nul > src\routes\department.routes.ts
+type nul > src\routes\employee.routes.ts
+type nul > src\routes\project.routes.ts
+===========================================================
+Create .env
+Create this file:
+backend/
+│
+├── .env
+├── package.json
+└── src/
+
+Put your Neon/PostgreSQL connection string in it:
+PORT=5000
+DATABASE_URL=YOUR_POSTGRES_CONNECTION_STRING
+
+
+npm install express cors dotenv pg
+npm install -D typescript tsx @types/node @types/express @types/cors @types/pg
+
+| Package | Purpose |
+|---|---|
+| `express` | Express backend |
+| `cors` | Frontend → backend communication |
+| `dotenv` | `.env` configuration |
+| `pg` | PostgreSQL connection |
+| `typescript` | TypeScript compiler (`tsc`) |
+| `tsx` | Run TypeScript directly during development |
+| `@types/node` | Node.js types |
+| `@types/express` | Express types |
+| `@types/cors` | CORS types |
+| `@types/pg` | PostgreSQL types |
+===========================================================
+npx tsc --init
+
+
+E:\Advaitecs\Week_7_Advanced_PostgreSQL\backend>npx tsc --init
+Created a new tsconfig.json
+                                                                                                                 
+You can learn more at https://aka.ms/tsconfig
+E:\Advaitecs\Week_7_Advanced_PostgreSQL\backend>
+
+THIS WILL CREATE tsconfig.json file in the root of project directory
+===========================================================
+npm run build
+npm run dev
+------------
+
+E:\Advaitecs\Week_7_Advanced_PostgreSQL\backend>npm run dev
+
+> week-7-advanced-postgresql-backend@1.0.0 dev
+> ts-node-dev --respawn --transpile-only src/server.ts
+
+[INFO] 11:00:51 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+◇ injected env (6) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+Server running on http://localhost:5000
+
+------------
+===========================================================
+
+One important point with your ESM setup
+Because your package.json contains:
+"type": "module"
+
+and your TypeScript has:
+"module": "NodeNext",
+"moduleResolution": "NodeNext"
+
+we should use ESM-compatible imports throughout the backend.
+===========================================================
+Backend API examples
+Once the SQL is understood, students can see how the same queries become APIs.
+Employees with departments
+GET /api/employees/with-departments
+
+Backend query:
+SELECT
+    e.employee_id,
+    e.employee_name,
+    e.salary,
+    d.department_name
+FROM employees_advaitecs_advpgsql e
+INNER JOIN departments_advaitecs_advpgsql d
+    ON e.department_id = d.department_id;
+
+All departments with employees
+GET /api/departments/with-employees
+
+Using:
+LEFT JOIN
+
+Employees and projects
+GET /api/projects/employees
+
+Using the three-table JOIN.
+Department statistics
+GET /api/departments/statistics
+
+Using:
+COUNT()
+AVG()
+GROUP BY
+HAVING
+
+Paginated employees
+GET /api/employees?page=1&limit=5
+
+Backend:
+SELECT *
+FROM employees_advaitecs_advpgsql
+ORDER BY employee_id
+LIMIT $1
+OFFSET $2;		
+========================================
+PostgreSQL
+                        │
+                        ▼
+                 Repository
+                        │
+                        ▼
+                  Controller
+                        │
+                        ▼
+                     Route
+                        │
+                        ▼
+                    Express
+                        │
+                        ▼
+                    React UI
+
+And students can directly map the SQL concepts:
+PostgreSQL concept	Backend API
+Tables	/api/employees
+INNER JOIN	/api/employees/with-departments
+LEFT JOIN	/api/employees/departments-with-employees
+COUNT / AVG / MIN / MAX	/api/employees/department-statistics
+GROUP BY	/api/employees/department-statistics
+HAVING	/api/employees/departments-having-more-than-one
+Many-to-many	/api/projects/with-employees
+
+PAGINATION:
+==========
+Add Pagination Repository Method
+Open:
+backend/src/repositories/employee.repository.ts
+getEmployeesPaginated
+
+Add Controller
+Open:
+backend/src/controllers/employee.controller.ts
+getEmployeesPaginated 
+
+Add Route
+Open:
+backend/src/routes/employee.routes.ts
+
+import {
+  getEmployees,
+  getEmployeesWithDepartments,
+  getDepartmentsWithEmployees,
+  getDepartmentStatistics,
+  getDepartmentsHavingMoreThanOneEmployee,
+  getEmployeesPaginated,
+} from "../controllers/employee.controller";
+
+router.get(
+  "/pagination",
+  getEmployeesPaginated
+);
+
+Build the Backend
+Run:
+npm run build
+
+You should get:
+tsc
+
+with no errors.
+Then start the server:
+npm run dev
+
+Backend Implementation
+For this particular topic, we don't actually need a new API just to create the index.
+Indexes are database structures.
+However, we can create a small API to demonstrate a frequently searched employee.
+Add this to:
+backend/src/repositories/employee.repository.ts
+getEmployeeByEmail 
+
+Add Controller
+In:
+backend/src/controllers/employee.controller.ts
+getEmployeeByEmail 
+
+Add Route
+Update the import in:
+backend/src/routes/employee.routes.ts
+getEmployeeByEmail
+
+Then add:
+router.get(
+  "/search",
+  getEmployeeByEmail
+);

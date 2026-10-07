@@ -1,0 +1,354 @@
+Database tables
+
+departments_advaitecs_advpgsql
+employees_advaitecs_advpgsql
+projects_advaitecs_advpgsql
+employee_projects_advaitecs_advpgsql
+
+Relationships:
+
+departments
+     │
+     │ 1
+     │
+     │ *
+employees
+     │
+     │ *
+     │
+     │ *
+employee_projects
+     │
+     │ *
+     │
+     │ 1
+projects
+
+Primary Keys
+Foreign Keys
+One-to-many relationship
+Many-to-many relationship
+INNER JOIN
+LEFT JOIN
+Related queries
+Aggregate functions
+GROUP BY
+HAVING
+Indexes
+Query performance
+Pagination
+
+Stage 1 — Create the tables
+
+departments_advaitecs_advpgsql
+
+CREATE TABLE departments_advaitecs_advpgsql (
+    department_id SERIAL PRIMARY KEY,
+    department_name VARCHAR(100) NOT NULL
+);
+
+employees_advaitecs_advpgsql
+
+CREATE TABLE employees_advaitecs_advpgsql (
+    employee_id SERIAL PRIMARY KEY,
+    employee_name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    salary NUMERIC(10,2),
+    department_id INT,
+
+    CONSTRAINT fk_employee_department
+        FOREIGN KEY (department_id)
+        REFERENCES departments_advaitecs_advpgsql(department_id)
+);
+
+PRIMARY KEY
+FOREIGN KEY
+REFERENCES
+
+projects_advaitecs_advpgsql
+
+CREATE TABLE projects_advaitecs_advpgsql (
+    project_id SERIAL PRIMARY KEY,
+    project_name VARCHAR(150) NOT NULL,
+    budget NUMERIC(12,2)
+);
+
+
+employee_projects_advaitecs_advpgsql
+This demonstrates a many-to-many relationship.
+
+CREATE TABLE employee_projects_advaitecs_advpgsql (
+    employee_id INT,
+    project_id INT,
+
+    PRIMARY KEY (employee_id, project_id),
+
+    FOREIGN KEY (employee_id)
+        REFERENCES employees_advaitecs_advpgsql(employee_id),
+
+    FOREIGN KEY (project_id)
+        REFERENCES projects_advaitecs_advpgsql(project_id)
+);
+
+This one table gives you a very good teaching opportunity:
+Employee ←→ Project
+
+through:
+employee_projects
+
+
+Insert sample data
+
+Departments
+
+INSERT INTO departments_advaitecs_advpgsql
+(department_name)
+VALUES
+('Development'),
+('Testing'),
+('HR'),
+('Database');
+
+Employees
+
+INSERT INTO employees_advaitecs_advpgsql
+(employee_name, email, salary, department_id)
+VALUES
+('Ravi', 'ravi@example.com', 75000, 1),
+('Priya', 'priya@example.com', 85000, 1),
+('Arun', 'arun@example.com', 65000, 2),
+('Sneha', 'sneha@example.com', 55000, 3),
+('Kiran', 'kiran@example.com', 90000, 4),
+('Meena', 'meena@example.com', 70000, 1);
+
+Notice that we can intentionally leave some employees without projects.
+That becomes useful for demonstrating LEFT JOIN.
+
+Projects
+
+INSERT INTO projects_advaitecs_advpgsql
+(project_name, budget)
+VALUES
+('E-Commerce Application', 500000),
+('Banking Application', 750000),
+('HR Management System', 300000);
+
+Employee Projects
+
+INSERT INTO employee_projects_advaitecs_advpgsql
+(employee_id, project_id)
+VALUES
+(1, 1),
+(1, 2),
+(2, 1),
+(3, 2),
+(5, 3);
+
+Now we have realistic relationships.
+
+
+JOINs BEFORE backend
+****************************
+3.1 INNER JOIN
+==============
+First teach:
+Give me employees and their department names.
+
+-----------------------------------
+SELECT
+    e.employee_id,
+    e.employee_name,
+    e.salary,
+    d.department_name
+FROM employees_advaitecs_advpgsql e
+INNER JOIN departments_advaitecs_advpgsql d
+    ON e.department_id = d.department_id;
+-----------------------------------
+
+Students can see:
+employees
+     │
+     │ department_id
+     ↓
+departments
+
+3.2 LEFT JOIN
+=============
+Then:
+Show ALL departments, even if there are no employees.
+
+-----------------------------------
+SELECT
+    d.department_name,
+    e.employee_name
+FROM departments_advaitecs_advpgsql d
+LEFT JOIN employees_advaitecs_advpgsql e
+    ON d.department_id = e.department_id;
+-----------------------------------
+
+This is an excellent way to explain the difference between:
+INNER JOIN
+    ↓
+matching records only
+
+LEFT JOIN
+    ↓
+all records from LEFT table
++ matching records from RIGHT table
+
+Stage 4 — Related relational queries
+=====================================
+Now move to the many-to-many relationship.
+Employees and projects
+
+-----------------------------------
+SELECT
+    e.employee_name,
+    p.project_name
+FROM employee_projects_advaitecs_advpgsql ep
+INNER JOIN employees_advaitecs_advpgsql e
+    ON ep.employee_id = e.employee_id
+INNER JOIN projects_advaitecs_advpgsql p
+    ON ep.project_id = p.project_id;
+-----------------------------------
+
+This is a very valuable classroom example because students see multiple JOINs.
+Stage 5 — Aggregate functions
+==============================
+Then teach:
+COUNT()
+SUM()
+AVG()
+MIN()
+MAX()
+
+For example:
+Number of employees in each department
+
+-----------------------------------
+SELECT
+    d.department_name,
+    COUNT(e.employee_id) AS employee_count
+FROM departments_advaitecs_advpgsql d
+LEFT JOIN employees_advaitecs_advpgsql e
+    ON d.department_id = e.department_id
+GROUP BY d.department_name;
+-----------------------------------
+
+Stage 6 — GROUP BY
+==================
+Then:
+
+-----------------------------------
+SELECT
+    d.department_name,
+    AVG(e.salary) AS average_salary
+FROM departments_advaitecs_advpgsql d
+INNER JOIN employees_advaitecs_advpgsql e
+    ON d.department_id = e.department_id
+GROUP BY d.department_name;
+-----------------------------------
+
+Students learn:
+WHERE
+   ↓
+filter rows
+
+GROUP BY
+   ↓
+create groups
+
+HAVING
+   ↓
+filter groups
+
+Stage 7 — HAVING
+================
+For example:
+Show departments having more than 1 employee.
+
+-----------------------------------
+SELECT
+    d.department_name,
+    COUNT(e.employee_id) AS employee_count
+FROM departments_advaitecs_advpgsql d
+INNER JOIN employees_advaitecs_advpgsql e
+    ON d.department_id = e.department_id
+GROUP BY d.department_name
+HAVING COUNT(e.employee_id) > 1;
+-----------------------------------
+
+This gives you a very clean way of teaching:
+WHERE
+
+versus
+HAVING
+****************************
+
+Stage 8 — Indexes
+=================
+Only after students understand the tables and queries, introduce indexes.
+For example:
+
+-----------------------------------
+CREATE INDEX idx_employee_department_advaitecs_advpgsql
+ON employees_advaitecs_advpgsql(department_id);
+-----------------------------------
+
+Then explain:
+department_id is frequently used in JOINs, so an index can help PostgreSQL find matching rows more efficiently.
+
+We can also create:
+-----------------------------------
+CREATE INDEX idx_employee_name_advaitecs_advpgsql
+ON employees_advaitecs_advpgsql(employee_name);
+-----------------------------------
+
+And demonstrate:
+-----------------------------------
+EXPLAIN ANALYZE
+SELECT *
+FROM employees_advaitecs_advpgsql
+WHERE employee_name = 'Ravi';
+-----------------------------------
+
+This makes query performance practical rather than theoretical.
+
+Stage 9 — Pagination
+====================
+Finally introduce:
+LIMIT
+OFFSET
+
+For example:
+-----------------------------------
+SELECT *
+FROM employees_advaitecs_advpgsql
+ORDER BY employee_id
+LIMIT 5
+OFFSET 0;
+-----------------------------------
+
+Page 2:
+-----------------------------------
+SELECT *
+FROM employees_advaitecs_advpgsql
+ORDER BY employee_id
+LIMIT 5
+OFFSET 5;
+-----------------------------------
+
+Then explain:
+Page 1
+LIMIT 5
+OFFSET 0
+
+Page 2
+LIMIT 5
+OFFSET 5
+
+Page 3
+LIMIT 5
+OFFSET 10
+
+This naturally leads into the backend pagination API.

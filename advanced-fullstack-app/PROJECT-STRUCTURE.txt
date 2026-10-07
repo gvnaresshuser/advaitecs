@@ -1,0 +1,1821 @@
+Create the backend first
+From your project root:
+mkdir backend
+cd backend
+npm init -y
+-----------------------------------------------------------------
+npm install express pg dotenv cors bcryptjs jsonwebtoken
+npm install -D typescript tsx @types/node @types/express @types/cors @types/bcryptjs @types/jsonwebtoken @types/pg
+npx tsc --init
+npm install cookie-parser
+npm install -D @types/cookie-parser
+npm install jsonwebtoken
+npm install -D @types/jsonwebtoken
+npm install bcrypt
+npm install -D @types/bcrypt
+npm install zod
+-----------------------------------------------------------------
+Backend package.json
+Change the important parts to:
+{
+  "name": "advanced-fullstack-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  }
+}
+-----------------------------------------------------------------
+tsconfig.json
+For this backend, I recommend:
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}	
+----------------------------------------------------------------- 
+Your .env
+Keep your existing environment variables conceptually like this:
+PORT=5000
+
+DATABASE_URL=your_neon_database_url
+
+JWT_SECRET=your_new_rotated_jwt_secret
+JWT_EXPIRES_IN=1h
+
+FRONTEND_URL=http://localhost:5173
+
+NODE_ENV=development
+-----------------------------------------------------------------
+PORT=5000
+
+DATABASE_URL=postgresql://neondb_owner:npg_e8piHMrYL0wy@ep-noisy-sea-aexpfwkt-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require	
+
+JWT_SECRET=a958e14b76bff8d73a84e3ca9fcf9d197b6f5c242fae4a1133645cad5e4d6361
+#https://jwtsecrets.com/#generator
+JWT_EXPIRES_IN=1h
+
+FRONTEND_URL=http://localhost:5173
+
+NODE_ENV=development
+-----------------------------------------------------------------
+E:\Advaitecs\advanced-fullstack-app\backend>
+FOLDERS:
+-------
+mkdir src\config src\db src\controllers src\services src\repositories src\routes src\middleware src\validators src\utils src\types sql
+-----------------------------------------------------------------
+FILES:
+------
+type nul > src\config\env.ts
+type nul > src\db\pool.ts
+
+type nul > src\controllers\auth.controller.ts
+type nul > src\controllers\user.controller.ts
+type nul > src\controllers\project.controller.ts
+type nul > src\controllers\task.controller.ts
+
+type nul > src\services\auth.service.ts
+type nul > src\services\user.service.ts
+type nul > src\services\project.service.ts
+type nul > src\services\task.service.ts
+
+type nul > src\repositories\user.repository.ts
+type nul > src\repositories\project.repository.ts
+type nul > src\repositories\task.repository.ts
+
+type nul > src\routes\auth.routes.ts
+type nul > src\routes\user.routes.ts
+type nul > src\routes\project.routes.ts
+type nul > src\routes\task.routes.ts
+
+type nul > src\middleware\auth.middleware.ts
+type nul > src\middleware\error.middleware.ts
+type nul > src\middleware\validate.middleware.ts
+type nul > src\middleware\not-found.middleware.ts
+
+type nul > src\validators\auth.validator.ts
+type nul > src\validators\project.validator.ts
+type nul > src\validators\task.validator.ts
+
+type nul > src\utils\jwt.ts
+type nul > src\utils\password.ts
+
+type nul > src\types\express.d.ts
+
+type nul > src\app.ts
+type nul > src\server.ts
+-----------------------------------------------------------------
+Database schema
+Now we'll create:
+sql/001_schema.sql
+----------------------------------------------------------------- 
+neondb
+gvnaressh@gmail.com
+public schema
+----------------------------------------------------------------- 
+CREATE TABLE users_adviatecs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE roles_adviatecs (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE user_roles_adviatecs (
+    user_id UUID NOT NULL,
+    role_id INTEGER NOT NULL,
+
+    PRIMARY KEY (user_id, role_id),
+
+    CONSTRAINT fk_user_roles_user
+        FOREIGN KEY (user_id)
+        REFERENCES users_adviatecs(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_user_roles_role
+        FOREIGN KEY (role_id)
+        REFERENCES roles_adviatecs(id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projects_adviatecs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    owner_id UUID NOT NULL,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_projects_owner
+        FOREIGN KEY (owner_id)
+        REFERENCES users_adviatecs(id)
+);
+
+CREATE TABLE project_members_adviatecs (
+    project_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+
+    joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    PRIMARY KEY (project_id, user_id),
+
+    CONSTRAINT fk_project_members_project
+        FOREIGN KEY (project_id)
+        REFERENCES projects_adviatecs(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_project_members_user
+        FOREIGN KEY (user_id)
+        REFERENCES users_adviatecs(id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE tasks_adviatecs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    project_id UUID NOT NULL,
+    assigned_to UUID,
+
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+
+    status VARCHAR(30) NOT NULL DEFAULT 'TODO',
+    priority VARCHAR(30) NOT NULL DEFAULT 'MEDIUM',
+
+    due_date DATE,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_tasks_project
+        FOREIGN KEY (project_id)
+        REFERENCES projects_adviatecs(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_tasks_assigned_user
+        FOREIGN KEY (assigned_to)
+        REFERENCES users_adviatecs(id)
+        ON DELETE SET NULL,
+
+    CONSTRAINT chk_task_status
+        CHECK (status IN ('TODO', 'IN_PROGRESS', 'DONE')),
+
+    CONSTRAINT chk_task_priority
+        CHECK (priority IN ('LOW', 'MEDIUM', 'HIGH'))
+);
+
+CREATE TABLE comments_adviatecs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    task_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+
+    content TEXT NOT NULL,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_comments_task
+        FOREIGN KEY (task_id)
+        REFERENCES tasks_adviatecs(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_comments_user
+        FOREIGN KEY (user_id)
+        REFERENCES users_adviatecs(id)
+        ON DELETE CASCADE
+);
+---------------------------------------------------
+Add user_profiles_adviatecs
+Run this in the Neon SQL Editor:
+CREATE TABLE user_profiles_adviatecs (
+    user_id UUID PRIMARY KEY,
+    phone VARCHAR(20),
+    bio TEXT,
+    avatar_url TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_user_profiles_user
+        FOREIGN KEY (user_id)
+        REFERENCES users_adviatecs(id)
+        ON DELETE CASCADE
+);
+-----------------------------------------------------------------
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+CREATE INDEX idx_users_adviatecs_email
+ON users_adviatecs(email);
+
+CREATE INDEX idx_projects_adviatecs_owner_id
+ON projects_adviatecs(owner_id);
+
+CREATE INDEX idx_project_members_adviatecs_user_id
+ON project_members_adviatecs(user_id);
+
+CREATE INDEX idx_tasks_adviatecs_project_id
+ON tasks_adviatecs(project_id);
+
+CREATE INDEX idx_tasks_adviatecs_assigned_to
+ON tasks_adviatecs(assigned_to);
+
+CREATE INDEX idx_tasks_adviatecs_status
+ON tasks_adviatecs(status);
+
+CREATE INDEX idx_tasks_adviatecs_created_at
+ON tasks_adviatecs(created_at);
+-----------------------------------------------------------------
+run it in Neon
+I would use this order:
+Neon
+  ↓
+SQL Editor
+  ↓
+public schema
+  ↓
+001_schema.sql
+  ↓
+Execute
+-----------------------------------------------------------------
+users_adviatecs
+      │
+      │ 1
+      │
+      └────────── 1
+             user_profiles_adviatecs
+-----------------------------------------------------------------
+User
+--------------------------------
+id = 101
+name = "Naresh"
+email = "naresh@example.com"
+
+        1 : 1
+
+Profile
+--------------------------------
+user_id = 101
+phone = "9876543210"
+bio = "Full Stack Trainer"
+----------------------------------------------------------------- 
+Verify the table
+Run:
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
+  AND table_name LIKE '%_adviatecs'
+ORDER BY table_name;
+
+You should now see 8 tables:
+comments_adviatecs
+project_members_adviatecs
+projects_adviatecs
+roles_adviatecs
+tasks_adviatecs
+user_profiles_adviatecs
+user_roles_adviatecs
+users_adviatecs
+-----------------------------------------------------------------
+| Relationship | Example |
+|---|---|
+| 1:1 | User → User Profile |
+| 1:M | User → Projects |
+| 1:M | Project → Tasks |
+| 1:M | Task → Comments |
+| M:M | Users ↔ Roles |
+| M:M | Users ↔ Projects |
+-----------------------------------------------------------------
+Execute it in Neon
+Open:
+Neon → SQL Editor
+Then paste the contents of:
+backend/sql/002_seed.sql
+E:\Advaitecs\advanced-fullstack-app\backend\sql\002_seed.sql
+-----------------------------------------------------------------
+Verify the data
+After it finishes, run:
+SELECT COUNT(*) AS users
+FROM users_adviatecs;
+
+SELECT COUNT(*) AS profiles
+FROM user_profiles_adviatecs;
+
+SELECT COUNT(*) AS roles
+FROM roles_adviatecs;
+
+SELECT COUNT(*) AS projects
+FROM projects_adviatecs;
+
+SELECT COUNT(*) AS project_members
+FROM project_members_adviatecs;
+
+SELECT COUNT(*) AS tasks
+FROM tasks_adviatecs;
+
+SELECT COUNT(*) AS comments
+FROM comments_adviatecs;
+-----------------------------------------------------------------
+users            → 8
+profiles         → 8
+roles            → 5
+projects         → 4
+project_members  → 14
+tasks            → 14
+comments         → 9
+----------------------------------------------------------------- 
+[{
+  "column_name": "project_id",
+  "data_type": "uuid"
+}, {
+  "column_name": "user_id",
+  "data_type": "uuid"
+}, {
+  "column_name": "joined_at",
+  "data_type": "timestamp with time zone"
+}]
+
+-----------------------------------------------------------------
+INSERT INTO projects_adviatecs
+    (name, description, owner_id)
+SELECT
+    'AI Support System',
+    'AI-powered customer support application',
+    id
+FROM users_adviatecs
+WHERE email = 'arjun@adviatecs.com'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM projects_adviatecs
+      WHERE name = 'AI Support System'
+  );
+-----------------------------------------------------------------
+INSERT INTO project_members_adviatecs (project_id, user_id)
+SELECT p.id, u.id
+FROM projects_adviatecs p
+CROSS JOIN users_adviatecs u
+WHERE
+    (p.name = 'E-Commerce Platform'
+        AND u.email IN (
+            'pranitha@adviatecs.com',
+            'arjun@adviatecs.com',
+            'sneha@adviatecs.com',
+            'priya@adviatecs.com'
+        ))
+ OR (p.name = 'AI Support System'
+        AND u.email IN (
+            'arjun@adviatecs.com',
+            'rahul@adviatecs.com',
+            'priya@adviatecs.com',
+            'kiran@adviatecs.com'
+        ))
+ OR (p.name = 'Training Management'
+        AND u.email IN (
+            'naresh@adviatecs.com',
+            'pranitha@adviatecs.com',
+            'sneha@adviatecs.com'
+        ))
+ OR (p.name = 'Employee Portal'
+        AND u.email IN (
+            'pranitha@adviatecs.com',
+            'rahul@adviatecs.com',
+            'anjali@adviatecs.com'
+        ))
+ON CONFLICT (project_id, user_id) DO NOTHING;
+-----------------------------------------------------------------
+INSERT INTO tasks_adviatecs
+(
+    project_id,
+    assigned_to,
+    title,
+    description,
+    status,
+    priority,
+    due_date
+)
+VALUES
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'E-Commerce Platform'),
+    (SELECT id FROM users_adviatecs WHERE email = 'arjun@adviatecs.com'),
+    'Design database schema',
+    'Create PostgreSQL database schema',
+    'DONE',
+    'HIGH',
+    CURRENT_DATE - 10
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'E-Commerce Platform'),
+    (SELECT id FROM users_adviatecs WHERE email = 'sneha@adviatecs.com'),
+    'Build product page',
+    'Create responsive product page',
+    'IN_PROGRESS',
+    'HIGH',
+    CURRENT_DATE + 5
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'E-Commerce Platform'),
+    (SELECT id FROM users_adviatecs WHERE email = 'priya@adviatecs.com'),
+    'Write API tests',
+    'Test product and order APIs',
+    'TODO',
+    'MEDIUM',
+    CURRENT_DATE + 10
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'E-Commerce Platform'),
+    (SELECT id FROM users_adviatecs WHERE email = 'arjun@adviatecs.com'),
+    'Implement authentication',
+    'Implement JWT authentication',
+    'DONE',
+    'HIGH',
+    CURRENT_DATE - 5
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'AI Support System'),
+    (SELECT id FROM users_adviatecs WHERE email = 'rahul@adviatecs.com'),
+    'Create AI service',
+    'Integrate LLM API',
+    'DONE',
+    'HIGH',
+    CURRENT_DATE - 7
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'AI Support System'),
+    (SELECT id FROM users_adviatecs WHERE email = 'kiran@adviatecs.com'),
+    'Build chat interface',
+    'Create React chat interface',
+    'IN_PROGRESS',
+    'HIGH',
+    CURRENT_DATE + 4
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'AI Support System'),
+    (SELECT id FROM users_adviatecs WHERE email = 'priya@adviatecs.com'),
+    'Test AI responses',
+    'Test response quality and errors',
+    'TODO',
+    'MEDIUM',
+    CURRENT_DATE + 12
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'AI Support System'),
+    (SELECT id FROM users_adviatecs WHERE email = 'rahul@adviatecs.com'),
+    'Add error handling',
+    'Implement centralized error handling',
+    'IN_PROGRESS',
+    'MEDIUM',
+    CURRENT_DATE + 3
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'Training Management'),
+    (SELECT id FROM users_adviatecs WHERE email = 'sneha@adviatecs.com'),
+    'Create batch module',
+    'Build training batch management',
+    'DONE',
+    'MEDIUM',
+    CURRENT_DATE - 15
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'Training Management'),
+    (SELECT id FROM users_adviatecs WHERE email = 'naresh@adviatecs.com'),
+    'Create student module',
+    'Build student management functionality',
+    'IN_PROGRESS',
+    'HIGH',
+    CURRENT_DATE + 6
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'Training Management'),
+    (SELECT id FROM users_adviatecs WHERE email = 'sneha@adviatecs.com'),
+    'Create attendance module',
+    'Track student attendance',
+    'TODO',
+    'LOW',
+    CURRENT_DATE + 15
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'Employee Portal'),
+    (SELECT id FROM users_adviatecs WHERE email = 'rahul@adviatecs.com'),
+    'Create employee API',
+    'Build employee REST APIs',
+    'DONE',
+    'HIGH',
+    CURRENT_DATE - 12
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'Employee Portal'),
+    (SELECT id FROM users_adviatecs WHERE email = 'anjali@adviatecs.com'),
+    'Build dashboard',
+    'Create employee dashboard',
+    'IN_PROGRESS',
+    'MEDIUM',
+    CURRENT_DATE + 8
+),
+
+(
+    (SELECT id FROM projects_adviatecs WHERE name = 'Employee Portal'),
+    (SELECT id FROM users_adviatecs WHERE email = 'rahul@adviatecs.com'),
+    'Implement authorization',
+    'Implement role-based access',
+    'TODO',
+    'HIGH',
+    CURRENT_DATE + 14
+);
+-----------------------------------------------------------------
+SELECT COUNT(*) AS project_members
+FROM project_members_adviatecs;
+----------------------------------------------------------------- 
+SELECT
+    p.name AS project_name,
+    u.name AS user_name
+FROM project_members_adviatecs pm
+JOIN projects_adviatecs p
+    ON p.id = pm.project_id
+JOIN users_adviatecs u
+    ON u.id = pm.user_id
+ORDER BY p.name, u.name;
+-----------------------------------------------------------------
+irst check projects and users
+Run this in Neon:
+SELECT id, name, email
+FROM users_adviatecs
+ORDER BY name;
+
+Then:
+SELECT id, name, owner_id
+FROM projects_adviatecs
+ORDER BY name;
+
+You should have 8 users and 4 projects.
+2. Check project members
+Run:
+SELECT
+    p.name AS project_name,
+    u.name AS user_name
+FROM project_members_adviatecs pm
+JOIN projects_adviatecs p
+    ON p.id = pm.project_id
+JOIN users_adviatecs u
+    ON u.id = pm.user_id
+ORDER BY p.name, u.name;
+
+If this returns 0 rows, we'll simply insert the 14 members directly.
+3. Check tasks
+Run:
+SELECT
+    t.title,
+    p.name AS project_name,
+    u.name AS assigned_to,
+    t.status,
+    t.priority
+FROM tasks_adviatecs t
+JOIN projects_adviatecs p
+    ON p.id = t.project_id
+LEFT JOIN users_adviatecs u
+    ON u.id = t.assigned_to
+ORDER BY p.name, t.title;
+
+If this is also empty, we'll insert the 14 tasks.
+-----------------------------------------------------------------
+SELECT COUNT(*) AS total_tasks
+FROM tasks_adviatecs;
+-----------------------------------------------------------------
+SELECT
+    t.title,
+    p.name AS project_name,
+    u.name AS assigned_to,
+    t.status,
+    t.priority
+FROM tasks_adviatecs t
+JOIN projects_adviatecs p
+    ON p.id = t.project_id
+LEFT JOIN users_adviatecs u
+    ON u.id = t.assigned_to
+ORDER BY p.name, t.title;
+-----------------------------------------------------------------
+Project
+   │
+   └── 1 : Many ──> Tasks
+                         │
+                         └── assigned_to ──> User
+----------------------------------------------------------------- 
+Insert the 9 comments
+-----------------------------------------------------------------
+INSERT INTO comments_adviatecs
+(
+    task_id,
+    user_id,
+    content
+)
+VALUES
+
+(
+    (SELECT id FROM tasks_adviatecs WHERE title = 'Design database schema'),
+    (SELECT id FROM users_adviatecs WHERE email = 'naresh@adviatecs.com'),
+    'Please make sure all foreign keys are properly defined.'
+),
+
+(
+    (SELECT id FROM tasks_adviatecs WHERE title = 'Design database schema'),
+    (SELECT id FROM users_adviatecs WHERE email = 'arjun@adviatecs.com'),
+    'Schema has been reviewed and completed.'
+),
+
+(
+    (SELECT id FROM tasks_adviatecs WHERE title = 'Build product page'),
+    (SELECT id FROM users_adviatecs WHERE email = 'pranitha@adviatecs.com'),
+    'Please make the page responsive.'
+),
+
+(
+    (SELECT id FROM tasks_adviatecs WHERE title = 'Create AI service'),
+    (SELECT id FROM users_adviatecs WHERE email = 'arjun@adviatecs.com'),
+    'Use the provider abstraction so we can change LLM providers.'
+),
+
+(
+    (SELECT id FROM tasks_adviatecs WHERE title = 'Build chat interface'),
+    (SELECT id FROM users_adviatecs WHERE email = 'kiran@adviatecs.com'),
+    'The UI should look like a real AI chat application.'
+),
+
+(
+    (SELECT id FROM tasks_adviatecs WHERE title = 'Create batch module'),
+    (SELECT id FROM users_adviatecs WHERE email = 'naresh@adviatecs.com'),
+    'Please include pagination for the batch list.'
+),
+
+(
+    (SELECT id FROM tasks_adviatecs WHERE title = 'Create student module'),
+    (SELECT id FROM users_adviatecs WHERE email = 'naresh@adviatecs.com'),
+    'Student search and filtering will be required.'
+),
+
+(
+    (SELECT id FROM tasks_adviatecs WHERE title = 'Create employee API'),
+    (SELECT id FROM users_adviatecs WHERE email = 'pranitha@adviatecs.com'),
+    'Please add validation for all request bodies.'
+),
+
+(
+    (SELECT id FROM tasks_adviatecs WHERE title = 'Build dashboard'),
+    (SELECT id FROM users_adviatecs WHERE email = 'anjali@adviatecs.com'),
+    'Dashboard should display employee statistics.'
+);
+-----------------------------------------------------------------
+Then verify:
+SELECT COUNT(*) AS total_comments
+FROM comments_adviatecs;
+
+Expected:
+total_comments
+--------------
+9
+
+And finally, let's verify the complete Task → User → Project → Comments relationship:
+SELECT
+    p.name AS project_name,
+    t.title AS task_title,
+    u.name AS assigned_to,
+    c.content AS comment,
+    cu.name AS commented_by
+FROM comments_adviatecs c
+JOIN tasks_adviatecs t
+    ON t.id = c.task_id
+JOIN projects_adviatecs p
+    ON p.id = t.project_id
+LEFT JOIN users_adviatecs u
+    ON u.id = t.assigned_to
+JOIN users_adviatecs cu
+    ON cu.id = c.user_id
+ORDER BY p.name, t.title;
+
+If that returns 9 rows, we'll officially have Stage 3 — Seed Data complete. 🎯
+-----------------------------------------------------------------
+----------------------------------------------------------------- 
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+----------------------------------------------------------------- 
+
+
+
+
+advanced-fullstack-app/
+│
+├── frontend/                 ← React + TypeScript + Vite
+│
+└── backend/                  ← Express + TypeScript
+    │
+    ├── src/
+    │   ├── config/
+    │   │   └── env.ts
+    │   │
+    │   ├── db/
+    │   │   └── pool.ts
+    │   │
+    │   ├── controllers/
+    │   │   ├── auth.controller.ts
+    │   │   ├── user.controller.ts
+    │   │   ├── project.controller.ts
+    │   │   └── task.controller.ts
+    │   │
+    │   ├── services/
+    │   │   ├── auth.service.ts
+    │   │   ├── user.service.ts
+    │   │   ├── project.service.ts
+    │   │   └── task.service.ts
+    │   │
+    │   ├── repositories/
+    │   │   ├── user.repository.ts
+    │   │   ├── project.repository.ts
+    │   │   └── task.repository.ts
+    │   │
+    │   ├── routes/
+    │   │   ├── auth.routes.ts
+    │   │   ├── user.routes.ts
+    │   │   ├── project.routes.ts
+    │   │   └── task.routes.ts
+    │   │
+    │   ├── middleware/
+    │   │   ├── auth.middleware.ts
+    │   │   ├── error.middleware.ts
+    │   │   ├── validate.middleware.ts
+    │   │   └── not-found.middleware.ts
+    │   │
+    │   ├── validators/
+    │   │   ├── auth.validator.ts
+    │   │   ├── project.validator.ts
+    │   │   └── task.validator.ts
+    │   │
+    │   ├── utils/
+    │   │   ├── jwt.ts
+    │   │   └── password.ts
+    │   │
+    │   ├── types/
+    │   │   └── express.d.ts
+    │   │
+    │   ├── app.ts
+    │   └── server.ts
+    │
+    ├── sql/
+    │   ├── 001_schema.sql
+    │   └── 002_seed.sql
+    │
+    ├── .env
+    ├── .env.example
+    ├── .gitignore
+    ├── package.json
+    └── tsconfig.json
+-----------------------------------------------------------------	
+Database design:
+---------------
+	
+	users_adviatecs
+roles_adviatecs
+user_roles_adviatecs
+
+projects_adviatecs
+project_members_adviatecs
+
+tasks_adviatecs
+
+comments_adviatecs
+
+-----------------------------------------------------------------
+users
+  │
+  ├────────────── user_roles ────────────── roles
+  │
+  ├────────────── projects
+  │                    │
+  │                    ├── project_members ── users
+  │                    │
+  │                    └── tasks
+  │                           │
+  │                           └── comments ── users
+  │
+  └────────────── comments
+-----------------------------------------------------------------
+What Module 12 will demonstrate
+Database Relationships
+
+| Concept | Tables |
+|---|---|
+| Primary Key | Every main table |
+| Foreign Key | Projects → Users |
+| One-to-One | User → Profile, if we add profile |
+| One-to-Many | Project → Tasks |
+| Many-to-Many | Users ↔ Projects |
+| Many-to-Many | Users ↔ Roles |
+| INNER JOIN | Projects + users |
+| LEFT JOIN | Projects + optional tasks |
+| RIGHT JOIN | Demonstration query |
+| Aggregate | COUNT, SUM |
+| GROUP BY | Tasks per project |
+| HAVING | Projects with task count > N |
+| Indexes | email, foreign keys, status |
+| Sorting | created_at, priority |
+| Filtering | status, project, user |
+| Pagination | LIMIT + OFFSET |
+| Query optimization | EXPLAIN ANALYZE |
+-----------------------------------------------------------------
+What Module 13 will demonstrate
+The same backend will demonstrate:
+
+HTTP Request
+     ↓
+Route
+     ↓
+Validation Middleware
+     ↓
+Authentication Middleware
+     ↓
+Controller
+     ↓
+Service
+     ↓
+Repository
+     ↓
+PostgreSQL
+-----------------------------------------------------------------
+Controllers
+Services
+Routes
+Middleware
+Centralized error handling
+Request validation
+Authentication
+Authorization
+Password hashing
+JWT
+CORS
+Environment variables
+Secure API design
+HTTP status codes
+Authentication middleware
+Protected routes
+Role-based authorization
+-----------------------------------------------------------------
+Why this database is particularly good for your two modules
+For example, we can ask:
+INNER JOIN
+SELECT
+    p.name AS project_name,
+    u.name AS owner_name
+FROM projects_adviatecs p
+INNER JOIN users_adviatecs u
+    ON p.owner_id = u.id;
+
+LEFT JOIN
+SELECT
+    p.name,
+    COUNT(t.id) AS task_count
+FROM projects_adviatecs p
+LEFT JOIN tasks_adviatecs t
+    ON p.id = t.project_id
+GROUP BY p.id, p.name;
+
+GROUP BY + HAVING
+SELECT
+    project_id,
+    COUNT(*) AS total_tasks
+FROM tasks_adviatecs
+GROUP BY project_id
+HAVING COUNT(*) > 5;
+
+Pagination
+SELECT *
+FROM tasks_adviatecs
+ORDER BY created_at DESC
+LIMIT 10
+OFFSET 20;
+
+So students aren't merely learning SQL syntax—they'll see why these queries exist inside an actual application.
+13. Backend API we'll eventually expose
+Authentication
+POST /api/auth/register
+POST /api/auth/login
+GET  /api/auth/me
+
+Users
+GET /api/users
+GET /api/users/:id
+
+Projects
+POST   /api/projects
+GET    /api/projects
+GET    /api/projects/:id
+PUT    /api/projects/:id
+DELETE /api/projects/:id
+
+Project members
+POST   /api/projects/:id/members
+GET    /api/projects/:id/members
+DELETE /api/projects/:id/members/:userId
+
+Tasks
+POST   /api/tasks
+GET    /api/tasks
+GET    /api/tasks/:id
+PUT    /api/tasks/:id
+DELETE /api/tasks/:id
+
+And:
+GET /api/tasks?page=1&limit=10
+GET /api/tasks?status=DONE
+GET /api/tasks?priority=HIGH
+GET /api/tasks?projectId=...
+GET /api/tasks?sortBy=created_at&order=desc
+
+That directly demonstrates filtering + sorting + pagination.
+14. Security flow
+For login:
+POST /api/auth/login
+          │
+          ↓
+validate request
+          │
+          ↓
+find user
+          │
+          ↓
+compare password
+          │
+          ↓
+generate JWT
+          │
+          ↓
+return authenticated response
+
+For a protected endpoint:
+GET /api/projects
+       │
+       ↓
+CORS
+       │
+       ↓
+JWT Authentication
+       │
+       ↓
+Authorization
+       │
+       ↓
+Controller
+       │
+       ↓
+Service
+       │
+       ↓
+Repository
+       │
+       ↓
+PostgreSQL
+
+This is exactly where Module 13 becomes meaningful.
+-----------------------------------------------------------------  
+Students will actually see:
+- SELECT
+- INSERT
+- UPDATE
+- DELETE
+- JOIN
+- GROUP BY
+- HAVING
+- LIMIT
+- OFFSET
+- indexes
+- transactions
+- parameterized queries
+-----------------------------------------------------------------
+1. gen_random_uuid()
+Your Neon PostgreSQL environment normally provides this function, but to make the script self-contained, put this at the very beginning:
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+Then your UUID defaults are guaranteed to work:
+DEFAULT gen_random_uuid()
+
+2. One important observation about your indexes
+You have:
+email VARCHAR(255) NOT NULL UNIQUE
+
+PostgreSQL automatically creates a unique index to enforce that constraint.
+Therefore this:
+CREATE INDEX idx_users_adviatecs_email
+ON users_adviatecs(email);
+
+is technically redundant.
+-----------------------------------------------------------------
+After execution
+Run this verification query in Neon:
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
+  AND table_name LIKE '%_adviatecs'
+ORDER BY table_name;
+
+You should get:
+comments_adviatecs
+project_members_adviatecs
+projects_adviatecs
+roles_adviatecs
+tasks_adviatecs
+user_roles_adviatecs
+users_adviatecs
+
+Then verify the indexes:
+SELECT
+    tablename,
+    indexname
+FROM pg_indexes
+WHERE schemaname = 'public'
+  AND tablename LIKE '%_adviatecs'
+ORDER BY tablename, indexname;
+-----------------------------------------------------------------
+Seed Data
+We should now populate 002_seed.sql with realistic training data designed specifically to demonstrate:
+- INNER JOIN
+- LEFT JOIN
+- RIGHT JOIN
+- Multiple-table JOINs
+- GROUP BY
+- HAVING
+- COUNT, AVG, etc.
+- Filtering
+- Sorting
+- Pagination
+- User/project/task relationships
+-----------------------------------------------------------------
+SELECT COUNT(*) AS users
+FROM users_adviatecs;
+
+SELECT COUNT(*) AS profiles
+FROM user_profiles_adviatecs;
+
+SELECT COUNT(*) AS roles
+FROM roles_adviatecs;
+
+SELECT COUNT(*) AS projects
+FROM projects_adviatecs;
+
+SELECT COUNT(*) AS project_members
+FROM project_members_adviatecs;
+
+SELECT COUNT(*) AS tasks
+FROM tasks_adviatecs;
+
+SELECT COUNT(*) AS comments
+FROM comments_adviatecs;
+-----------------------------------------------------------------
+users            → 8
+profiles         → 8
+roles            → 5
+projects         → 4
+project_members  → 14
+tasks            → 14
+comments         → 9
+-----------------------------------------------------------------
+SELECT 'users' AS table_name, COUNT(*) AS record_count
+FROM users_adviatecs
+
+UNION ALL
+
+SELECT 'profiles', COUNT(*)
+FROM user_profiles_adviatecs
+
+UNION ALL
+
+SELECT 'roles', COUNT(*)
+FROM roles_adviatecs
+
+UNION ALL
+
+SELECT 'projects', COUNT(*)
+FROM projects_adviatecs
+
+UNION ALL
+
+SELECT 'project_members', COUNT(*)
+FROM project_members_adviatecs
+
+UNION ALL
+
+SELECT 'tasks', COUNT(*)
+FROM tasks_adviatecs
+
+UNION ALL
+
+SELECT 'comments', COUNT(*)
+FROM comments_adviatecs
+
+ORDER BY table_name;
+-----------------------------------------------------------------
+[{
+  "table_name": "comments",
+  "record_count": 9
+}, {
+  "table_name": "profiles",
+  "record_count": 8
+}, {
+  "table_name": "project_members",
+  "record_count": 14
+}, {
+  "table_name": "projects",
+  "record_count": 4
+}, {
+  "table_name": "roles",
+  "record_count": 5
+}, {
+  "table_name": "tasks",
+  "record_count": 14
+}, {
+  "table_name": "users",
+  "record_count": 8
+}]
+
+-----------------------------------------------------------------
+RUN SEED 003 FILE CODE IN SQL EDITOR OF NEON DB
+E:\Advaitecs\advanced-fullstack-app\backend\sql\003_seed.sql
+-----------------------------------------------------------------
+SELECT 'projects' AS table_name, COUNT(*) AS record_count
+FROM projects_adviatecs
+
+UNION ALL
+
+SELECT 'project_members', COUNT(*)
+FROM project_members_adviatecs
+
+UNION ALL
+
+SELECT 'tasks', COUNT(*)
+FROM tasks_adviatecs
+
+UNION ALL
+
+SELECT 'comments', COUNT(*)
+FROM comments_adviatecs;
+----------------------------------------------------------------- 
+This version is actually useful for Module 12 – Advanced PostgreSQL, because we are deliberately using:
+- INSERT ... SELECT
+- JOIN
+- CROSS JOIN
+- WHERE
+- IN
+- subqueries
+- NOT EXISTS
+- ON CONFLICT
+- primary keys / foreign keys
+- composite keys
+-----------------------------------------------------------------
+With cookies, the flow becomes:
+React Login
+    │
+    │ POST /api/auth/login
+    ↓
+Express
+    │
+    ├── Verify email/password
+    │
+    ├── Generate JWT
+    │
+    └── Set HTTP-only cookie
+             │
+             ↓
+        Browser Cookie
+             │
+             │ Automatically sent
+             ↓
+Protected API
+    │
+    ↓
+authMiddleware
+    │
+    ├── Read JWT from cookie
+    ├── Verify JWT
+    └── req.user
+-----------------------------------------------------------------
+Why HTTP-only cookies are useful
+The important setting is:
+httpOnly: true
+
+That means JavaScript running in the browser cannot directly read the JWT through:
+document.cookie
+
+So we avoid putting the JWT in:
+localStorage
+sessionStorage
+
+For a production-style application, I would also use:
+httpOnly: true
+secure: true       // HTTPS
+sameSite: "lax"
+-----------------------------------------------------------------
+During local development:
+httpOnly: true
+secure: false
+sameSite: "lax"
+-----------------------------------------------------------------
+React
+   │
+   │ Login
+   ↓
+POST /api/auth/login
+   │
+   ↓
+Express
+   │
+   ├── bcrypt → verify password
+   │
+   ├── JWT → create token
+   │
+   └── res.cookie("accessToken", ...)
+             │
+             ↓
+          Browser
+             │
+             │ Cookie automatically sent
+             ↓
+     Protected API requests
+             │
+             ↓
+      auth.middleware.ts
+             │
+             ↓
+       jwt.verify(...)
+             │
+             ↓
+          req.user
+----------------------------------------------------------------- 
+Install cookie-parser and its TypeScript types.
+Implement utils/password.ts with bcrypt.
+Implement utils/jwt.ts.
+Update auth.service.ts.
+Update auth.controller.ts to set/clear the cookie.
+Update auth.middleware.ts to read the cookie.
+Type req.user in types/express.d.ts.
+Protect selected routes.
+-----------------------------------------------------------------
+We can design the backend so that it accepts:
+1. HTTP-only cookie — recommended for our React browser application.
+2. Bearer token — useful for Postman, mobile apps, external clients, and APIs.
+
+
+                         LOGIN
+                           │
+                           ▼
+                    POST /api/auth/login
+                           │
+                    Verify email/password
+                           │
+                    Generate JWT
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+       HTTP-only Cookie          Response JSON
+       accessToken=JWT           { accessToken: JWT }
+              │                         │
+              │                         │
+        Browser app              Postman / API client
+              │                         │
+              ▼                         ▼
+       Cookie automatically      Authorization:
+       sent with request         Bearer <JWT>
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+                    authMiddleware
+                           │
+                 ┌─────────┴─────────┐
+                 │                   │
+          Check cookie first    Check Bearer token
+                 │                   │
+                 └─────────┬─────────┘
+                           ▼
+                      Verify JWT
+                           │
+                           ▼
+                       req.user
+                           │
+                           ▼
+                       next()
+-----------------------------------------------------------------
+Cookie available?
+      │
+      ├── YES → use cookie JWT
+      │
+      └── NO
+           │
+           ▼
+     Bearer token?
+           │
+           ├── YES → use Bearer JWT
+           │
+           └── NO → 401 Unauthorized
+-----------------------------------------------------------------
+                    Authentication
+                           │
+             ┌─────────────┴─────────────┐
+             │                           │
+        HTTP Cookie                 Bearer Token
+             │                           │
+     accessToken cookie        Authorization header
+             │                           │
+             └─────────────┬─────────────┘
+                           ▼
+                  auth.middleware.ts
+                           │
+                           ▼
+                     jwt.verify()
+                           │
+                           ▼
+                       req.user
+                           │
+                           ▼
+                    Protected Route
+                           │
+                           ▼
+                      Controller
+-----------------------------------------------------------------
+✅ JWT authentication
+       │
+       ├── JWT transported in HTTP-only cookie
+       │
+       └── JWT transported in Authorization header
+----------------------------------------------------------------- 
+npm install cookie-parser
+npm install -D @types/cookie-parser
+-----------------------------------------------------------------
+src/types/express.d.ts
+Path:
+E:\Advaitecs\advanced-fullstack-app\backend\src\types\express.d.ts
+
+Use:
+import type { JwtPayload } from "jsonwebtoken";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+      };
+    }
+  }
+}
+
+export {};
+
+Why this is needed
+Our middleware does:
+req.user = {
+  id: payload.userId,
+};
+
+Normally Express's Request type doesn't know about user.
+This declaration adds:
+req.user
+
+to Express's Request object.
+-----------------------------------------------------------------
+src/utils/jwt.ts
+Path:
+E:\Advaitecs\advanced-fullstack-app\backend\src\utils\jwt.ts
+
+First install jsonwebtoken:
+npm install jsonwebtoken
+npm install -D @types/jsonwebtoken
+-----------------------------------------------------------------
+Login
+  │
+  ▼
+generateToken(user.id)
+  │
+  ▼
+JWT
+  │
+  ├───────────────┐
+  │               │
+  ▼               ▼
+HTTP Cookie     Bearer Token
+  │               │
+  └───────┬───────┘
+          ▼
+   authMiddleware
+          │
+          ▼
+    verifyToken()
+          │
+          ▼
+    payload.userId
+          │
+          ▼
+       req.user
+          │
+          ▼
+     Controller
+----------------------------------------------------------------- 
+Install bcrypt
+From:
+E:\Advaitecs\advanced-fullstack-app\backend
+
+run:
+npm install bcrypt
+npm install -D @types/bcrypt
+
+2. src/utils/password.ts
+-----------------------------------------------------------------
+What we now have
+src/utils/
+│
+├── jwt.ts
+│   ├── generateToken()
+│   └── verifyToken()
+│
+└── password.ts
+    ├── hashPassword()
+    └── comparePassword()
+
+The authentication flow will be:
+REGISTER
+   │
+   ├── Plain password
+   │
+   ▼
+hashPassword()
+   │
+   ▼
+bcrypt hash
+   │
+   ▼
+PostgreSQL
+password_hash
+
+And login:
+LOGIN
+   │
+   ├── Email + password
+   │
+   ▼
+Find user
+   │
+   ▼
+comparePassword()
+   │
+   ├── false → 401
+   │
+   └── true
+        │
+        ▼
+  generateToken()
+        │
+        ▼
+       JWT
+        │
+        ├── HTTP-only Cookie
+        │
+        └── optionally Bearer token
+-----------------------------------------------------------------
+ZOD:
+----
+npm i zod
+-----------------------------------------------------------------
+HTTP Request
+     │
+     ▼
+Validation Middleware
+     │
+     ├── Invalid → 400
+     │
+     └── Valid
+          │
+          ▼
+       Route
+          │
+          ▼
+     Controller
+          │
+          ▼
+       Service
+          │
+          ▼
+     Repository
+          │
+          ▼
+      PostgreSQL
+-----------------------------------------------------------------
+Request
+   ↓
+Route
+   ↓
+Validation Middleware
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+PostgreSQL
+   ↓
+Response
+
+If route doesn't exist
+        ↓
+notFoundMiddleware
+
+If an unexpected error occurs
+        ↓
+errorMiddleware
+----------------------------------------------------------------- 
+| HTTP | Endpoint | Controller |
+|---|---|---|
+| GET | `/api/projects` | `getAllProjects` |
+| GET | `/api/projects/search?q=AI` | `searchProjects` |
+| GET | `/api/projects/pagination?page=1&limit=5` | `getProjectsPaginated` |
+| GET | `/api/projects/owners` | `getProjectsWithOwners` |
+| GET | `/api/projects/summary` | `getProjectSummary` |
+| GET | `/api/projects/minimum-tasks?count=3` | `getProjectsWithMinimumTasks` |
+| GET | `/api/projects/:id/members` | `getProjectMembers` |
+| GET | `/api/projects/:id` | `getProjectById` |
+-----------------------------------------------------------------
+Incoming Request
+       ↓
+     CORS
+       ↓
+  express.json()
+       ↓
+  cookieParser()
+       ↓
+    Health Check
+       ↓
+    API Routes
+       ↓
+       ├── Validation
+       ├── Authentication
+       └── Controller
+       ↓
+   404 Middleware
+       ↓
+  Error Middleware
+-----------------------------------------------------------------
+TESTING BACKEND:
+---------------
+npm run build
+
+npm run dev
+
+Start the backend
+From:
+E:\Advaitecs\advanced-fullstack-app\backend
+
+run:
+npm run dev
+
+You should see:
+✅ PostgreSQL connected successfully
+🚀 Server running at http://localhost:5000
+
+2. Test Health Check
+Request
+GET http://localhost:5000/api/health
+
+Expected
+{
+  "success": true,
+  "message": "Backend API is running"
+}
+-----------------------------------------------------------------
+| Area | Status |
+|---|---|
+| PostgreSQL schema | ✅ |
+| Seed data | ✅ |
+| Repository layer | ✅ |
+| Service layer | ✅ |
+| Controllers | ✅ |
+| Routes | ✅ |
+| Environment configuration | ✅ |
+| Password hashing | ✅ |
+| JWT authentication | ✅ |
+| HTTP-only cookie | ✅ |
+| Bearer authentication support | ✅ |
+| Zod validation | ✅ |
+| CORS | ✅ |
+| 404 handling | ✅ |
+| Centralized error handling | ✅ |
+| Thunder Client testing | ✅ |
+| TypeScript build | ✅ |
+-----------------------------------------------------------------
+
+That means we have successfully verified:
+
+✅ TypeScript build
+✅ Express server
+✅ PostgreSQL connection
+✅ CORS
+✅ JSON parsing
+✅ Cookie parsing
+✅ Zod request validation
+✅ User registration
+✅ Password hashing
+✅ JWT generation
+✅ HTTP-only cookie
+✅ Bearer/cookie authentication
+✅ Protected routes
+✅ /auth/me
+✅ 401 authentication handling
+✅ 404 handling
+✅ Centralized error handling
+
+                    React + TypeScript
+                           │
+                         HTTP
+                           ↓
+                    ┌──────────────┐
+                    │   Express    │
+                    └──────┬───────┘
+                           │
+                 Global Middleware
+                           │
+              ┌────────────┼────────────┐
+              ↓            ↓            ↓
+            CORS      JSON Parser   Cookie Parser
+                           │
+                           ↓
+                       Routes
+                           │
+              ┌────────────┼────────────┐
+              ↓            ↓            ↓
+          Validation   Authentication  Controller
+              │            │            │
+              └────────────┴────────────┘
+                           ↓
+                        Service
+                           ↓
+                       Repository
+                           ↓
+                      PostgreSQL
+					  
+Invalid Request
+      ↓
+Validation
+      ↓
+400
+
+No Authentication
+      ↓
+Auth Middleware
+      ↓
+401
+
+Unknown Route
+      ↓
+404 Middleware
+      ↓
+404
+
+Unexpected Error
+      ↓
+Error Middleware
+      ↓
+500
+----------------------------------------------------------------- 
+Backend milestone completed
+
+                    ADVANCED FULL-STACK APP
+                             │
+                    ┌────────┴────────┐
+                    │                 │
+                FRONTEND           BACKEND
+                                      │
+                         ┌────────────┴────────────┐
+                         │                         │
+                    Express + TS             PostgreSQL
+                         │                         │
+              ┌──────────┼──────────┐              │
+              │          │          │              │
+            Routes    Controllers Services     Database
+                         │          │              │
+                         └────┬─────┘              │
+                              │                     │
+                         Repositories ──────────────┘
+                              │
+                         Raw SQL / pg
+-----------------------------------------------------------------
+
+✅ Environment variables
+✅ CORS
+✅ Cookie Parser
+✅ Zod validation
+✅ Password hashing
+✅ JWT
+✅ HTTP-only cookie
+✅ Bearer token support
+✅ Authentication middleware
+✅ 401 handling
+✅ 404 handling
+✅ Centralized error handling
+-----------------------------------------------------------------
+✅ Users endpoints tested
+✅ Projects endpoints tested
+✅ Tasks endpoints tested
+✅ Authentication endpoints tested
+✅ JOIN/relationship endpoints tested
+✅ Search tested
+✅ Filtering tested
+✅ Pagination tested
+✅ Aggregate/summary endpoints tested
+-----------------------------------------------------------------
+JOIN without LEFT, RIGHT, or FULL means INNER JOIN in PostgreSQL.
+So:
+JOIN projects_adviatecs p
+
+and:
+INNER JOIN projects_adviatecs p
+
+mean the same thing.
+-----------------------------------------------------------------
+----------------------------------------------------------------- 
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+----------------------------------------------------------------- -----------------------------------------------------------------
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+----------------------------------------------------------------- 

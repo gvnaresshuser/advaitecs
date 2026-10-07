@@ -1,0 +1,60 @@
+CORS — Topics Covered
+You can list it as:
+- CORS (Cross-Origin Resource Sharing)
+  - Frontend and backend running on different origins
+  - Configuring allowed frontend origin
+  - CORS_ORIGIN using environment variables
+  - credentials: true
+  - withCredentials: true in Axios
+  - Why credentials are required for HTTP-only cookies
+  - Preflight / OPTIONS requests
+  - Restricting CORS instead of allowing *
+  - CORS configuration middleware
+In your project, we have essentially demonstrated:
+CORS_ORIGIN=http://localhost:5173
+CORS_CREDENTIALS=true
+
+and on the frontend:
+const api = axios.create({
+  baseURL: "http://localhost:5000/api",
+  withCredentials: true,
+});
+
+So the important teaching flow is:
+React Frontend
+localhost:5173
+       │
+       │ Cross-Origin Request
+       ↓
+Express Backend
+localhost:5000
+       │
+       ↓
+CORS Middleware
+       │
+       ├── Allowed Origin ✓
+       └── Credentials ✓
+              │
+              ↓
+       HTTP-Only Cookies
+
+I would slightly improve your final checklist
+● Backend Project Architecture
+● Controllers, Services & Routes
+● Middleware
+● Centralized Error Handling
+● Request Validation
+● Authentication & Authorization
+● Password Hashing
+● JWT Security
+● HTTP-Only Cookies
+● Access & Refresh Tokens
+● Refresh Token Rotation
+● CORS & Cross-Origin Requests
+● Environment Variables
+● Secure API Design
+● Role-Based Authorization
+● Common Backend Security Practices
+
+Yes — I would mark CORS as DONE. ✅
+And because we have actually demonstrated CORS + credentials + HTTP-only cookies + Axios withCredentials, this is more than just theoretical CORS coverage.

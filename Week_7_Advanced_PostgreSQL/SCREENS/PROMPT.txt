@@ -1,0 +1,85 @@
+Week 7	Advanced PostgreSQL	• Table Relationships
+• Primary Keys and Foreign Keys
+• INNER JOIN and LEFT JOIN
+• Related Relational Queries
+• Aggregate Functions, GROUP BY & HAVING
+• Indexes & Query Performance
+• Pagination & Efficient Data Retrieval
+• Real-World Relational Data
+• Hands-on PostgreSQL Query Practice
+
+-----------------------------------------------
+i want to have a typescript react js frontend with tailwind css and ts node express backend to demonstrate the following...Week 7	Advanced PostgreSQL	• Table Relationships
+• Primary Keys and Foreign Keys
+• INNER JOIN and LEFT JOIN
+• Related Relational Queries
+• Aggregate Functions, GROUP BY & HAVING
+• Indexes & Query Performance
+• Pagination & Efficient Data Retrieval
+• Real-World Relational Data
+• Hands-on PostgreSQL Query Practice
+
+i want this as simple as possible please
+tables can be given names tablename_advaitecs_advpgsql...with this suffix please so that i can identify
+shall we have tables, indexes, primary and foriegn keys firs and then queries demonstrating for eg...INNER JOIN and LEFT JOIN and then related backend and frontend?...i want to give my students the concept first and its related implementation...backend structure may be something lile this please...Microsoft Windows [Version 10.0.26100.8246]
+(c) Microsoft Corporation. All rights reserved.
+
+E:\Advaitecs\advanced-fullstack-app\backend\src>tree /F
+Folder PATH listing for volume DATA
+Volume serial number is 0ED0-D3D0
+E:.
+│   app.ts
+│   server.ts
+│
+├───config
+│       env.ts
+│
+├───controllers
+│       auth.controller.ts
+│       project.controller.ts
+│       task.controller.ts
+│       user.controller.ts
+│
+├───db
+│       pool.ts
+│
+├───middleware
+│       auth.middleware.ts
+│       error.middleware.ts
+│       not-found.middleware.ts
+│       validate.middleware.ts
+│
+├───repositories
+│       project.repository.ts
+│       task.repository.ts
+│       user.repository.ts
+│
+├───routes
+│       auth.routes.ts
+│       project.routes.ts
+│       task.routes.ts
+│       user.routes.ts
+│
+├───schemas
+│       user.schema.ts
+│
+├───services
+│       auth.service.ts
+│       project.service.ts
+│       task.service.ts
+│       user.service.ts
+│
+├───types
+│       express.d.ts
+│
+├───utils
+│       jwt.ts
+│       password.ts
+│
+└───validators
+        auth.validator.ts
+        project.validator.ts
+        task.validator.ts
+
+
+E:\Advaitecs\advanced-fullstack-app\backend\src>

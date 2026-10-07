@@ -1,0 +1,85 @@
+Let's Learn EXPLAIN
+This is an important PostgreSQL training topic.
+Suppose we execute:
+SELECT *
+FROM employees_advaitecs_advpgsql
+WHERE email = 'ravi@example.com';
+
+We can ask PostgreSQL:
+How are you planning to execute this query?
+
+Using:
+EXPLAIN
+SELECT *
+FROM employees_advaitecs_advpgsql
+WHERE email = 'ravi@example.com';
+
+PostgreSQL returns a query execution plan.
+8. EXPLAIN ANALYZE
+EXPLAIN shows the planned execution.
+EXPLAIN ANALYZE actually executes the query and provides execution statistics.
+Try:
+EXPLAIN ANALYZE
+SELECT *
+FROM employees_advaitecs_advpgsql
+WHERE email = 'ravi@example.com';
+
+You may see something like:
+Index Scan using idx_employees_email_advaitecs
+on employees_advaitecs_advpgsql
+
+The exact output will depend on your PostgreSQL version, table size, statistics, and data.
+9. Sequential Scan vs Index Scan
+================================
+This is the key concept to teach.
+Sequential Scan
+Table
+ ↓
+Row 1
+Row 2
+Row 3
+Row 4
+Row 5
+...
+
+PostgreSQL scans rows sequentially.
+You may see:
+Seq Scan
+
+Index Scan
+Index
+  ↓
+Matching row
+
+You may see:
+Index Scan
+
+So students should understand:
+Seq Scan  → PostgreSQL scans the table
+Index Scan → PostgreSQL uses an index
+
+10. One Important Warning
+With our current table containing only 6 employees, PostgreSQL may still choose:
+Seq Scan
+
+even after we create an index.
+That is not necessarily a problem.
+Why?
+Because PostgreSQL thinks:
+"There are only 6 rows. Scanning all 6 rows may be cheaper than using the index."
+
+This is actually a very good teaching point.
+Small table
+6 rows
+↓
+Seq Scan may be faster
+
+Large table
+1,000,000 rows
+↓
+Index Scan can be much more useful
+
+So:
+Creating an index does not guarantee that PostgreSQL will use it.
+
+PostgreSQL's query planner makes that decision.

@@ -1,0 +1,70 @@
+it can matter depending on how you run/deploy the TypeScript application, and your observation is correct.
+With your configuration:
+"module": "NodeNext",
+"moduleResolution": "NodeNext"
+
+there is an important distinction between TypeScript development and compiled Node.js production.
+Why ./config/env may work during development
+If you use:
+npm run dev
+
+with:
+"dev": "tsx watch src/server.ts"
+
+tsx executes the TypeScript source directly and is more forgiving about extension handling.
+So this may work:
+import { env } from "./config/env";
+
+But production is different
+When you build:
+npm run build
+
+TypeScript generates:
+dist/
+├── app.js
+├── server.js
+└── config/
+    └── env.js
+
+And Node.js runs the generated JavaScript:
+npm start
+
+With native Node ESM/NodeNext behavior, explicit file extensions are the safest and recommended approach:
+import { env } from "./config/env.js";
+
+Even though the source file is:
+src/config/env.ts
+
+the compiled file is:
+dist/config/env.js
+
+So the .js refers to the runtime JavaScript file, not the source TypeScript file.
+The important teaching point
+Think of it this way:
+DEVELOPMENT
+
+src/server.ts
+     │
+     │ tsx
+     ▼
+TypeScript directly
+
+versus:
+PRODUCTION
+
+src/server.ts
+     │
+     │ tsc
+     ▼
+dist/server.js
+     │
+     ▼
+Node.js
+
+Therefore:
+import { env } from "./config/env.js";
+
+is a good practice for your current:
+"module": "NodeNext"
+
+setup.

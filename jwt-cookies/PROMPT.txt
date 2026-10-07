@@ -1,0 +1,16 @@
+good morning...i want to build the following and demonstrate use of jwt with http-cookies only as first priority and 2nd is authentication bearer...and also have cookie settings in .env file for lax,http etc...and demonstrate in frontend when token is expired show session expired refreshing token...in axios interceptors...Learn how to structure and secure backend applications using real-world development practices.
+
+Topics Covered
+● Backend Project Architecture
+● Controllers, Services & Routes
+● Middleware
+● Centralized Error Handling
+● Request Validation
+● Authentication & Authorization
+● Password Hashing
+● JWT Security
+● CORS
+● Environment Variables
+● Secure API Design
+● Common Backend Security Practices
+

@@ -1,0 +1,760 @@
+
+## 1. Project we will build
+
+Let's use a **Project Management API** because it naturally demonstrates all the PostgreSQL relationships and backend-security concepts.
+
+```text
+advanced-fullstack-app/
+│
+├── frontend/                 ← React + TypeScript + Vite
+│
+└── backend/                  ← Express + TypeScript
+    │
+    ├── src/
+    │   ├── config/
+    │   │   └── env.ts
+    │   │
+    │   ├── db/
+    │   │   └── pool.ts
+    │   │
+    │   ├── controllers/
+    │   │   ├── auth.controller.ts
+    │   │   ├── user.controller.ts
+    │   │   ├── project.controller.ts
+    │   │   └── task.controller.ts
+    │   │
+    │   ├── services/
+    │   │   ├── auth.service.ts
+    │   │   ├── user.service.ts
+    │   │   ├── project.service.ts
+    │   │   └── task.service.ts
+    │   │
+    │   ├── repositories/
+    │   │   ├── user.repository.ts
+    │   │   ├── project.repository.ts
+    │   │   └── task.repository.ts
+    │   │
+    │   ├── routes/
+    │   │   ├── auth.routes.ts
+    │   │   ├── user.routes.ts
+    │   │   ├── project.routes.ts
+    │   │   └── task.routes.ts
+    │   │
+    │   ├── middleware/
+    │   │   ├── auth.middleware.ts
+    │   │   ├── error.middleware.ts
+    │   │   ├── validate.middleware.ts
+    │   │   └── not-found.middleware.ts
+    │   │
+    │   ├── validators/
+    │   │   ├── auth.validator.ts
+    │   │   ├── project.validator.ts
+    │   │   └── task.validator.ts
+    │   │
+    │   ├── utils/
+    │   │   ├── jwt.ts
+    │   │   └── password.ts
+    │   │
+    │   ├── types/
+    │   │   └── express.d.ts
+    │   │
+    │   ├── app.ts
+    │   └── server.ts
+    │
+    ├── sql/
+    │   ├── 001_schema.sql
+    │   └── 002_seed.sql
+    │
+    ├── .env
+    ├── .env.example
+    ├── .gitignore
+    ├── package.json
+    └── tsconfig.json
+```
+
+This deliberately demonstrates:
+
+**Route → Controller → Service → Repository → PostgreSQL**
+
+rather than putting SQL directly inside routes.
+
+---
+
+# 2. Database design
+
+We'll use these tables, with your requested `_adviatecs` suffix.
+
+```text
+users_adviatecs
+roles_adviatecs
+user_roles_adviatecs
+
+projects_adviatecs
+project_members_adviatecs
+
+tasks_adviatecs
+
+comments_adviatecs
+```
+
+The relationships become:
+
+```text
+users
+  │
+  ├────────────── user_roles ────────────── roles
+  │
+  ├────────────── projects
+  │                    │
+  │                    ├── project_members ── users
+  │                    │
+  │                    └── tasks
+  │                           │
+  │                           └── comments ── users
+  │
+  └────────────── comments
+```
+
+This gives us plenty of real relational-data examples.
+
+---
+
+# 3. What Module 12 will demonstrate
+
+### Database Relationships
+
+| Concept | Tables |
+|---|---|
+| Primary Key | Every main table |
+| Foreign Key | Projects → Users |
+| One-to-One | User → Profile, if we add profile |
+| One-to-Many | Project → Tasks |
+| Many-to-Many | Users ↔ Projects |
+| Many-to-Many | Users ↔ Roles |
+| INNER JOIN | Projects + users |
+| LEFT JOIN | Projects + optional tasks |
+| RIGHT JOIN | Demonstration query |
+| Aggregate | COUNT, SUM |
+| GROUP BY | Tasks per project |
+| HAVING | Projects with task count > N |
+| Indexes | email, foreign keys, status |
+| Sorting | created_at, priority |
+| Filtering | status, project, user |
+| Pagination | LIMIT + OFFSET |
+| Query optimization | EXPLAIN ANALYZE |
+
+This is much more useful for your students than creating isolated `employees` and `departments` tables.
+
+---
+
+# 4. What Module 13 will demonstrate
+
+The same backend will demonstrate:
+
+```text
+HTTP Request
+     ↓
+Route
+     ↓
+Validation Middleware
+     ↓
+Authentication Middleware
+     ↓
+Controller
+     ↓
+Service
+     ↓
+Repository
+     ↓
+PostgreSQL
+```
+
+And we'll cover:
+
+- Controllers
+- Services
+- Routes
+- Middleware
+- Centralized error handling
+- Request validation
+- Authentication
+- Authorization
+- Password hashing
+- JWT
+- CORS
+- Environment variables
+- Secure API design
+- HTTP status codes
+- Authentication middleware
+- Protected routes
+- Role-based authorization
+
+---
+
+# 5. Create the backend first
+
+From your project root:
+
+```bash
+mkdir backend
+cd backend
+npm init -y
+```
+
+Install the runtime dependencies:
+
+```bash
+npm install express pg dotenv cors bcryptjs jsonwebtoken
+```
+
+Install TypeScript/development dependencies:
+
+```bash
+npm install -D typescript tsx @types/node @types/express @types/cors @types/bcryptjs @types/jsonwebtoken
+```
+
+Then:
+
+```bash
+npx tsc --init
+```
+
+---
+
+# 6. Backend `package.json`
+
+Change the important parts to:
+
+```json
+{
+  "name": "advanced-fullstack-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  }
+}
+```
+
+We'll keep the `.js` extension in TypeScript imports because you're using ESM/Node-style TypeScript configuration.
+
+For example:
+
+```ts
+import app from "./app.js";
+```
+
+even though the source file is:
+
+```text
+app.ts
+```
+
+---
+
+# 7. `tsconfig.json`
+
+For this backend, I recommend:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}
+```
+
+Here I **would explicitly use `"strict": true`** because this is our own backend configuration and we want students to see strict TypeScript clearly.
+
+---
+
+# 8. Your `.env`
+
+Keep your existing environment variables conceptually like this:
+
+```env
+PORT=5000
+
+DATABASE_URL=your_neon_database_url
+
+JWT_SECRET=your_new_rotated_jwt_secret
+JWT_EXPIRES_IN=1h
+
+FRONTEND_URL=http://localhost:5173
+
+NODE_ENV=development
+```
+
+And create:
+
+```text
+.env.example
+```
+
+with:
+
+```env
+PORT=5000
+DATABASE_URL=
+JWT_SECRET=
+JWT_EXPIRES_IN=1h
+FRONTEND_URL=http://localhost:5173
+NODE_ENV=development
+```
+
+### `.gitignore`
+
+Very important:
+
+```gitignore
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+```
+
+This is especially important because you previously encountered **GitHub push protection for API secrets**.
+
+---
+
+# 9. Database connection
+
+Create:
+
+```text
+src/db/pool.ts
+```
+
+```ts
+import pg from "pg";
+import "dotenv/config";
+
+const { Pool } = pg;
+
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+```
+
+For Neon, the connection uses SSL.
+
+Later we can improve the configuration so the application validates that `DATABASE_URL` exists before starting.
+
+---
+
+# 10. Database schema
+
+Now we'll create:
+
+```text
+sql/001_schema.sql
+```
+
+The first version can contain:
+
+```sql
+CREATE TABLE users_adviatecs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE roles_adviatecs (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE user_roles_adviatecs (
+    user_id UUID NOT NULL,
+    role_id INTEGER NOT NULL,
+
+    PRIMARY KEY (user_id, role_id),
+
+    CONSTRAINT fk_user_roles_user
+        FOREIGN KEY (user_id)
+        REFERENCES users_adviatecs(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_user_roles_role
+        FOREIGN KEY (role_id)
+        REFERENCES roles_adviatecs(id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projects_adviatecs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    owner_id UUID NOT NULL,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_projects_owner
+        FOREIGN KEY (owner_id)
+        REFERENCES users_adviatecs(id)
+);
+
+CREATE TABLE project_members_adviatecs (
+    project_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+
+    joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    PRIMARY KEY (project_id, user_id),
+
+    CONSTRAINT fk_project_members_project
+        FOREIGN KEY (project_id)
+        REFERENCES projects_adviatecs(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_project_members_user
+        FOREIGN KEY (user_id)
+        REFERENCES users_adviatecs(id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE tasks_adviatecs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    project_id UUID NOT NULL,
+    assigned_to UUID,
+
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+
+    status VARCHAR(30) NOT NULL DEFAULT 'TODO',
+    priority VARCHAR(30) NOT NULL DEFAULT 'MEDIUM',
+
+    due_date DATE,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_tasks_project
+        FOREIGN KEY (project_id)
+        REFERENCES projects_adviatecs(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_tasks_assigned_user
+        FOREIGN KEY (assigned_to)
+        REFERENCES users_adviatecs(id)
+        ON DELETE SET NULL,
+
+    CONSTRAINT chk_task_status
+        CHECK (status IN ('TODO', 'IN_PROGRESS', 'DONE')),
+
+    CONSTRAINT chk_task_priority
+        CHECK (priority IN ('LOW', 'MEDIUM', 'HIGH'))
+);
+
+CREATE TABLE comments_adviatecs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    task_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+
+    content TEXT NOT NULL,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_comments_task
+        FOREIGN KEY (task_id)
+        REFERENCES tasks_adviatecs(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_comments_user
+        FOREIGN KEY (user_id)
+        REFERENCES users_adviatecs(id)
+        ON DELETE CASCADE
+);
+```
+
+Notice how many Module 12 concepts are already present.
+
+---
+
+# 11. Indexes
+
+Then we'll create:
+
+```sql
+CREATE INDEX idx_users_adviatecs_email
+ON users_adviatecs(email);
+
+CREATE INDEX idx_projects_adviatecs_owner_id
+ON projects_adviatecs(owner_id);
+
+CREATE INDEX idx_project_members_adviatecs_user_id
+ON project_members_adviatecs(user_id);
+
+CREATE INDEX idx_tasks_adviatecs_project_id
+ON tasks_adviatecs(project_id);
+
+CREATE INDEX idx_tasks_adviatecs_assigned_to
+ON tasks_adviatecs(assigned_to);
+
+CREATE INDEX idx_tasks_adviatecs_status
+ON tasks_adviatecs(status);
+
+CREATE INDEX idx_tasks_adviatecs_created_at
+ON tasks_adviatecs(created_at);
+```
+
+This gives us real examples for:
+
+```sql
+EXPLAIN ANALYZE
+```
+
+and query optimization.
+
+---
+
+# 12. Why this database is particularly good for your two modules
+
+For example, we can ask:
+
+### INNER JOIN
+
+```sql
+SELECT
+    p.name AS project_name,
+    u.name AS owner_name
+FROM projects_adviatecs p
+INNER JOIN users_adviatecs u
+    ON p.owner_id = u.id;
+```
+
+### LEFT JOIN
+
+```sql
+SELECT
+    p.name,
+    COUNT(t.id) AS task_count
+FROM projects_adviatecs p
+LEFT JOIN tasks_adviatecs t
+    ON p.id = t.project_id
+GROUP BY p.id, p.name;
+```
+
+### GROUP BY + HAVING
+
+```sql
+SELECT
+    project_id,
+    COUNT(*) AS total_tasks
+FROM tasks_adviatecs
+GROUP BY project_id
+HAVING COUNT(*) > 5;
+```
+
+### Pagination
+
+```sql
+SELECT *
+FROM tasks_adviatecs
+ORDER BY created_at DESC
+LIMIT 10
+OFFSET 20;
+```
+
+So students aren't merely learning SQL syntax—they'll see **why these queries exist inside an actual application**.
+
+---
+
+# 13. Backend API we'll eventually expose
+
+### Authentication
+
+```text
+POST /api/auth/register
+POST /api/auth/login
+GET  /api/auth/me
+```
+
+### Users
+
+```text
+GET /api/users
+GET /api/users/:id
+```
+
+### Projects
+
+```text
+POST   /api/projects
+GET    /api/projects
+GET    /api/projects/:id
+PUT    /api/projects/:id
+DELETE /api/projects/:id
+```
+
+### Project members
+
+```text
+POST   /api/projects/:id/members
+GET    /api/projects/:id/members
+DELETE /api/projects/:id/members/:userId
+```
+
+### Tasks
+
+```text
+POST   /api/tasks
+GET    /api/tasks
+GET    /api/tasks/:id
+PUT    /api/tasks/:id
+DELETE /api/tasks/:id
+```
+
+And:
+
+```text
+GET /api/tasks?page=1&limit=10
+GET /api/tasks?status=DONE
+GET /api/tasks?priority=HIGH
+GET /api/tasks?projectId=...
+GET /api/tasks?sortBy=created_at&order=desc
+```
+
+That directly demonstrates **filtering + sorting + pagination**.
+
+---
+
+# 14. Security flow
+
+For login:
+
+```text
+POST /api/auth/login
+          │
+          ↓
+validate request
+          │
+          ↓
+find user
+          │
+          ↓
+compare password
+          │
+          ↓
+generate JWT
+          │
+          ↓
+return authenticated response
+```
+
+For a protected endpoint:
+
+```text
+GET /api/projects
+       │
+       ↓
+CORS
+       │
+       ↓
+JWT Authentication
+       │
+       ↓
+Authorization
+       │
+       ↓
+Controller
+       │
+       ↓
+Service
+       │
+       ↓
+Repository
+       │
+       ↓
+PostgreSQL
+```
+
+This is exactly where Module 13 becomes meaningful.
+
+---
+
+## One architectural decision I recommend
+
+Since your goal is specifically to **teach PostgreSQL**, I suggest we initially use the **`pg` PostgreSQL driver and SQL directly**, rather than introducing an ORM immediately.
+
+That lets you teach:
+
+```text
+SQL
+ ↓
+PostgreSQL
+ ↓
+pg
+ ↓
+Repository
+ ↓
+Service
+ ↓
+Controller
+ ↓
+Route
+```
+
+Students will actually see:
+
+- `SELECT`
+- `INSERT`
+- `UPDATE`
+- `DELETE`
+- `JOIN`
+- `GROUP BY`
+- `HAVING`
+- `LIMIT`
+- `OFFSET`
+- indexes
+- transactions
+- parameterized queries
+
+Then, if you later want to teach **TypeORM/Drizzle**, we can introduce the ORM as a separate layer after the students understand the underlying SQL.
+
+---
+
+### Our immediate next step
+
+I suggest we **don't create all the backend files at once**. Let's build it in teaching stages:
+
+**Stage 1:** Backend project + TypeScript + Express + Neon connection  
+**Stage 2:** PostgreSQL schema with all `_adviatecs` tables  
+**Stage 3:** Seed data  
+**Stage 4:** Repository layer + SQL queries  
+**Stage 5:** Services + controllers + routes  
+**Stage 6:** Joins, aggregates, filtering, sorting, pagination  
+**Stage 7:** Validation + centralized errors  
+**Stage 8:** Registration + bcrypt password hashing  
+**Stage 9:** JWT authentication  
+**Stage 10:** Authorization + protected routes  
+**Stage 11:** CORS + secure API practices  
+**Stage 12:** Connect the React TypeScript frontend
+
+That way, **Module 12 and Module 13 are taught through one progressively built real-world application**, rather than a collection of disconnected examples.

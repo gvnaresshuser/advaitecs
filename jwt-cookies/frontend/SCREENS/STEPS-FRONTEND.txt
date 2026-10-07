@@ -1,0 +1,581 @@
+*****************************
+npm install react-router-dom
+npm install axios
+npm install sweetalert2
+*****************************
+
+frontend/
+└── src/
+    ├── api/
+    │   ├── axios.ts
+    │   ├── authApi.ts
+    │   ├── userApi.ts
+    │   └── projectApi.ts
+    │
+    ├── auth/
+    │   ├── AuthContext.tsx
+    │   └── authService.ts
+    │
+    ├── components/
+    │   ├── common/
+    │   ├── auth/
+    │   ├── users/
+    │   └── projects/
+    │
+    ├── pages/
+    │   ├── Login.tsx
+    │   ├── Dashboard.tsx
+    │   ├── Users.tsx
+    │   └── Projects.tsx
+    │
+    ├── types/
+    │   └── auth.ts
+    │
+    ├── App.tsx
+    └── main.tsx
+	
+	Create folders
+mkdir src\api
+mkdir src\auth
+mkdir src\components\common
+mkdir src\components\auth
+mkdir src\components\users
+mkdir src\components\projects
+mkdir src\pages
+mkdir src\types
+
+2. Create files
+type nul > src\api\axios.ts
+type nul > src\api\authApi.ts
+type nul > src\api\userApi.ts
+type nul > src\api\projectApi.ts
+
+type nul > src\auth\AuthContext.tsx
+type nul > src\auth\authService.ts
+
+type nul > src\pages\Login.tsx
+type nul > src\pages\Dashboard.tsx
+type nul > src\pages\Users.tsx
+type nul > src\pages\Projects.tsx
+
+type nul > src\types\auth.ts
+
+frontend/
+└── src/
+    ├── api/
+    │   ├── axios.ts
+    │   ├── authApi.ts
+    │   ├── userApi.ts
+    │   └── projectApi.ts
+    │
+    ├── auth/
+    │   ├── AuthContext.tsx
+    │   └── authService.ts
+    │
+    ├── components/
+    │   ├── common/
+    │   ├── auth/
+    │   ├── users/
+    │   └── projects/
+    │
+    ├── pages/
+    │   ├── Login.tsx
+    │   ├── Dashboard.tsx
+    │   ├── Users.tsx
+    │   └── Projects.tsx
+    │
+    ├── types/
+    │   └── auth.ts
+    │
+    ├── App.tsx
+    └── main.tsx
+---------------------------------------------------------
+Axios Refresh Interceptor
+
+API Request
+    ↓
+Access token valid?
+    │
+    ├── YES → Response ✅
+    │
+    └── NO → 401
+              ↓
+       Call /auth/refresh
+              ↓
+       New cookies received
+              ↓
+       Retry original request
+              ↓
+          Response ✅
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+---------------------------------------------------------
+
+
+
+Login as ADMIN
+In Thunder Client:
+POST
+http://localhost:5000/api/auth/login
+
+Body:
+{
+  "email": "admin@example.com",
+  "password": "Admin@123"
+}
+
+------------------------------------------------------------
+Login as Normal USER
+
+1. Login using:
+POST http://localhost:5000/api/auth/login
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+
+
+                     App
+                      │
+             ┌────────┴────────┐
+             │                 │
+          Public            Protected
+             │                 │
+       ┌─────┴─────┐           │
+       │           │           ▼
+     Login      Register   ProtectedRoute
+                               │
+                       ┌───────┴───────┐
+                       │               │
+                     Auth            No Auth
+                       │               │
+                       ▼               ▼
+                   Dashboard         Login
+
+
+Next step — Test Access Token Expiration & Refresh 🔄
+Now we can move to the most important teaching part of this project.
+Our .env currently has:
+JWT_ACCESS_EXPIRES_IN=2m
+JWT_REFRESH_EXPIRES_IN=15m
+
+So we can demonstrate this real-world flow:
+Login
+  ↓
+Access Token valid
+  ↓
+Access Token expires after 2 minutes
+  ↓
+Protected API returns 401
+  ↓
+Axios interceptor detects 401
+  ↓
+POST /api/auth/refresh
+  ↓
+Refresh Token validated
+  ↓
+New Access Token generated
+  ↓
+Original request automatically retried
+  ↓
+User continues without logging in again
+
+First test
+Do not change any code yet.
+1. Login again.
+2. Go to Dashboard.
+3. Wait more than 2 minutes.
+4. Then refresh the Dashboard page.
+We will observe what happens and then implement the “Session refreshing...” SweetAlert/message properly.
+
+
+Login
+  ↓
+Access Token valid
+  ↓
+Wait 10 seconds
+  ↓
+Access Token expires
+  ↓
+Protected API → 401
+  ↓
+Axios interceptor
+  ↓
+POST /api/auth/refresh
+  ↓
+New Access Token
+  ↓
+Original request retried
+  ↓
+Dashboard continues working
+
+
+
+1. Open the application.
+2. Login.
+3. Go to Dashboard.
+4. Wait more than 10 seconds.
+5. Press F5.
+6. Open DevTools → Network.
+We are looking for:
+/auth/me       → 401
+/auth/refresh  → 200
+/auth/me       → 200
+
+If you see this sequence and remain on the Dashboard, we have successfully demonstrated:
+JWT Access Token Expiration + Refresh Token + Axios Automatic Retry
+
+
+******************************************************
+The correct JWT flow
+When the access token expires:
+Access Token Expired
+        ↓
+SweetAlert:
+"Session expired. Refreshing access token..."
+        ↓
+Refresh Token
+        ↓
+New Access Token
+        ↓
+Retry original request
+
+When the refresh token is still valid, our backend can also rotate it and generate a new refresh token:
+Refresh Token Valid
+        ↓
+Generate new Access Token
+        +
+Generate new Refresh Token
+        ↓
+Store new refresh token
+        ↓
+Continue session
+
+But if the refresh token itself has expired:
+Access Token Expired
+        ↓
+Try Refresh Token
+        ↓
+Refresh Token Expired ❌
+        ↓
+Cannot generate a new refresh token
+        ↓
+SweetAlert:
+"Your session has expired.
+Please login again."
+        ↓
+Redirect to Login
+******************************************************
+E:\Advaitecs\jwt-cookies\backend\.env
+JWT_ACCESS_EXPIRES_IN=10s
+JWT_REFRESH_EXPIRES_IN=20s
+
+0 sec       Login
+            ↓
+10 sec      Access Token expires
+            ↓
+            🔄 Refresh Access Token
+            ↓
+20 sec      Refresh Token expires
+            ↓
+            ❌ Cannot refresh
+            ↓
+            SweetAlert
+            ↓
+            Redirect to /login
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+We now have:
+GET /auth/me → 401
+        ↓
+   refreshSession()
+        ↓
+ONE POST /auth/refresh
+        ↓
+      200
+        ↓
+retry /auth/me
+
+If two requests expire together:
+Request A → 401 ─┐
+                 │
+Request B → 401 ─┤
+                 ↓
+        ONE refresh request
+                 ↓
+              success
+                 ↓
+        A retries + B retries
+
+So we should no longer get the problem you saw:
+/refresh → 200
+/refresh → 500
+
+And when the refresh token expires
+We'll get:
+Access Token expired
+        ↓
+🔄 "Session expired.
+    Refreshing your access token..."
+        ↓
+/auth/refresh fails
+        ↓
+❌ "Session Expired
+    Your refresh token has expired
+    or is no longer valid.
+    Please login again."
+        ↓
+/login
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+5 sec
+F5
+→ /auth/me → 200
+→ no refresh
+
+10 sec
+Access Token expires
+
+15 sec
+F5
+→ /auth/me → 401
+→ /auth/refresh → SUCCESS
+→ NEW access token
+→ NEW refresh token
+
+Now the new refresh token gets another 20-second lifetime.
+Then:
+20 sec
+F5
+→ Access token may still be valid
+→ no refresh
+
+25 sec
+F5
+→ Access token expired
+→ refresh succeeds
+→ NEW refresh token
+→ another 20 seconds
+
+And this continues.
+So:
+F5 every 5 seconds
+       ↓
+Access token eventually expires
+       ↓
+Refresh succeeds
+       ↓
+Refresh token rotated
+       ↓
+New refresh-token lifetime
+       ↓
+Session continues
+
+This is called a "sliding session"
+Our current design effectively creates a sliding refresh-token session.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+🔐 Authentication
+- Login / Register
+- JWT access token
+- JWT refresh token
+- HTTP-only cookies
+- withCredentials
+- Protected routes
+- /auth/me
+🔄 Token Refresh
+Access Token expires
+        ↓
+401 Unauthorized
+        ↓
+Axios interceptor
+        ↓
+Refresh Token
+        ↓
+New Access Token
+        ↓
+Retry original request
+
+🔁 Refresh Token Rotation
+A successful refresh generates:
+New Access Token
++
+New Refresh Token
+
+and the old refresh token is revoked.
+🚪 Session Expiration
+If the refresh token is no longer valid:
+Refresh fails
+    ↓
+SweetAlert
+"Session Expired"
+    ↓
+Redirect to Login
+
+🛡️ Authorization
+We also have:
+USER
+ ↓
+Normal protected APIs
+
+ADMIN
+ ↓
+ADMIN protected APIs
+
+with 403 Forbidden when a USER tries to access an ADMIN-only endpoint.
+🎓 Especially good for your training
+The project now demonstrates the complete lifecycle:
+REGISTER
+   ↓
+LOGIN
+   ↓
+HTTP-ONLY COOKIE
+   ↓
+ACCESS TOKEN
+   ↓
+PROTECTED API
+   ↓
+ACCESS TOKEN EXPIRES
+   ↓
+REFRESH TOKEN
+   ↓
+TOKEN ROTATION
+   ↓
+RETRY ORIGINAL REQUEST
+   ↓
+REFRESH TOKEN EXPIRES
+   ↓
+SESSION EXPIRED
+   ↓
+LOGIN AGAIN
+
+=============================
+JWT Authentication with HTTP-Only Cookies
+
+Secure Access & Refresh Token Management using React, TypeScript, Express & PostgreSQL
+This is professional and accurately describes what we have built.
+
+Other good options
+
+1. JWT Authentication & Authorization — Full-Stack Security Demo
+2. Secure JWT Authentication with Access & Refresh Tokens
+3. Full-Stack JWT Authentication with HTTP-Only Cookies
+4. JWT-Based Authentication & Role-Based Authorization
+5. Secure Authentication System — JWT, HTTP-Only Cookies & Refresh Tokens
+
+For your training material, I particularly like:
+
+JWT Authentication & Authorization
+Access Tokens, Refresh Tokens & HTTP-Only Cookies
+React + TypeScript + Express + PostgreSQL
+
+It gives you very clear teaching sections:
+
+1. User Registration
+2. User Login
+3. JWT Access Tokens
+4. JWT Refresh Tokens
+5. HTTP-Only Cookies
+6. Access Token Expiration
+7. Automatic Token Refresh
+8. Refresh Token Rotation
+9. Logout
+10. Protected Routes
+11. Role-Based Authorization
+12. Session Expiration
+=============================
+
+--------------------
+admin@example.com
+Admin@123
+
+naresh@example.com
+Password@123
+--------------------
+
+
+
+
+
+**************	
+npm run build
+npm run dev
+**************
+
+
+CORS — Topics Covered
+You can list it as:
+- CORS (Cross-Origin Resource Sharing)
+  - Frontend and backend running on different origins
+  - Configuring allowed frontend origin
+  - CORS_ORIGIN using environment variables
+  - credentials: true
+  - withCredentials: true in Axios
+  - Why credentials are required for HTTP-only cookies
+  - Preflight / OPTIONS requests
+  - Restricting CORS instead of allowing *
+  - CORS configuration middleware
+In your project, we have essentially demonstrated:
+CORS_ORIGIN=http://localhost:5173
+CORS_CREDENTIALS=true
+
+and on the frontend:
+const api = axios.create({
+  baseURL: "http://localhost:5000/api",
+  withCredentials: true,
+});
+
+So the important teaching flow is:
+React Frontend
+localhost:5173
+       │
+       │ Cross-Origin Request
+       ↓
+Express Backend
+localhost:5000
+       │
+       ↓
+CORS Middleware
+       │
+       ├── Allowed Origin ✓
+       └── Credentials ✓
+              │
+              ↓
+       HTTP-Only Cookies
+
+I would slightly improve your final checklist
+● Backend Project Architecture
+● Controllers, Services & Routes
+● Middleware
+● Centralized Error Handling
+● Request Validation
+● Authentication & Authorization
+● Password Hashing
+● JWT Security
+● HTTP-Only Cookies
+● Access & Refresh Tokens
+● Refresh Token Rotation
+● CORS & Cross-Origin Requests
+● Environment Variables
+● Secure API Design
+● Role-Based Authorization
+● Common Backend Security Practices
+
+Yes — I would mark CORS as DONE. ✅
+And because we have actually demonstrated CORS + credentials + HTTP-only cookies + Axios withCredentials, this is more than just theoretical CORS coverage.

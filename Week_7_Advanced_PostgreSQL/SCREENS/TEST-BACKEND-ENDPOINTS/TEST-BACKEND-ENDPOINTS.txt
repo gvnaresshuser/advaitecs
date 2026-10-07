@@ -1,0 +1,385 @@
+ 1. Start the backend
+
+From:
+
+```cmd
+E:\Advaitecs\Week_7_Advanced_PostgreSQL\backend
+```
+
+run:
+
+```cmd
+npm run dev
+```
+
+You should see something like:
+
+```text
+Server running on http://localhost:5000
+```
+
+ 2. First test the root endpoint
+
+Open Chrome/Postman:
+
+```text
+http://localhost:5000/
+```
+
+Expected:
+
+```json
+{
+  "message": "Week 7 Advanced PostgreSQL API"
+}
+```
+
+---
+
+## 3. Test Departments
+
+ Get all departments
+
+```text
+GET http://localhost:5000/api/departments
+```
+
+Expected:
+
+```json
+[
+  {
+    "department_id": 1,
+    "department_name": "Development"
+  },
+  {
+    "department_id": 2,
+    "department_name": "Testing"
+  },
+  {
+    "department_id": 3,
+    "department_name": "HR"
+  },
+  {
+    "department_id": 4,
+    "department_name": "Database"
+  }
+]
+```
+
+---
+
+# 4. Test Employees
+
+ Get all employees
+
+```text
+GET http://localhost:5000/api/employees
+```
+
+Expected:
+
+```json
+[
+  {
+    "employee_id": 1,
+    "employee_name": "Ravi",
+    "email": "ravi@example.com",
+    "salary": "75000.00",
+    "department_id": 1
+  }
+]
+```
+
+You should see all your inserted employees.
+
+---
+
+# 5. Test INNER JOIN ⭐
+
+This is one of the important Week 7 demonstrations.
+
+```text
+GET http://localhost:5000/api/employees/with-departments
+```
+
+This executes:
+
+```sql
+SELECT
+  e.employee_id,
+  e.employee_name,
+  e.email,
+  e.salary,
+  d.department_name
+FROM employees_advaitecs_advpgsql e
+INNER JOIN departments_advaitecs_advpgsql d
+  ON e.department_id = d.department_id
+ORDER BY e.employee_id;
+```
+
+Expected type of result:
+
+```json
+[
+  {
+    "employee_id": 1,
+    "employee_name": "Ravi",
+    "email": "ravi@example.com",
+    "salary": "75000.00",
+    "department_name": "Development"
+  },
+  {
+    "employee_id": 2,
+    "employee_name": "Priya",
+    "email": "priya@example.com",
+    "salary": "85000.00",
+    "department_name": "Development"
+  }
+]
+```
+
+This is our first **SQL → Repository → Controller → Route → HTTP API** demonstration.
+
+---
+
+# 6. Test LEFT JOIN ⭐
+
+```text
+GET http://localhost:5000/api/employees/departments-with-employees
+```
+
+This executes our `LEFT JOIN`.
+
+The important thing to show students is that **all departments appear**, even if a department has no employee.
+
+For example:
+
+```json
+[
+  {
+    "department_id": 1,
+    "department_name": "Development",
+    "employee_id": 1,
+    "employee_name": "Ravi",
+    "salary": "75000.00"
+  }
+]
+```
+
+---
+
+# 7. Test Aggregate Functions + GROUP BY ⭐
+
+```text
+GET http://localhost:5000/api/employees/department-statistics
+```
+
+This demonstrates:
+
+```text
+COUNT()
+AVG()
+MIN()
+MAX()
+GROUP BY
+```
+
+Expected structure:
+
+```json
+[
+  {
+    "department_id": 1,
+    "department_name": "Development",
+    "employee_count": "3",
+    "average_salary": "76666.67",
+    "minimum_salary": "70000",
+    "maximum_salary": "85000"
+  }
+]
+```
+
+---
+
+# 8. Test HAVING ⭐
+
+```text
+GET http://localhost:5000/api/employees/departments-having-more-than-one
+```
+
+This executes:
+
+```sql
+GROUP BY
+HAVING COUNT(...) > 1
+```
+
+Expected:
+
+```json
+[
+  {
+    "department_name": "Development",
+    "employee_count": "3"
+  }
+]
+```
+
+---
+
+# 9. Test Projects
+
+```text
+GET http://localhost:5000/api/projects
+```
+
+Expected:
+
+```json
+[
+  {
+    "project_id": 1,
+    "project_name": "E-Commerce Application",
+    "budget": "500000.00"
+  }
+]
+```
+
+---
+
+# 10. Test Many-to-Many JOIN ⭐
+
+This is another important PostgreSQL concept.
+
+```text
+GET http://localhost:5000/api/projects/with-employees
+```
+
+It executes:
+
+```sql
+employee_projects
+       ↓
+   employees
+       +
+    projects
+```
+
+Expected:
+
+```json
+[
+  {
+    "employee_id": 1,
+    "employee_name": "Ravi",
+    "project_id": 1,
+    "project_name": "E-Commerce Application",
+    "budget": "500000.00"
+  }
+]
+```
+
+---
+
+## Your endpoint testing checklist
+
+I would test them in this order:
+
+| # | Endpoint | Concept |
+|---|---|---|
+| 1 | `/` | API health |
+| 2 | `/api/departments` | Table |
+| 3 | `/api/employees` | Table |
+| 4 | `/api/employees/with-departments` | **INNER JOIN** |
+| 5 | `/api/employees/departments-with-employees` | **LEFT JOIN** |
+| 6 | `/api/employees/department-statistics` | **Aggregate + GROUP BY** |
+| 7 | `/api/employees/departments-having-more-than-one` | **HAVING** |
+| 8 | `/api/projects` | Table |
+| 9 | `/api/projects/with-employees` | **Multiple JOIN / Many-to-Many** |
+
+
+If the tables/data are already there, start:
+
+```cmd
+npm run dev
+```
+
+and test **endpoint #1 first**, then proceed down the list.
+
+
+| # | Endpoint | Concept |
+|---|---|---|
+| 1 | `/` | API health |
+| 2 | `/api/departments` | Table |
+| 3 | `/api/employees` | Table |
+| 4 | `/api/employees/with-departments` | **INNER JOIN** |
+| 5 | `/api/employees/departments-with-employees` | **LEFT JOIN** |
+| 6 | `/api/employees/department-statistics` | **Aggregate + GROUP BY** |
+| 7 | `/api/employees/departments-having-more-than-one` | **HAVING** |
+| 8 | `/api/projects` | Table |
+| 9 | `/api/projects/with-employees` | **Multiple JOIN / Many-to-Many** |
+
+
+What we have completed
+WEEK 7 – ADVANCED POSTGRESQL
+        │
+        ├── Tables                    ✅
+        ├── Primary Keys              ✅
+        ├── Foreign Keys              ✅
+        ├── Relationships             ✅
+        ├── INNER JOIN                ✅
+        ├── LEFT JOIN                 ✅
+        ├── Related Queries           ✅
+        ├── Aggregate Functions       ✅
+        ├── GROUP BY                  ✅
+        └── HAVING                    ✅
+		
+PostgreSQL
+    ↓
+SQL Query
+    ↓
+Repository
+    ↓
+Controller
+    ↓
+Route
+    ↓
+REST API
+    ↓
+Tested Successfully ✅
+
+Test Page 1
+Open:
+GET
+http://localhost:5000/api/employees/pagination?page=1&limit=3
+
+GET
+http://localhost:5000/api/employees/pagination?page=2&limit=3
+
+One Very Important PostgreSQL Concept
+For pagination, we should normally use:
+ORDER BY employee_id
+
+before:
+LIMIT
+OFFSET
+
+For example:
+SELECT *
+FROM employees_advaitecs_advpgsql
+ORDER BY employee_id
+LIMIT 3
+OFFSET 3;
+
+This gives us stable and predictable pagination.
+Without ORDER BY, PostgreSQL does not guarantee a particular row order.		
+
+
+est the Search API
+Start your backend:
+npm run dev
+
+Then open:
+GET
+http://localhost:5000/api/employees/search?email=ravi@example.com

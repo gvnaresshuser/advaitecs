@@ -1,0 +1,116 @@
+What is an Index?
+Suppose our employee table contains:
+1,000,000 employees
+
+We frequently search by:
+WHERE email = 'ravi@example.com'
+
+Without an index, PostgreSQL may need to inspect many rows.
+An index is a data structure that helps PostgreSQL find rows more efficiently.
+A simple real-world example:
+Book
+│
+├── Page 1
+├── Page 2
+├── Page 3
+├── ...
+└── Page 500
+
+Instead of reading every page to find "PostgreSQL", the index tells us approximately where to look.
+2. Check Existing Indexes
+Our primary keys already have indexes automatically created by PostgreSQL.
+For example:
+CREATE TABLE employees_advaitecs_advpgsql (
+    employee_id SERIAL PRIMARY KEY,
+    ...
+);
+
+Because employee_id is a:
+PRIMARY KEY
+
+PostgreSQL automatically creates a unique index for it.
+We can check indexes using:
+SELECT
+    indexname,
+    indexdef
+FROM pg_indexes
+WHERE tablename = 'employees_advaitecs_advpgsql';
+
+You should see an index related to:
+employee_id
+
+3. Create an Index on Email
+Our application may frequently search employees by email:
+SELECT *
+FROM employees_advaitecs_advpgsql
+WHERE email = 'ravi@example.com';
+
+Let's create an index:
+------------------------------------------
+CREATE INDEX idx_employees_email_advaitecs
+ON employees_advaitecs_advpgsql(email);
+------------------------------------------
+
+Now PostgreSQL has an index on:
+email
+
+4. Why Did We Create This Index?
+Before:
+Search employee by email
+        ↓
+Check many rows
+        ↓
+Find matching employee
+
+With an index:
+Search employee by email
+        ↓
+Email Index
+        ↓
+Find matching row
+
+This becomes especially useful when the table contains a large number of records.
+5. Important Point — Don't Create Indexes Everywhere
+Indexes are useful, but they are not free.
+Every index consumes:
+- Storage
+- Memory/cache
+- Additional work during INSERT
+- Additional work during UPDATE
+- Additional work during DELETE
+Therefore:
+Create indexes on columns that are frequently used for searching, joining, sorting, or filtering.
+
+Typical candidates:
+email
+department_id
+created_at
+status
+foreign keys
+frequently searched columns
+
+6. Index on Foreign Key
+Our employees table contains:
+department_id
+
+and we frequently perform:
+JOIN departments
+ON employees.department_id = departments.department_id
+
+We can create:
+------------------------------------------
+CREATE INDEX idx_employees_department_id_advaitecs
+ON employees_advaitecs_advpgsql(department_id);
+------------------------------------------
+
+This can help queries involving department_id.
+
+
+| Index | Column | How it came |
+|---|---|---|
+| `employees_advaitecs_advpgsql_pkey` | `employee_id` | Automatic — PRIMARY KEY |
+| `employees_advaitecs_advpgsql_email_key` | `email` | Automatic — UNIQUE |
+| `idx_employee_department_advaitecs_advpgsql` | `department_id` | Explicitly created earlier |
+| `idx_employee_name_advaitecs_advpgsql` | `employee_name` | Explicitly created earlier |
+| `idx_employees_email_advaitecs` | `email` | Explicitly created |
+| `idx_employees_department_id_advaitecs` | `department_id` | Explicitly created |

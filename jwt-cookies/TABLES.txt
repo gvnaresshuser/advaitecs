@@ -1,0 +1,126 @@
+users_advaitecs_jwt_cookies
+roles_advaitecs_jwt_cookies
+user_roles_advaitecs_jwt_cookies
+refresh_tokens_advaitecs_jwt_cookies
+---------------------------------------------------------------------------
+Run the schema
+Run 001_schema.sql in your Neon/PostgreSQL SQL editor.
+---------------------------------------------------------------------------
+Then run:
+SELECT
+    schemaname,
+    tablename
+FROM pg_tables
+WHERE tablename LIKE '%_advaitecs_jwt_cookies'
+ORDER BY tablename;
+
+[{
+  "schemaname": "public",
+  "tablename": "projects_advaitecs_jwt_cookies"
+}, {
+  "schemaname": "public",
+  "tablename": "refresh_tokens_advaitecs_jwt_cookies"
+}, {
+  "schemaname": "public",
+  "tablename": "roles_advaitecs_jwt_cookies"
+}, {
+  "schemaname": "public",
+  "tablename": "user_roles_advaitecs_jwt_cookies"
+}, {
+  "schemaname": "public",
+  "tablename": "users_advaitecs_jwt_cookies"
+}]
+---------------------------------------------------------------------------
+Run the schema
+Run 002_seed.sql in your Neon/PostgreSQL SQL editor.
+
+SELECT *
+FROM roles_advaitecs_jwt_cookies
+ORDER BY id;
+
+[{
+  "id": 1,
+  "name": "USER",
+  "description": "Regular authenticated user",
+  "created_at": "2026-10-07 02:35:09.409576+00"
+}, {
+  "id": 2,
+  "name": "ADMIN",
+  "description": "Administrator with elevated permissions",
+  "created_at": "2026-10-07 02:35:09.409576+00"
+}]
+
+---------------------------------------------------------------------------
+
+projects_advaitecs_jwt_cookies table later so our protected APIs have something meaningful to demonstrate:
+
+Proposed relationships
+
+roles_advaitecs_jwt_cookies
+          │
+          │
+          ▼
+user_roles_advaitecs_jwt_cookies
+          ▲
+          │
+          │
+users_advaitecs_jwt_cookies
+          │
+          │
+          ▼
+refresh_tokens_advaitecs_jwt_cookies
+
+---------------------------------------------------------------------------
+Database relationship
+
+┌─────────────────────────────────────┐
+│ roles_advaitecs_jwt_cookies         │
+│                                     │
+│ id                                  │
+│ name                                │
+│ description                         │
+└──────────────────┬──────────────────┘
+                   │
+                   │
+                   │
+┌──────────────────▼──────────────────┐
+│ user_roles_advaitecs_jwt_cookies    │
+│                                     │
+│ user_id                             │
+│ role_id                             │
+└──────────────────┬──────────────────┘
+                   │
+                   │
+┌──────────────────▼──────────────────┐
+│ users_advaitecs_jwt_cookies         │
+│                                     │
+│ id                                  │
+│ name                                │
+│ email                               │
+│ password_hash                       │
+│ is_active                           │
+└───────────────┬─────────────────────┘
+                │
+         ┌──────┴──────────────┐
+         │                     │
+         ▼                     ▼
+┌────────────────────┐   ┌─────────────────────────┐
+│ projects_          │   │ refresh_tokens_         │
+│ advaitecs_         │   │ advaitecs_              │
+│ jwt_cookies        │   │ jwt_cookies             │
+│                    │   │                         │
+│ id                 │   │ id                      │
+│ name               │   │ user_id                 │
+│ description        │   │ token_hash              │
+│ owner_id           │   │ expires_at              │
+└────────────────────┘   │ revoked_at              │
+                         └─────────────────────────┘
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------						 

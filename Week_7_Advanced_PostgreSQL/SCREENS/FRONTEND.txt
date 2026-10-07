@@ -1,0 +1,917 @@
+E:\Advaitecs\Week_7_Advanced_PostgreSQL
+
+*******************************************************
+npm create vite@latest frontend -- --template react-ts
+npm install tailwindcss @tailwindcss/vite
+npm install axios
+*******************************************************
+Microsoft Windows [Version 10.0.26100.8246]
+(c) Microsoft Corporation. All rights reserved.
+
+E:\Advaitecs\Week_7_Advanced_PostgreSQL>npm create vite@latest frontend -- --template react-ts
+
+> npx
+> create-vite frontend --template react-ts
+
+|
+o  Which linter to use?
+|  ESLint
+|
+o  Install with npm and start now?
+|  Yes
+|
+o  Scaffolding project in E:\Advaitecs\Week_7_Advanced_PostgreSQL\frontend...
+|
+o  Installing dependencies with npm...
+|
+
+TAILWIND CSS INSTALLATION:
+=========================
+https://tailwindcss.com/docs/installation/using-vite
+npm install tailwindcss @tailwindcss/vite
+
+
+Then React + TypeScript + Tailwind
+The frontend can be extremely simple:
+frontend/
+└── src/
+    ├── api/
+    │   ├── axios.ts
+    │   ├── departmentApi.ts
+    │   ├── employeeApi.ts
+    │   └── projectApi.ts
+    │
+    ├── components/
+    │   ├── common/
+    │   ├── departments/
+    │   ├── employees/
+    │   └── projects/
+    │
+    ├── pages/
+    │   └── Dashboard.tsx
+    │
+    ├── App.tsx
+    ├── main.tsx
+    └── index.css
+	
+	
+	
+Install Axios
+From the frontend folder:
+npm install axios
+
+Step 3 — Create the folders
+Since you're using Windows CMD:
+mkdir src\api
+mkdir src\components
+mkdir src\components\common
+mkdir src\components\departments
+mkdir src\components\employees
+mkdir src\components\projects
+mkdir src\pages
+
+Step 4 — Create the API files
+type nul > src\api\axios.ts
+type nul > src\api\departmentApi.ts
+type nul > src\api\employeeApi.ts
+type nul > src\api\projectApi.ts
+
+Step 5 — Create the Dashboard
+type nul > src\pages\Dashboard.tsx
+
+
+E:\Advaitecs\Week_7_Advanced_PostgreSQL\frontend>
+
+----------------------------------------------------
+INNER JOIN — Employees with Departments
+1. PostgreSQL concept
+We already have two tables:
+departments
+    department_id
+    department_name
+
+employees
+    employee_id
+    employee_name
+    email
+    salary
+    department_id
+
+The relationship is:
+departments.department_id
+          ↑
+          │
+employees.department_id
+
+The SQL query we already implemented in the backend is:
+SELECT
+    e.employee_id,
+    e.employee_name,
+    e.email,
+    e.salary,
+    d.department_name
+FROM employees_advaitecs_advpgsql e
+INNER JOIN departments_advaitecs_advpgsql d
+    ON e.department_id = d.department_id
+ORDER BY e.employee_id;
+
+This gives us employee information together with the department name.
+----------------------------------------------------
+Create Employee API
+Create:
+src/api/employeeApi.ts
+----------------------------------------------------
+Create Employees Component
+Create:
+src/components/employees/EmployeeList.tsx
+----------------------------------------------------
+Add EmployeeList to Dashboard
+Update:
+src/pages/Dashboard.tsx
+
+----------------------------------------------------
+PostgreSQL Relationship Concepts
+Departments
+Simple SELECT demonstration
+
+Employees with Departments
+INNER JOIN demonstration
+
+Departments with Employees
+LEFT JOIN demonstration
+
+Employees with Projects
+Many-to-Many relationship demonstration
+
+Aggregate Concepts
+Department Statistics
+COUNT, AVG, MIN, MAX + GROUP BY demonstration
+
+Departments with More Than One Employee
+GROUP BY + HAVING demonstration
+
+Data Retrieval Concepts
+Employees
+Simple SELECT demonstration
+
+Employee Search
+WHERE condition + indexed search demonstration
+
+Employee Pagination
+LIMIT + OFFSET demonstration
+
+Performance Concepts
+Employee Name Search
+INDEX + EXPLAIN ANALYZE demonstration
+
+Department Search
+INDEX + query performance demonstration
+----------------------------------------------------
+LEFT JOIN — Departments with Employees
+This will let you teach the difference very clearly:
+INNER JOIN demonstration
+→ only matching records
+
+LEFT JOIN demonstration
+→ all records from the left table,
+  including departments with no employees
+----------------------------------------------------
+  Then we'll continue in this sequence:
+1. LEFT JOIN demonstration
+2. Many-to-Many relationship demonstration
+3. GROUP BY + Aggregate Functions demonstration
+4. HAVING demonstration
+5. Pagination demonstration
+6. Indexed Search demonstration
+7. EXPLAIN ANALYZE demonstration
+For every section, I'll keep the same pattern:
+PostgreSQL Concept → SQL Query → Backend API → React TypeScript → Tailwind UI → Teaching heading
+----------------------------------------------------
+LEFT JOIN demonstration.
+1. Create EmployeeDepartmentLeftJoin.tsx
+type nul > src\components\employees\EmployeeDepartmentLeftJoin.tsx
+
+Add the API function
+In src/api/employeeApi.ts, add:
+export interface DepartmentWithEmployee {
+export const getDepartmentsWithEmployees =
+
+Add the component
+src/components/employees/EmployeeDepartmentLeftJoin.tsx
+
+Add it to Dashboard.tsx
+Add:
+import EmployeeDepartmentLeftJoin from "../components/employees/EmployeeDepartmentLeftJoin";
+
+Then immediately after the EmployeeList section:
+<EmployeeDepartmentLeftJoin />
+
+So your Dashboard will now teach:
+Departments
+Simple SELECT demonstration
+
+Employees with Departments
+INNER JOIN demonstration
+
+Departments with Employees
+LEFT JOIN demonstration
+
+SQL being demonstrated
+The backend endpoint uses:
+SELECT
+    d.department_id,
+    d.department_name,
+    e.employee_id,
+    e.employee_name,
+    e.salary
+FROM departments_advaitecs_advpgsql d
+LEFT JOIN employees_advaitecs_advpgsql e
+    ON d.department_id = e.department_id
+ORDER BY d.department_id, e.employee_id;
+
+The important teaching point is:
+LEFT JOIN returns every department from the left table, even when there is no matching employee.
+----------------------------------------------------
+Now our frontend has two important relational-query demonstrations:
+Departments
+Simple SELECT demonstration
+
+Employees with Departments
+INNER JOIN demonstration
+
+Departments with Employees
+LEFT JOIN demonstration
+----------------------------------------------------
+Many-to-Many Relationship Demonstration
+We'll use:
+employees
+      ↕
+employee_projects
+      ↕
+projects
+
+The backend endpoint is already ready:
+GET /api/projects/with-employees
+----------------------------------------------------
+Many-to-Many Relationship Demonstration.
+1. Update src/api/projectApi.ts
+
+Create src/components/projects/EmployeeProjectList.tsx
+
+Update Dashboard.tsx
+Add the import:
+import EmployeeProjectList from "../components/projects/EmployeeProjectList";
+----------------------------------------------------
+What this demonstrates
+The frontend is displaying the result of this backend SQL:
+SELECT
+  e.employee_id,
+  e.employee_name,
+  p.project_id,
+  p.project_name,
+  p.budget
+FROM employee_projects_advaitecs_advpgsql ep
+INNER JOIN employees_advaitecs_advpgsql e
+  ON ep.employee_id = e.employee_id
+INNER JOIN projects_advaitecs_advpgsql p
+  ON ep.project_id = p.project_id
+ORDER BY e.employee_id, p.project_id;
+
+The relationship is:
+employees
+     │
+     │
+     ▼
+employee_projects
+     │
+     │
+     ▼
+projects
+
+This is a Many-to-Many relationship because:
+- One employee can work on many projects.
+- One project can have many employees.
+- The employee_projects_advaitecs_advpgsql table acts as the junction/bridge table.
+----------------------------------------------------
+Next: Aggregate Functions + GROUP BY
+We’ll follow the same teaching pattern:
+PostgreSQL concept → SQL query → Backend API → React + TypeScript + Tailwind UI
+We will demonstrate:
+COUNT()
+AVG()
+MIN()
+MAX()
+GROUP BY
+
+using the Department Statistics report.
+The frontend section will be titled:
+Department Statistics
+COUNT, AVG, MIN, MAX + GROUP BY demonstration
+----------------------------------------------------
+Yes. Let’s implement Aggregate Functions + GROUP BY next.
+1. PostgreSQL concept first
+We want to calculate statistics for each department:
+COUNT() → number of employees
+AVG()   → average salary
+MIN()   → minimum salary
+MAX()   → maximum salary
+
+Our SQL is already available in the backend:
+SELECT
+  d.department_id,
+  d.department_name,
+  COUNT(e.employee_id) AS employee_count,
+  ROUND(AVG(e.salary), 2) AS average_salary,
+  MIN(e.salary) AS minimum_salary,
+  MAX(e.salary) AS maximum_salary
+FROM departments_advaitecs_advpgsql d
+LEFT JOIN employees_advaitecs_advpgsql e
+  ON d.department_id = e.department_id
+GROUP BY
+  d.department_id,
+  d.department_name
+ORDER BY d.department_id;
+
+Why GROUP BY?
+Without GROUP BY, PostgreSQL would calculate statistics for all employees together.
+With:
+GROUP BY d.department_id, d.department_name
+
+PostgreSQL creates one group for each department.
+For our data, conceptually:
+Development
+   Employees: Ravi, Priya, Meena
+
+Testing
+   Employee: Arun
+
+HR
+   Employee: Sneha
+
+Database
+   Employee: Kiran
+
+Then PostgreSQL calculates COUNT, AVG, MIN, and MAX separately for each group.
+2. Backend
+Good news: the backend is already complete.
+We already have:
+GET /api/employees/department-statistics
+
+and the repository method:
+getDepartmentStatistics()
+
+So we only need to build the frontend.
+----------------------------------------------------
+Create employeeApi.ts interface and API
+Open:
+frontend/src/api/employeeApi.ts
+
+Add this at the bottom:
+export interface DepartmentStatistics {
+  department_id: number;
+  department_name: string;
+  employee_count: number;
+  average_salary: number;
+  minimum_salary: number;
+  maximum_salary: number;
+}
+
+export const getDepartmentStatistics =
+  async (): Promise<DepartmentStatistics[]> => {
+    const response = await api.get<DepartmentStatistics[]>(
+      "/employees/department-statistics"
+    );
+
+    return response.data;
+  };
+----------------------------------------------------
+Create the React component
+Create:
+frontend/src/components/employees/DepartmentStatistics.tsx
+
+Add it to Dashboard.tsx
+Add the import:
+import DepartmentStatistics from "../components/employees/DepartmentStatistics";
+----------------------------------------------------
+dashboard flow is now becoming very nice for teaching:
+Departments
+   ↓
+Simple SELECT demonstration
+
+Employees with Departments
+   ↓
+INNER JOIN demonstration
+
+Departments with Employees
+   ↓
+LEFT JOIN demonstration
+
+Employees with Projects
+   ↓
+Many-to-Many relationship demonstration
+
+Department Statistics
+   ↓
+COUNT, AVG, MIN, MAX + GROUP BY demonstration
+----------------------------------------------------
+The Aggregate Functions + GROUP BY Demonstration is now complete.
+Next topic: GROUP BY + HAVING
+We’ll build the next section:
+Departments with More Than One Employee
+GROUP BY + HAVING demonstration
+
+The PostgreSQL query will demonstrate the important difference between:
+WHERE  → filters rows BEFORE grouping
+HAVING → filters groups AFTER grouping
+
+We’ll use the existing backend endpoint:
+GET /api/employees/departments-having-more-than-one
+----------------------------------------------------
+GROUP BY + HAVING now.
+1. PostgreSQL concept
+We want to find departments having more than one employee.
+The SQL is:
+SELECT
+  d.department_name,
+  COUNT(e.employee_id) AS employee_count
+FROM departments_advaitecs_advpgsql d
+INNER JOIN employees_advaitecs_advpgsql e
+  ON d.department_id = e.department_id
+GROUP BY
+  d.department_id,
+  d.department_name
+HAVING COUNT(e.employee_id) > 1
+ORDER BY employee_count DESC;
+
+Important teaching point
+WHERE
+  ↓
+filters individual rows
+
+GROUP BY
+  ↓
+creates groups
+
+HAVING
+  ↓
+filters the groups
+
+For our data:
+Development → 3 employees  ✅
+Testing     → 1 employee   ❌
+HR          → 1 employee   ❌
+Database    → 1 employee   ❌
+
+Therefore, only Development should appear.
+2. Backend
+The backend is already implemented.
+Endpoint:
+GET /api/employees/departments-having-more-than-one
+
+Repository method:
+getDepartmentsHavingMoreThanOneEmployee()
+----------------------------------------------------
+Update employeeApi.ts
+Open:
+frontend/src/api/employeeApi.ts
+
+Add this at the bottom:
+export interface DepartmentHavingMoreThanOneEmployee {
+  department_name: string;
+  employee_count: number;
+}
+
+export const getDepartmentsHavingMoreThanOneEmployee =
+  async (): Promise<DepartmentHavingMoreThanOneEmployee[]> => {
+    const response =
+      await api.get<DepartmentHavingMoreThanOneEmployee[]>(
+        "/employees/departments-having-more-than-one"
+      );
+
+    return response.data;
+  };
+----------------------------------------------------
+Create the React component
+Create:
+frontend/src/components/employees/DepartmentHavingMoreThanOne.tsx
+
+Update Dashboard.tsx
+Add the import:
+import DepartmentHavingMoreThanOne from "../components/employees/DepartmentHavingMoreThanOne";
+----------------------------------------------------
+dashboard teaching sequence is now:
+Departments
+    ↓
+Simple SELECT demonstration
+
+Employees with Departments
+    ↓
+INNER JOIN demonstration
+
+Departments with Employees
+    ↓
+LEFT JOIN demonstration
+
+Employees with Projects
+    ↓
+Many-to-Many relationship demonstration
+
+Department Statistics
+    ↓
+COUNT, AVG, MIN, MAX + GROUP BY demonstration
+
+Departments with More Than One Employee
+    ↓
+GROUP BY + HAVING demonstration
+----------------------------------------------------
+Pagination & Efficient Data Retrieval
+We’ll now implement:
+Employee Pagination
+LIMIT + OFFSET demonstration
+
+We already have the backend endpoint:
+GET /api/employees/pagination?page=1&limit=3
+
+And the PostgreSQL concept is:
+LIMIT 3
+OFFSET 0
+
+with:
+OFFSET = (page - 1) × limit
+
+So:
+Page 1 → LIMIT 3 OFFSET 0
+Page 2 → LIMIT 3 OFFSET 3
+----------------------------------------------------
+Absolutely. Let’s implement Employee Pagination now.
+1. PostgreSQL concept first
+Pagination allows us to retrieve only a small portion of records instead of loading the entire table.
+Our SQL:
+SELECT
+    employee_id,
+    employee_name,
+    email,
+    salary,
+    department_id
+FROM employees_advaitecs_advpgsql
+ORDER BY employee_id
+LIMIT 3
+OFFSET 0;
+
+The important formula is:
+OFFSET = (page - 1) × limit
+
+Therefore:
+Page 1 → LIMIT 3 OFFSET 0
+Page 2 → LIMIT 3 OFFSET 3
+
+Our backend already implements this.
+2. Add pagination API to employeeApi.ts
+Open:
+frontend/src/api/employeeApi.ts
+
+Add this at the bottom:
+export interface Employee {
+  employee_id: number;
+  employee_name: string;
+  email: string;
+  salary: number;
+  department_id: number;
+}
+
+export interface EmployeePaginationResponse {
+  data: Employee[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalRecords: number;
+    totalPages: number;
+  };
+}
+
+export const getEmployeesPaginated = async (
+  page: number,
+  limit: number
+): Promise<EmployeePaginationResponse> => {
+  const response = await api.get<EmployeePaginationResponse>(
+    "/employees/pagination",
+    {
+      params: {
+        page,
+        limit,
+      },
+    }
+  );
+
+  return response.data;
+};
+----------------------------------------------------
+Create pagination component
+Create:
+frontend/src/components/employees/EmployeePagination.tsx
+
+Add it to Dashboard.tsx
+Add the import:
+import EmployeePagination from "../components/employees/EmployeePagination";
+----------------------------------------------------
+With our six employees and limit = 3:
+Page 1
+Employee 1
+Employee 2
+Employee 3
+
+Page 1 of 2
+
+[Previous]    Page 1 of 2    [Next]
+
+Click Next:
+Page 2
+Employee 4
+Employee 5
+Employee 6
+
+Page 2 of 2
+
+[Previous]    Page 2 of 2    [Next]
+
+The browser will make:
+GET /api/employees/pagination?page=1&limit=3
+
+and then:
+GET /api/employees/pagination?page=2&limit=3
+
+This gives us a very clear full-stack demonstration:
+PostgreSQL
+LIMIT + OFFSET
+       ↓
+Repository
+       ↓
+Controller
+       ↓
+REST API
+       ↓
+Axios
+       ↓
+TypeScript Interface
+       ↓
+React State
+       ↓
+Pagination UI
+----------------------------------------------------
+Employee Search + Index
+We’ll implement:
+Employee Search
+WHERE condition + indexed search demonstration
+
+We already have the backend endpoint:
+GET /api/employees/search?email=ravi@example.com
+
+The PostgreSQL concept will be:
+SELECT
+    employee_id,
+    employee_name,
+    email,
+    salary,
+    department_id
+FROM employees_advaitecs_advpgsql
+WHERE email = 'ravi@example.com';
+
+Then we’ll connect it to React with a simple email search box + Search button + result table.
+----------------------------------------------------
+Absolutely. Let’s implement Employee Search next.
+1. PostgreSQL concept first
+We want to search for an employee using the email address.
+SELECT
+    employee_id,
+    employee_name,
+    email,
+    salary,
+    department_id
+FROM employees_advaitecs_advpgsql
+WHERE email = 'ravi@example.com';
+
+The important concept here is:
+WHERE
+  ↓
+filters rows based on a condition
+
+Because email is defined as:
+email VARCHAR(150) UNIQUE NOT NULL
+
+PostgreSQL automatically creates a unique index for the email column.
+We can verify that with:
+SELECT
+    indexname,
+    indexdef
+FROM pg_indexes
+WHERE tablename = 'employees_advaitecs_advpgsql';
+
+You should see:
+employees_advaitecs_advpgsql_email_key
+
+along with the other indexes.
+2. Backend
+The backend is already complete.
+Endpoint:
+GET /api/employees/search?email=ravi@example.com
+
+Repository:
+getEmployeeByEmail(email)
+
+Controller:
+getEmployeeByEmail()
+
+So again, we only need the frontend.
+3. Add the API function
+Open:
+frontend/src/api/employeeApi.ts
+
+Add:
+export const getEmployeeByEmail = async (
+  email: string
+): Promise<Employee[]> => {
+  const response = await api.get<Employee[]>(
+    "/employees/search",
+    {
+      params: {
+        email,
+      },
+    }
+  );
+
+  return response.data;
+};
+----------------------------------------------------
+Create Employee Search component
+Create:
+frontend/src/components/employees/EmployeeSearch.tsx
+
+Add it to Dashboard.tsx
+Add:
+import EmployeeSearch from "../components/employees/EmployeeSearch";
+----------------------------------------------------
+flow so far
+1. Simple SELECT
+        ↓
+2. INNER JOIN
+        ↓
+3. LEFT JOIN
+        ↓
+4. Many-to-Many
+        ↓
+5. Aggregate Functions + GROUP BY
+        ↓
+6. GROUP BY + HAVING
+        ↓
+7. LIMIT + OFFSET Pagination
+        ↓
+8. WHERE + Indexed Search
+----------------------------------------------------
+INDEX + EXPLAIN ANALYZE demonstration
+----------------------------------------------------
+One important teaching point first: because our table has only 6 employees, PostgreSQL may choose a Sequential Scan even when an index exists. That is normal—the planner chooses the cheapest plan for the table size.
+For this demo, I recommend showing the SQL and the execution plan in the UI.
+1. PostgreSQL concept
+First, create/verify the employee-name index:
+CREATE INDEX IF NOT EXISTS idx_employee_name_advaitecs_advpgsql
+ON employees_advaitecs_advpgsql(employee_name);
+
+Then:
+EXPLAIN
+SELECT
+    employee_id,
+    employee_name,
+    email,
+    salary
+FROM employees_advaitecs_advpgsql
+WHERE employee_name = 'Ravi';
+
+And:
+EXPLAIN ANALYZE
+SELECT
+    employee_id,
+    employee_name,
+    email,
+    salary
+FROM employees_advaitecs_advpgsql
+WHERE employee_name = 'Ravi';
+
+2. Important distinction
+EXPLAIN
+   ↓
+Shows the planned execution strategy
+Does NOT execute the query
+
+EXPLAIN ANALYZE
+   ↓
+Actually executes the query
+Shows actual execution statistics
+
+For example, you may see:
+Seq Scan on employees_advaitecs_advpgsql
+
+rather than:
+Index Scan using idx_employee_name_advaitecs_advpgsql
+
+With only six rows, PostgreSQL can reasonably decide that scanning the small table is cheaper than using the index.
+3. Backend: add an EXPLAIN endpoint
+Open:
+backend/src/repositories/employee.repository.ts
+
+Add:
+// EXPLAIN ANALYZE
+Backend: add an EXPLAIN endpoint
+Open:
+backend/src/repositories/employee.repository.ts
+export const explainEmployeeNameSearch = async (
+----------------------------------------------------
+Add controller
+Open:
+backend/src/controllers/employee.controller.ts
+Add:
+export const explainEmployeeNameSearch = async (
+----------------------------------------------------
+Add route
+In:
+backend/src/routes/employee.routes.ts
+
+Import:
+explainEmployeeNameSearch,
+
+Then add:
+router.get(
+  "/explain-name",
+  explainEmployeeNameSearch
+);
+----------------------------------------------------
+Frontend API
+Open:
+frontend/src/api/employeeApi.ts
+
+Add:
+export interface ExplainResult {
+
+Create the teaching component
+Create:
+frontend/src/components/employees/EmployeeNameExplain.tsx
+----------------------------------------------------
+The dashboard will show:
+Employee Name Search
+INDEX + EXPLAIN ANALYZE demonstration
+
+SQL Query
+┌─────────────────────────────────────┐
+│ EXPLAIN ANALYZE                     │
+│ SELECT ...                          │
+│ WHERE employee_name = 'Ravi';       │
+└─────────────────────────────────────┘
+
+[ Ravi                         ] [Run EXPLAIN]
+
+Execution Plan
+
+Seq Scan on employees...
+...
+Execution Time: ...
+
+This is a very good teaching demonstration because students can connect:
+CREATE INDEX
+      ↓
+WHERE condition
+      ↓
+EXPLAIN
+      ↓
+EXPLAIN ANALYZE
+      ↓
+Execution Plan
+      ↓
+Seq Scan / Index Scan
+      ↓
+Query Performance
+
+One important caution: “creating an index guarantees an Index Scan.” PostgreSQL's query planner chooses the execution strategy based on estimated cost. With our tiny six-row training table, a sequential scan is often the sensible choice.
+----------------------------------------------------
+| # | Frontend Section 							| PostgreSQL Concept 
+|---|-------------------------------------------|--------------------
+| 1 | Departments 								| Simple `SELECT` 
+| 2 | Employees with Departments 				| `INNER JOIN` 
+| 3 | Departments with Employees 				| `LEFT JOIN` 
+| 4 | Employees with Projects 					| Many-to-Many 
+| 5 | Department Statistics 					| `COUNT`, `AVG`, `MIN`, `MAX` + `GROUP BY` 
+| 6 | Departments with More Than One Employee 	| `GROUP BY` + `HAVING` 
+| 7 | Employee Pagination 						| `LIMIT` + `OFFSET` 
+| 8 | Employee Search 							| `WHERE` + indexed search 
+| 9 | Employee Name Search 						| `INDEX` + `EXPLAIN ANALYZE` 
+---------------------------------------------------------------------
+#	Frontend Section	PostgreSQL Concept
+1	Departments	Simple SELECT
+2	Employees with Departments	INNER JOIN
+3	Departments with Employees	LEFT JOIN
+4	Employees with Projects	Many-to-Many
+5	Department Statistics	COUNT, AVG, MIN, MAX + GROUP BY
+6	Departments with More Than One Employee	GROUP BY + HAVING
+7	Employee Pagination	LIMIT + OFFSET
+8	Employee Search	WHERE + indexed search
+9	Employee Name Search	INDEX + EXPLAIN ANALYZE
+----------------------------------------------------
+----------------------------------------------------

@@ -1,0 +1,730 @@
+Step 10 — Test Registration
+Use Postman or Thunder Client.
+Request
+POST http://localhost:5000/api/auth/register
+
+Body → JSON
+{
+  "name": "Naresh",
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+Expected response:
+{
+  "success": true,
+  "message": "User registered successfully",
+  "data": {
+    "id": 1,
+    "name": "Naresh",
+    "email": "naresh@example.com",
+    "isActive": true,
+    "roles": [
+      "USER"
+    ]
+  }
+}
+------------------------------------------------------------
+SELECT
+    id,
+    name,
+    email,
+    password_hash,
+    is_active
+FROM users_advaitecs_jwt_cookies;
+
+[{
+  "id": 1,
+  "name": "Naresh",
+  "email": "naresh@example.com",
+  "password_hash": "$2b$12$vynHrWEGZ7TeuTpxDO6aaeopwi9sHTc3YXkAmUhfXoRQ1xKR/J66y",
+  "is_active": true
+}]
+------------------------------------------------------------
+SELECT
+    u.name,
+    u.email,
+    r.name AS role
+FROM users_advaitecs_jwt_cookies u
+INNER JOIN user_roles_advaitecs_jwt_cookies ur
+    ON ur.user_id = u.id
+INNER JOIN roles_advaitecs_jwt_cookies r
+    ON r.id = ur.role_id;
+	
+	[{
+  "name": "Naresh",
+  "email": "naresh@example.com",
+  "role": "USER"
+}]
+------------------------------------------------------------
+Thunder Client.
+Request
+POST http://localhost:5000/api/auth/login
+
+Headers
+Content-Type: application/json
+
+Body → JSON
+Use the same credentials with which you registered:
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+
+Expected response
+You should receive something similar to:
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "Naresh",
+      "email": "naresh@example.com",
+      "isActive": true,
+      "roles": [
+        "USER"
+      ]
+    }
+  }
+}
+------------------------------------------------------------
+Refresh Token End-to-End Test
+We will use Postman for this test because it lets us clearly see the cookies and responses.
+Step 1 — Start the backend
+From:
+E:\Advaitecs\jwt-cookies\backend
+
+run:
+npm run dev
+
+Make sure you see:
+Server running at http://localhost:5000
+
+Step 2 — Login
+Send:
+POST http://localhost:5000/api/auth/login
+
+Body → raw → JSON:
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+
+Use the credentials of an existing user.
+You should receive:
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "...",
+      "email": "...",
+      "isActive": true,
+      "roles": ["USER"]
+    }
+  }
+}
+------------------------------------------
+SELECT
+    id,
+    user_id,
+    token_hash,
+    expires_at,
+    revoked_at,
+    created_at
+FROM refresh_tokens_advaitecs_jwt_cookies
+ORDER BY id DESC;
+------------------------------------------
+
+Important
+The response does not contain:
+accessToken
+refreshToken
+
+because both tokens are stored in HTTP-only cookies.
+In Postman, check the Cookies section.
+You should see:
+accessToken
+refreshToken
+
+Step 3 — Call Refresh
+Now send:
+POST http://localhost:5000/api/auth/refresh
+
+No request body is required.
+Because Postman retains the cookies from the login request, it should automatically send the refreshToken.
+Expected response:
+{
+  "success": true,
+  "message": "Token refreshed successfully",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "...",
+      "email": "...",
+      "isActive": true,
+      "roles": ["USER"]
+    }
+  }
+}
+------------------------------------------
+SELECT
+    id,
+    user_id,
+    token_hash,
+    expires_at,
+    revoked_at,
+    created_at
+FROM refresh_tokens_advaitecs_jwt_cookies
+ORDER BY id DESC;
+------------------------------------------
+
+
+And the response should set new cookies.
+Step 4 — Verify PostgreSQL 🔍
+Run:
+SELECT
+    id,
+    user_id,
+    token_hash,
+    expires_at,
+    revoked_at,
+    created_at
+FROM refresh_tokens_advaitecs_jwt_cookies
+ORDER BY id DESC;
+
+After login + refresh, you should see something similar to:
+id	user_id	revoked_at	Meaning
+1	1	timestamp	🔴 OLD token revoked
+2	1	NULL	🟢 NEW token active
+
+
+------------------------------------------------------------
+COMPLETE Logout Security Test.
+🔐 Test 1 — Login
+Send:
+POST http://localhost:5000/api/auth/login
+
+Body:
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+
+Expected:
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "...",
+      "email": "...",
+      "isActive": true,
+      "roles": ["USER"]
+    }
+  }
+}
+
+And Postman should contain:
+accessToken
+refreshToken
+
+🔄 Test 2 — Refresh
+Send:
+POST http://localhost:5000/api/auth/refresh
+
+No body.
+Expected:
+{
+  "success": true,
+  "message": "Token refreshed successfully",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "...",
+      "email": "...",
+      "isActive": true,
+      "roles": ["USER"]
+    }
+  }
+}
+
+The refresh token should be rotated.
+🚪 Test 3 — Logout
+Send:
+POST http://localhost:5000/api/auth/logout
+
+No body.
+Expected:
+{
+  "success": true,
+  "message": "Logout successful"
+}
+
+The response should clear:
+accessToken
+refreshToken
+
+🔍 Test 4 — Verify PostgreSQL
+Run:
+SELECT
+    id,
+    user_id,
+    expires_at,
+    revoked_at,
+    created_at
+FROM refresh_tokens_advaitecs_jwt_cookies
+ORDER BY id DESC;
+
+The latest refresh-token record should show:
+revoked_at
+---------------------------
+2026-10-07 ...
+
+That proves the session was revoked on the server.
+🚨 Test 5 — Try Refresh After Logout
+Now send:
+POST http://localhost:5000/api/auth/refresh
+
+Because logout cleared the browser cookie, you may get:
+{
+  "success": false,
+  "message": "Refresh token is missing"
+}
+
+That's expected.
+------------------------------------------------------------
+Logging out doesn't merely remove the cookie. It invalidates the refresh session on the server as well.
+------------------------------------------------------------
+Test A — HTTP-only Cookie Authentication
+------------------------------------------------------------
+1. Login
+POST http://localhost:5000/api/auth/login
+Body:
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+
+Use your existing valid credentials.
+Make sure Postman receives:
+accessToken
+refreshToken
+
+2. Call /me
+GET http://localhost:5000/api/auth/me
+
+Do not add an Authorization header.
+Because the accessToken cookie is already stored by Postman, it should be sent automatically.
+Expected response:
+{
+  "success": true,
+  "message": "Authenticated user",
+  "data": {
+    "user": {
+      "userId": 1,
+      "email": "your-email@example.com",
+      "roles": [
+        "USER"
+      ]
+    }
+  }
+}
+
+This proves:
+HTTP-only Cookie
+       ↓
+accessToken
+       ↓
+authenticate()
+       ↓
+verifyAccessToken()
+       ↓
+req.user
+       ↓
+/api/auth/me
+------------------------------------------------------------
+🔑 Test B — Bearer Authentication
+------------------------------------------------------------
+Now we want to demonstrate our secondary authentication mechanism.
+For this test, obtain an access token. 
+Since our login response intentionally doesn't expose it, 
+use the token from the cookie only for this classroom/demo test.
+
+LOGIN AGAIN AND SAVE THE ACCES_TOKEN
+POST
+http://localhost:5000/api/auth/login
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+accesstoken - SAVE THIS TOKEN FOR TESTING - Add this header:Authorization: Bearer 
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoibmFyZXNoQGV4YW1wbGUuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkxMzUxMzk3LCJleHAiOjE3OTEzNTE1MTd9.2fUmVCnZdfx2KmGtBqfQYQcWzPLNcraOzSHQ9AX1DOc
+
+
+Try
+GET http://localhost:5000/api/auth/me
+NO BODY REQUIRED
+
+{
+  "success": true,
+  "message": "Authenticated user",
+  "data": {
+    "user": {
+      "userId": 1,
+      "email": "naresh@example.com",
+      "roles": [
+        "USER"
+      ]
+    }
+  }
+}
+
+DELETE ALL TOKENS IN THUNDER CLIENT USING MANAGE COOKIES
+
+Try
+GET http://localhost:5000/api/auth/me
+NO BODY REQUIRED
+401 UnAuthorized
+
+NOW USE THIS Token
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoibmFyZXNoQGV4YW1wbGUuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkxMzUxMzk3LCJleHAiOjE3OTEzNTE1MTd9.2fUmVCnZdfx2KmGtBqfQYQcWzPLNcraOzSHQ9AX1DOc
+
+Add this header:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoibmFyZXNoQGV4YW1wbGUuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkxMzUxMzk3LCJleHAiOjE3OTEzNTE1MTd9.2fUmVCnZdfx2KmGtBqfQYQcWzPLNcraOzSHQ9AX1DOc
+
+
+In Postman, send:
+GET http://localhost:5000/api/auth/me
+
+{
+  "success": true,
+  "message": "Authenticated user",
+  "data": {
+    "user": {
+      "userId": 1,
+      "email": "naresh@example.com",
+      "roles": [
+        "USER"
+      ]
+    }
+  }
+}
+
+
+🎓 This gives us a very useful teaching comparison
+Authentication	Source	Status
+Cookie	accessToken HTTP-only cookie	✅ Primary
+Bearer	Authorization: Bearer ...		✅ Secondary
+Neither	No credentials					❌ 401
+
+
+And our middleware deliberately follows:
+Cookie
+  ↓
+if not available
+  ↓
+Bearer
+  ↓
+if not available
+  ↓
+401
+
+Finally, test unauthenticated access
+Clear both cookies and remove the Authorization header.
+Call:
+GET http://localhost:5000/api/auth/me
+
+Expected:
+{
+  "success": false,
+  "message": "Authentication required"
+}
+
+Once Cookie, Bearer, and unauthenticated tests all behave correctly, tell me done please.
+------------------------------------------------------------
+TEST Role-Based Authorization
+
+Test 1 — Normal USER
+You already have:
+naresh@example.com
+Password@123
+
+1. Login using:
+POST http://localhost:5000/api/auth/login
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+
+2. Then call:
+GET http://localhost:5000/api/auth/admin
+
+Because your user currently has only the USER role, we should get:
+{
+  "success": false,
+  "message": "Access forbidden"
+}
+
+This is an important demonstration:
+
+Authentication answers: "Who are you?"
+Authorization answers: "Are you allowed to do this?"
+------------------------------------------------------------
+CREATE ADMIN USER
+POST http://localhost:5000/api/auth/register
+
+Body:
+{
+  "name": "Admin User",
+  "email": "admin@example.com",
+  "password": "Admin@123"
+}
+------------------------------------------------------------
+Assign ADMIN Role
+Run this SQL in Neon:USE THIS INSERT NO NEED TO REGISTER.............2 Admin User USERS WILL BE CREATED..ONE WITH REGISTER AND ONE WITH INSERT.....DELETE ONE OF THEM...
+ 
+INSERT INTO user_roles_advaitecs_jwt_cookies (user_id, role_id)
+SELECT u.id, r.id
+FROM users_advaitecs_jwt_cookies u
+CROSS JOIN roles_advaitecs_jwt_cookies r
+WHERE u.email = 'admin@example.com'
+  AND r.name = 'ADMIN'
+ON CONFLICT (user_id, role_id) DO NOTHING;
+
+Step 3 — Verify
+Run:
+SELECT
+    u.id,
+    u.name,
+    u.email,
+    r.name AS role
+FROM users_advaitecs_jwt_cookies u
+INNER JOIN user_roles_advaitecs_jwt_cookies ur
+    ON ur.user_id = u.id
+INNER JOIN roles_advaitecs_jwt_cookies r
+    ON r.id = ur.role_id
+WHERE u.email = 'admin@example.com';
+------------------------------------------------------------
+DELETE FROM user_roles_advaitecs_jwt_cookies
+WHERE user_id = (
+    SELECT id
+    FROM users_advaitecs_jwt_cookies
+    WHERE email = 'admin@example.com'
+)
+AND role_id = (
+    SELECT id
+    FROM roles_advaitecs_jwt_cookies
+    WHERE name = 'USER'
+);
+------------------------------------------------------------
+Login as ADMIN
+In Thunder Client:
+POST
+http://localhost:5000/api/auth/login
+
+Body:
+{
+  "email": "admin@example.com",
+  "password": "Admin@123"
+}
+
+Because the login response doesn't expose the token—the token is stored in the HTTP-only cookie—Thunder Client should receive the accessToken and refreshToken cookies.
+Step 4 — Test the ADMIN endpoint
+Now call:
+GET http://localhost:5000/api/auth/admin
+NO BODY REQUIRED
+
+Expected response:
+{
+  "success": true,
+  "message": "Welcome Admin",
+  "data": {
+    "user": {
+      "userId": 2,
+      "email": "admin@example.com",
+      "roles": [
+        "ADMIN"
+      ]
+    }
+  }
+}
+
+🎯 This completes our first RBAC demonstration:
+------------------------------------------------------------
+USER
+  ↓
+authenticate()
+  ↓
+JWT verified
+  ↓
+authorize("ADMIN")
+  ↓
+No ADMIN role
+  ↓
+403 Forbidden
+------------------------------------------------------------
+ADMIN
+  ↓
+authenticate()
+  ↓
+JWT verified
+  ↓
+authorize("ADMIN")
+  ↓
+ADMIN role found
+  ↓
+adminOnly()
+  ↓
+200 OK
+------------------------------------------------------------
+Notice that the role is coming from the JWT payload:
+req.user = {
+  userId: payload.userId,
+  email: payload.email,
+  roles: payload.roles,
+};
+
+and authorize() checks:
+const hasRequiredRole =
+  req.user.roles.some((role) =>
+    allowedRoles.includes(role),
+  );
+
+So we have successfully separated:
+Authentication
+Who is the user?
+
+from
+Authorization
+What is the user allowed to do?
+------------------------------------------------------------
+Protect our Project API
+------------------------------------------------------------
+rotect the existing Project API
+
+Project API
+     ↓
+authenticate()
+     ↓
+USER or ADMIN
+     ↓
+Access allowed
+
+And for one sensitive operation:
+Delete Project
+     ↓
+authenticate()
+     ↓
+authorize("ADMIN")
+     ↓
+ADMIN only
+------------------------------------------------------------
+backend/src/routes/project.routes.ts
+------------------------------------------------------------
+USER can view projects
+First login as:
+Email:    naresh@example.com
+Password: Password@123
+
+Then call:
+GET http://localhost:5000/api/projects
+NO BODY REQUIRED
+
+Login as Normal USER
+
+1. Login using:
+POST http://localhost:5000/api/auth/login
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
+------------------------------------------------------------
+Test 2 — USER cannot delete projects
+Without changing the login, call:
+DELETE http://localhost:5000/api/projects/1
+
+Expected:
+{
+  "success": false,
+  "message": "Access forbidden"
+}
+
+This proves:
+USER
+ ├── GET /api/projects       ✅
+ └── DELETE /api/projects/1  ❌ 403
+------------------------------------------------------------
+Final ADMIN test
+Now login as:
+Email:    admin@example.com
+Password: Admin@123
+
+POST
+http://localhost:5000/api/auth/login
+
+Body:
+{
+  "email": "admin@example.com",
+  "password": "Admin@123"
+}
+
+Then call:
+DELETE http://localhost:5000/api/projects/1
+
+Expected:
+{
+  "success": true,
+  "message": "Project 1 deleted successfully"
+}
+
+This will complete our simple JWT + RBAC demonstration.
+------------------------------------------------------------
+Access token expires
+       ↓
+Axios interceptor detects 401
+       ↓
+"Session expired. Refreshing..."
+       ↓
+POST /api/auth/refresh
+       ↓
+New access token cookie
+       ↓
+Retry original request
+       ↓
+Success ✅
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+
+Login as ADMIN
+In Thunder Client:
+POST
+http://localhost:5000/api/auth/login
+
+Body:
+{
+  "email": "admin@example.com",
+  "password": "Admin@123"
+}
+
+------------------------------------------------------------
+Login as Normal USER
+
+1. Login using:
+POST http://localhost:5000/api/auth/login
+{
+  "email": "naresh@example.com",
+  "password": "Password@123"
+}
