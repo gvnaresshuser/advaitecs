@@ -1,0 +1,148 @@
+****************************************************************
+npm install express cors pg dotenv
+npm install -D @types/express @types/cors @types/node @types/pg
+****************************************************************
+departments_advaitecs_joins
+employees_advaitecs_joins
+projects_advaitecs_joins
+employee_project_assignment_advaitecs_joins
+
+
+backend/
+└── src/
+    │
+    ├── app.ts
+    ├── server.ts
+    │
+    ├── config/
+    │   └── env.ts
+    │
+    ├── db/
+    │   └── pool.ts
+    │
+    ├── controllers/
+    │   └── join.controller.ts
+    │
+    ├── services/
+    │   └── join.service.ts
+    │
+    ├── routes/
+    │   └── join.routes.ts
+    │
+    ├── middleware/
+    │   ├── error.middleware.ts
+    │   └── not-found.middleware.ts
+    │
+    └── types/
+        └── join.types.ts
+
+
+mkdir src\config
+mkdir src\db
+mkdir src\controllers
+mkdir src\services
+mkdir src\routes
+mkdir src\middleware
+mkdir src\types
+
+CREATE ONLY THESE FOLDERS
+-------
+mkdir src\services
+mkdir src\types
+-------
+
+type nul > src\app.ts
+type nul > src\server.ts
+
+type nul > src\config\env.ts
+
+type nul > src\db\pool.ts
+
+CREATE ONLY THESE FILES
+-------------
+type nul > src\controllers\join.controller.ts
+
+type nul > src\services\join.service.ts
+
+type nul > src\routes\join.routes.ts
+
+type nul > src\middleware\error.middleware.ts
+type nul > src\middleware\not-found.middleware.ts
+
+type nul > src\types\join.types.ts	
+-------------	
+npm install express cors pg dotenv
+npm install -D @types/express @types/cors @types/node @types/pg
+==============================================
+Final API list
+Once the backend is running:
+npm run dev
+
+you will have:
+Basic JOINs
+GET http://localhost:5000/api/joins/inner
+
+GET http://localhost:5000/api/joins/left
+
+GET http://localhost:5000/api/joins/right
+
+GET http://localhost:5000/api/joins/full
+
+GET http://localhost:5000/api/joins/cross
+
+GET http://localhost:5000/api/joins/natural
+
+GET http://localhost:5000/api/joins/self
+
+Special demonstrations
+GET http://localhost:5000/api/joins/employees-without-department
+
+GET http://localhost:5000/api/joins/departments-without-employees
+
+Multi-table JOINs
+GET http://localhost:5000/api/joins/employee-projects
+
+GET http://localhost:5000/api/joins/employee-department-projects
+--------------------------------
+ART 14 — What we will demonstrate in React
+This gives us an excellent frontend teaching structure later:
+PostgreSQL JOIN Demonstrations
+│
+├── INNER JOIN
+├── LEFT JOIN
+├── RIGHT JOIN
+├── FULL OUTER JOIN
+├── CROSS JOIN
+├── NATURAL JOIN
+├── SELF JOIN
+│
+├── Employees Without Department
+├── Departments Without Employees
+│
+├── Employee → Project
+└── Employee → Department → Project
+
+For example, your INNER JOIN card can show:
+INNER JOIN
+────────────────────────────────────
+
+Employee             Department
+John Doe             Development
+Jane Smith           Marketing
+Bob Johnson          Development
+Alice Williams       Sales
+Charlie Brown        Development
+Eva Davis            Marketing
+--------------------------------------------
+And your LEFT JOIN will visibly demonstrate the NULL department for Elena and Victor. That's exactly the behavior your supplied SQL is intended to demonstrate.   left_join_right_join
+The RIGHT JOIN will similarly make Technical Support appear with a NULL employee.   left_join_right_join
+The FULL OUTER JOIN will bring both unmatched sides together.   full_outer_join
+And the CROSS JOIN will be particularly nice visually because every employee is paired with every department.
+
+
+
+*****************
+npm run typecheck
+npm run build
+npm run dev
+*****************

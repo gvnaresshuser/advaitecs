@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.pool = void 0;
+const pg_1 = require("pg");
+const env_js_1 = require("../config/env.js");
+exports.pool = new pg_1.Pool({
+    connectionString: env_js_1.env.databaseUrl,
+    ssl: {
+        rejectUnauthorized: false,
+    },
+});
+//# sourceMappingURL=pool.js.map

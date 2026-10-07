@@ -1,0 +1,103 @@
+*****************************
+npm install axios
+*****************************
+
+
+For this JOIN demonstration:
+frontend/
+└── src/
+    ├── api/
+    │   ├── axios.ts
+    │   └── joinApi.ts
+    │
+    ├── components/
+    │   ├── common/
+    │   └── joins/
+    │
+    ├── pages/
+    │   └── Joins.tsx
+    │
+    ├── App.tsx
+    ├── main.tsx
+    └── index.css
+
+We can build it progressively:
+1. Axios configuration
+2. JOIN API functions
+3. Reusable table component
+4. JOIN demonstration page
+5. Buttons for:
+   - INNER JOIN
+   - LEFT JOIN
+   - RIGHT JOIN
+   - FULL OUTER JOIN
+   - CROSS JOIN
+   - NATURAL JOIN
+   - SELF JOIN
+   - Employees without Department
+   - Departments without Employees
+   - Employee + Projects
+   - Employee + Department + Projects
+6. Display the selected JOIN result in a clean table.
+7. Add a small JOIN explanation heading for teaching purposes.
+
+Create folders
+mkdir src\api
+mkdir src\components
+mkdir src\components\common
+mkdir src\components\joins
+mkdir src\pages
+
+
+Create files
+type nul > src\api\axios.ts
+type nul > src\api\joinApi.ts
+
+type nul > src\components\common\DataTable.tsx
+
+type nul > src\components\joins\JoinButtons.tsx
+type nul > src\components\joins\JoinResult.tsx
+
+type nul > src\pages\Joins.tsx
+
+--------------------------------
+frontend/
+└── src/
+    ├── api/
+    │   ├── axios.ts
+    │   └── joinApi.ts
+    │
+    ├── components/
+    │   ├── common/
+    │   │   └── DataTable.tsx
+    │   │
+    │   └── joins/
+    │       ├── JoinButtons.tsx
+    │       └── JoinResult.tsx
+    │
+    ├── pages/
+    │   └── Joins.tsx
+    │
+    ├── App.tsx
+    ├── main.tsx
+    └── index.css
+------------------------------
+PostgreSQL JOIN Demonstration
+│
+├── Select JOIN Type
+│   │
+│   ├── INNER JOIN
+│   ├── LEFT JOIN
+│   ├── RIGHT JOIN
+│   ├── FULL OUTER JOIN
+│   ├── CROSS JOIN
+│   ├── NATURAL JOIN
+│   ├── SELF JOIN
+│   └── ...
+│
+└── JOIN Result
+    │
+    └── Reusable DataTable
+	
+	
+	1. SQL Query → 2. Concept Explanation → 3. Actual Result

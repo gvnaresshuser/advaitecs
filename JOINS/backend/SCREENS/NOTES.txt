@@ -1,0 +1,176 @@
+Certainly, sir. This command:
+
+```json
+"dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+```
+
+is used to **run your TypeScript Express backend during development**.
+
+Let's break it down:
+
+### 1. `ts-node-dev`
+
+```bash
+ts-node-dev
+```
+
+`ts-node-dev` allows Node.js to run your **TypeScript files directly**, without you having to manually run:
+
+```bash
+tsc
+```
+
+followed by:
+
+```bash
+node dist/server.js
+```
+
+It also watches your files for changes.
+
+So instead of:
+
+```text
+.ts
+ ↓
+tsc
+ ↓
+.js
+ ↓
+node
+```
+
+you can develop more conveniently:
+
+```text
+.ts
+ ↓
+ts-node-dev
+ ↓
+Node.js runs your TypeScript application
+```
+
+---
+
+### 2. `--respawn`
+
+```bash
+--respawn
+```
+
+This tells `ts-node-dev`:
+
+> **Whenever I change my source code, restart the Node.js server.**
+
+For example, your server is running:
+
+```text
+Server running on http://localhost:5000
+```
+
+You modify:
+
+```text
+join.service.ts
+```
+
+`ts-node-dev` detects the change and automatically restarts the server.
+
+Without this, you would have to manually stop and restart the server every time.
+
+---
+
+### 3. `--transpile-only`
+
+```bash
+--transpile-only
+```
+
+This tells `ts-node-dev`:
+
+> **Just transpile the TypeScript to JavaScript and run it; don't perform full TypeScript type checking while starting the server.**
+
+This makes development startup faster.
+
+For example, suppose you have:
+
+```ts
+const employeeName: string = 123;
+```
+
+This has a TypeScript error.
+
+With:
+
+```bash
+--transpile-only
+```
+
+the development server may still start because `ts-node-dev` isn't doing the full TypeScript type-checking step.
+
+That's why we have a separate script:
+
+```json
+"typecheck": "tsc --noEmit"
+```
+
+You can run:
+
+```bash
+npm run typecheck
+```
+
+to perform the actual TypeScript checking.
+
+---
+
+### 4. `src/server.ts`
+
+This is simply the **entry point** of your backend.
+
+Your command:
+
+```bash
+ts-node-dev --respawn --transpile-only src/server.ts
+```
+
+therefore means:
+
+> **Run `src/server.ts` as a TypeScript application, automatically restart whenever source files change, and skip full type checking during development for faster startup.**
+
+---
+
+### Development vs Production
+
+This distinction is very useful to teach:
+
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Development |
+| `npm run typecheck` | Check TypeScript errors |
+| `npm run build` | Compile TypeScript → JavaScript |
+| `npm start` | Run compiled production JavaScript |
+
+So your workflow becomes:
+
+```text
+During development
+        ↓
+npm run dev
+        ↓
+ts-node-dev
+        ↓
+Automatic restart
+```
+
+Then before considering the backend complete:
+
+```text
+npm run typecheck
+        ↓
+npm run build
+        ↓
+npm start
+```
+
+**One important point:** `--transpile-only` does **not** mean TypeScript errors don't exist. It only means `ts-node-dev` isn't checking them when launching the development server. That's why keeping your separate `typecheck` script is a very good practice.
