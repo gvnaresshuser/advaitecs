@@ -1,0 +1,71 @@
+REDUX Toolkit IMPLTEMENTATION
+****************************************
+npm install @reduxjs/toolkit react-redux
+****************************************
+
+
+Below is a complete but still simple Redux Toolkit CRUD example containing:
+
+Counter slice
+Users slice
+fetchUsers → loading
+addUser → adding
+updateUser → updating
+deleteUser → deleting
+pending, fulfilled, and rejected for every CRUD operation
+UI that actually reflects all these states
+
+We'll use JSONPlaceholder for the API.
+
+
+redux-toolkit-crud/
+│
+├── node_modules/
+│
+├── public/
+│
+├── src/
+│   │
+│   ├── features/
+│   │   │
+│   │   ├── counter/
+│   │   │   └── counterSlice.js
+│   │   │
+│   │   └── users/
+│   │       └── usersSlice.js
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── store.js
+│
+├── index.html
+├── package.json
+├── package-lock.json
+└── vite.config.js
+
+The complete CRUD pattern
+This is the important part to remember:
+
+
+                    USERS
+                      │
+       ┌──────────────┼──────────────┐
+       │              │              │
+      READ           CREATE         UPDATE        DELETE
+       │              │              │              │
+ fetchUsers()      addUser()     updateUser()   deleteUser()
+       │              │              │              │
+       ▼              ▼              ▼              ▼
+    pending        pending        pending        pending
+       │              │              │              │
+       ▼              ▼              ▼              ▼
+    loading         adding        updating       deleting
+       │              │              │              │
+       ▼              ▼              ▼              ▼
+      API            API            API            API
+       │              │              │              │
+       ▼              ▼              ▼              ▼
+   fulfilled      fulfilled      fulfilled      fulfilled
+       │              │              │              │
+       ▼              ▼              ▼              ▼
+   users = data    push user     update user    remove user

@@ -1,0 +1,130 @@
+
+Scenario A — Neon PostgreSQL
+                   HTTPS
+Browser ────────> Vercel
+                    │
+                    │ HTTPS
+                    ▼
+                 Render
+              Node.js API
+                    │
+                    │ PostgreSQL SSL/TLS
+                    ▼
+                  Neon
+                PostgreSQL
+
+You don't normally buy certificates yourself for:
+
+❌ React
+❌ Vercel
+❌ Node.js
+❌ Render
+
+And you generally use Neon's prescribed database SSL configuration for:
+
+✅ Node.js → Neon PostgreSQL
+Scenario B — Render PostgreSQL
+                   HTTPS
+Browser ────────> Vercel
+                    │
+                    │ HTTPS
+                    ▼
+                 Render
+              Node.js API
+                    │
+                    │ PostgreSQL SSL/TLS
+                    ▼
+                 Render
+                PostgreSQL
+
+Again, Vercel and Render handle the public HTTPS certificates.
+
+Your responsibility is primarily:
+
+Node.js
+   │
+   └── Use Render's recommended PostgreSQL connection configuration
+---------------------------------------------------------
+When would YOU actually need to deal with CA certificates?
+
+Usually when you're dealing with something like:
+
+Company-managed PostgreSQL
+        ↓
+Private network
+        ↓
+Custom CA
+        ↓
+Strict certificate verification
+
+or a database provider explicitly says:
+
+"Download our CA certificate and configure your client to verify the server certificate."
+
+Then you might have:
+
+ssl: {
+  rejectUnauthorized: true,
+  ca: process.env.DATABASE_CA,
+}
+
+But you don't obtain a CA certificate just because your application is going to production.
+
+The simple rule
+
+Vercel handles HTTPS for your React application. Render handles HTTPS for your Node.js API. Your PostgreSQL provider handles the database's TLS infrastructure. You only configure CA certificates yourself when the particular database/enterprise setup requires it.
+
+So for the applications you've been building with React + Node/Express + PostgreSQL + Vercel/Render/Neon, you generally don't need to go to a CA and purchase certificates yourself.
+---------------------------------------------------------
+
+                 ┌──────────────────────┐
+                 │   DigiCert /         │
+                 │   GlobalSign / etc.  │
+                 │                      │
+                 │  Certificate         │
+                 │  Authority (CA)      │
+                 └──────────┬───────────┘
+                            │
+                     Signs certificate
+                            │
+                            ▼
+                 ┌──────────────────────┐
+                 │ ABC Bank PostgreSQL  │
+                 │      Server          │
+                 │                      │
+                 │ server.crt           │
+                 │ server.key 🔒        │
+                 └──────────┬───────────┘
+                            │
+                     SSL/TLS connection
+                            │
+                            ▼
+                 ┌──────────────────────┐
+                 │ ABC Bank Node.js     │
+                 │      Backend         │
+                 │                      │
+                 │ ca.crt               │
+                 └──────────────────────┘
+---------------------------------------------------------				 
+                    COMPANY NETWORK
+┌──────────────────────────────────────────────────┐
+│                                                  │
+│   React Frontend        Node.js Backend          │
+│       │                      │                   │
+│       │ HTTPS                │                   │
+│       ▼                      ▼                   │
+│   Browser/App          Application Server        │
+│                              │                   │
+│                              │ Private network   │
+│                              ▼                   │
+│                       ┌───────────────┐          │
+│                       │  PostgreSQL   │          │
+│                       │    Server    │          │
+│                       └───────────────┘          │
+│                                                  │
+└──────────────────────────────────────────────────┘				 
+---------------------------------------------------------
+
+---------------------------------------------------------
+
+---------------------------------------------------------

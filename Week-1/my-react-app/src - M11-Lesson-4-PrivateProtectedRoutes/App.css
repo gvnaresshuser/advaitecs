@@ -1,0 +1,140 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+.logo1 {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+/* ----------------- CONTAINER STYLING -------------------------- */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-top: 40px;
+}
+
+/* -------------------- ROUTER LINKS STYLING ------------------------------ */
+/* Nav container */
+nav {
+  background-color: #333;
+  padding: 10px 0;
+  text-align: center;
+}
+
+/* Nav list */
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Nav links */
+li {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Style for Links */
+a {
+  color: lime;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Hover effect */
+a:hover {
+  background-color: #007bff;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Active link */
+a:active {
+  background-color: #0056b3;
+  
+}
+
+/* ------------------------------------------------------- */
+.h1Cls {
+  font-size: 3em;
+  /* Increase the font size */
+  background: linear-gradient(45deg, navy, lime);
+  /* Linear gradient from orange to yellow */
+  -webkit-background-clip: text;
+  /* Makes the gradient apply to the text itself */
+  color: transparent;
+  /* Makes the text color transparent so the gradient is visible */
+  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 0, 0, 0.5);
+  /* Adds multiple text shadows for depth */
+  font-weight: bold;
+  /* Makes the font bold */
+  text-align: center;
+  /* Centers the text */
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}

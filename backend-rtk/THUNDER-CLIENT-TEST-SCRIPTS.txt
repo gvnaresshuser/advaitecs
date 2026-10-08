@@ -1,0 +1,229 @@
+
+```text
+http://localhost:5000
+```
+## 1. Test Home — GET
+Method: `GET`
+URL:
+```text
+http://localhost:5000/
+```
+No body required.
+### Expected response
+```text
+Hello Express!
+```
+
+
+
+
+---
+## 2. Get All Users — GET
+Method: `GET`
+URL:
+```text
+http://localhost:5000/api/users
+```
+No body required.
+### Expected response
+You should receive an array of users from JSONPlaceholder:
+```json
+[
+  {
+    "id": 1,
+    "name": "Leanne Graham",
+    "username": "Bret",
+    "email": "Sincere@april.biz"
+  }
+]
+```
+There will be multiple users.
+### Flow
+```text
+Thunder Client
+     ↓
+GET /api/users
+     ↓
+Express
+     ↓
+fetch(API_URL)
+     ↓
+JSONPlaceholder
+     ↓
+users
+     ↓
+res.json(users)
+     ↓
+Thunder Client
+```
+
+
+
+
+---
+# 3. Add User — POST
+Method: `POST`
+URL:
+```text
+http://localhost:5000/api/users
+```
+Go to:
+Body → JSON
+Enter:
+```json
+{
+  "name": "Uzwall",
+  "username": "uzwall",
+  "email": "uzwall@gmail.com"
+}
+```
+Also make sure the request has:
+```text
+Content-Type: application/json
+```
+Your middleware:
+```js
+app.use(express.json());
+```
+converts the incoming JSON into:
+```js
+req.body
+```
+So:
+```js
+body: JSON.stringify(req.body)
+```
+sends that data to JSONPlaceholder.
+### Expected response
+Something similar to:
+```json
+{
+  "name": "Uzwall",
+  "username": "uzwall",
+  "email": "uzwall@gmail.com",
+  "id": 11
+}
+```
+Important: JSONPlaceholder is a fake REST API. The new user is simulated and is not permanently stored.
+---
+
+
+
+# 4. Update User — PUT
+Method: `PUT`
+URL:
+```text
+http://localhost:5000/api/users/1
+```
+Here:
+```text
+:id = 1
+```
+So Express matches:
+```js
+app.put("/api/users/:id", ...)
+```
+### Body → JSON
+```json
+{
+  "name": "Updated Uzwall",
+  "username": "updated_uzwall",
+  "email": "updated@gmail.com"
+}
+```
+### Expected response
+```json
+{
+  "name": "Updated Uzwall",
+  "username": "updated_uzwall",
+  "email": "updated@gmail.com",
+  "id": 1
+}
+```
+The important part here is:
+
+```js
+const { id } = req.params;
+```
+For:
+```text
+/api/users/1
+```
+we get:
+```js
+id = "1"
+```
+and then:
+```js
+fetch(`${API_URL}/${id}`, ...)
+```
+becomes:
+```text
+https://jsonplaceholder.typicode.com/users/1
+```
+
+
+
+---
+# 5. Delete User — DELETE
+Method: `DELETE`
+URL:
+```text
+http://localhost:5000/api/users/1
+```
+No body required.
+### Expected response
+```json
+{
+  "message": "User deleted successfully"
+}
+```
+Again, JSONPlaceholder only simulates the deletion.
+---
+
+## Thunder Client Test Summary
+
+| # | Method | URL                                 | Body |
+| - | ------ | ----------------------------------- | ---- |
+| 1 | GET    | `http://localhost:5000/`            | None |
+| 2 | GET    | `http://localhost:5000/api/users`   | None |
+| 3 | POST   | `http://localhost:5000/api/users`   | JSON |
+| 4 | PUT    | `http://localhost:5000/api/users/1` | JSON |
+| 5 | DELETE | `http://localhost:5000/api/users/1` | None |
+
+### POST/PUT JSON
+
+```json
+{
+  "name": "Uzwall",
+  "username": "uzwall",
+  "email": "uzwall@gmail.com"
+}
+```
+
+### The complete CRUD flow
+
+```text
+GET       → Read users
+POST      → Create user
+PUT       → Update user
+DELETE    → Delete user
+```
+
+One important teaching point in your example: your Express server is acting as a middle layer/proxy.
+
+```text
+Thunder Client / React
+          ↓
+   Express :5000
+          ↓
+ JSONPlaceholder API
+          ↓
+      Response
+          ↓
+   Express :5000
+          ↓
+ Thunder Client / React
+```
+
+This is a very good example to demonstrate Express + middleware + REST APIs + async/await + external API integration.

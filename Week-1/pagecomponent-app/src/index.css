@@ -1,0 +1,11 @@
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f1f5f9;
+  font-family: Arial, sans-serif;
+}

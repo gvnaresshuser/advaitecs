@@ -1,0 +1,31 @@
+
+*******************************************************
+npm create vite@latest react-course -- --template react
+*******************************************************
+
+cd react-course
+code .
+=============================================================
+GOOGLE SEARCH
+react js vite with tailwind css
+https://tailwindcss.com/docs/installation/using-vite
+
+npm install tailwindcss @tailwindcss/vite
+
+vite.config.js
+import tailwindcss from '@tailwindcss/vite'
+tailwindcss()
+
+index.css
+@import "tailwindcss";
+=============================================================
+npm run dev
+=============================================================
+TEST TAILWIND CSS INSTALLATION:
+------------------------------
+TO TEST TAILWIND CSS INSTALLATION, HAVE THE FOLLOWING IN App.jsx FILE
+<h1 className="text-3xl font-bold underline text-red-500">
+        Hello world!
+      </h1>
+
+=============================================================

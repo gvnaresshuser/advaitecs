@@ -1,0 +1,112 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+}
+
+/* Main page */
+.app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 50px;
+}
+
+/* Main heading */
+h1 {
+    text-align: center;
+    margin: 0;
+    padding: 15px;
+
+    background: navy;
+    color: white;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================================
+   User / Post List
+   ========================================= */
+
+.user-list {
+    width: 450px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-list h2 {
+    margin: 0 0 20px;
+
+    text-align: center;
+    padding: 10px;
+
+    outline: 1px solid green;
+    border-radius: 8px;
+
+    color: navy;
+    width: 200px;
+
+    background: linear-gradient(135deg,
+            #bbecfa 0%,
+            #a9e7dd 50%,
+            #93fb9a 100%);
+}
+
+/* =========================================
+   User / Post Card
+   ========================================= */
+
+.user-card {
+    width: 400px;
+
+    margin-bottom: 15px;
+    padding: 20px;
+
+    text-align: center;
+
+    border: 1px solid navy;
+    border-radius: 10px;
+
+    background: linear-gradient(135deg,
+            #bbc7fa 0%,
+            #d8c7a2 50%,
+            #f093fb 100%);
+
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.user-info {
+    text-align: left;
+}
+
+.user-card p {
+    margin: 6px 0;
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
+
+@media (max-width: 1000px) {
+    .app {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+}

@@ -1,0 +1,171 @@
+TOPICS
+
+---
+
+# 🎓 **React JS Crash Course (Industry-Oriented Training)**
+
+# 🚀 From ES6 to Real-Time Project Development
+
+---
+
+## 📘 Course Overview
+
+Master **React JS from basics to advanced level** with a **hands-on real-time project**.
+This course focuses on **industry-ready skills**, helping you build modern web applications with confidence.
+
+---
+
+## 🧠 What You Will Learn
+
+# 🔰 JavaScript (ES6+) Fundamentals
+
+* `let`, `const`, arrow functions
+* Template literals
+* Destructuring (arrays & objects)
+* Spread & rest operators
+* Modules (import/export)
+* Promises & async/await
+
+---
+
+# ⚛️ React JS Core Concepts
+
+* Introduction to React & SPA
+* JSX & Components
+* Functional Components
+* Props & State
+* Event Handling
+* Conditional Rendering
+* Lists & Keys
+
+---
+
+# 🔄 React Hooks
+
+* `useState`
+* `useEffect`
+* `useRef`
+* Custom Hooks (basics)
+
+---
+
+# 🧭 Routing (React Router)
+
+* BrowserRouter setup
+* Navigation using `Link`
+* Dynamic Routing (`/orders/:id`)
+* Programmatic navigation
+
+---
+
+# 🔐 Authentication & Authorization
+
+* Login & Register
+* JWT Token handling
+* Protected Routes
+* Role-based access (Admin/User)
+
+---
+
+# 🧠 State Management (Redux Toolkit)
+
+* Store setup
+* Slices & reducers
+* `createAsyncThunk`
+* Global state handling
+
+---
+
+# 🌐 API Integration
+
+* Axios setup
+* Environment variables (`.env`)
+* Backend communication
+
+---
+
+# 🎨 UI & Styling
+
+* Tailwind CSS
+* Responsive design
+* Modern UI components
+
+---
+
+# 🔔 User Experience
+
+* Toast notifications
+* Loading indicators
+* Error handling
+
+---
+
+# ⚙️ Deployment & Environment
+
+* `.env` configuration
+* API URL handling
+* Production setup basics
+
+---
+
+## 🎯 Capstone Project
+
+# 🛒 **E-Commerce Application (Live Project)**
+
+You will build a complete real-world application with:
+
+* 🔐 User Authentication (Login/Register)
+* 🛍️ Product Listing
+* 🛒 Shopping Cart
+* 💳 Razorpay Payment Gateway Integration
+* 📦 Orders Management
+* 🧑‍💼 Admin Panel (Order Control)
+* 🔑 JWT Token Handling
+* 📱 Fully Responsive UI
+
+---
+
+## 👨‍🏫 Training Highlights
+
+* ✅ 100% Practical Sessions
+* ✅ Real-time Project Development
+* ✅ Industry-based Curriculum
+* ✅ Source Code Provided
+* ✅ Interview Preparation Support
+
+---
+
+## ⏳ Course Duration
+
+* 🗓️ **5–7 Days Crash Course** *(Flexible)*
+
+---
+
+## 🎯 Who Can Join?
+
+* Students (B.Tech / Degree)
+* Freshers
+* Job seekers
+* Developers switching to React
+
+---
+
+## 📞 Contact Details
+
+📱 Mobile: ____________
+📧 Email: ____________
+📍 Location: ____________
+
+---
+
+## 🌟 Enroll Now & Build Your Own Live Project!
+
+---
+
+💡 If you want next:
+
+* I can convert this into a **designed pamphlet (A4 / tri-fold with colors)**
+* Add **your name, institute branding, fees, batch timings**
+* Create **poster + WhatsApp banner**
+
+Just tell me 👍

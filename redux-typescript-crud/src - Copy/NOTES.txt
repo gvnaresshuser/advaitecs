@@ -1,0 +1,92 @@
+src/
+│
+├── app/
+│   ├── store.ts
+│   └── hooks.ts
+│
+├── components/
+│   └── users/
+│       ├── UserForm.tsx
+│       ├── UserList.tsx
+│       ├── UserCard.tsx
+│       └── UserHeader.tsx
+│
+├── features/
+│   └── users/
+│       └── usersSlice.ts
+│
+├── types/
+│   └── user.types.ts
+│
+├── App.tsx
+├── main.tsx
+└── index.css
+
+Why this is better
+
+App.tsx
+   │
+   ├── Page layout
+   │
+   ├── UserHeader
+   │
+   ├── UserForm
+   │
+   └── UserList
+          │
+          └── UserCard
+
+And the responsibilities become:
+
+          | File             | Responsibility                    |
+| ---------------- | --------------------------------- |
+| `user.types.ts`  | All User-related TypeScript types |
+| `usersSlice.ts`  | Redux state + API/CRUD operations |
+| `UserForm.tsx`   | Add/Edit user form                |
+| `UserList.tsx`   | Display collection of users       |
+| `UserCard.tsx`   | Display one user                  |
+| `UserHeader.tsx` | User page heading/statistics      |
+| `App.tsx`        | Compose the page                  |
+
+Final production-style structure
+
+src/
+│
+├── app/
+│   ├── store.ts
+│   └── hooks.ts
+│
+├── components/
+│   └── users/
+│       │
+│       ├── UserHeader.tsx
+│       ├── UserForm.tsx
+│       ├── UserList.tsx
+│       └── UserCard.tsx
+│
+├── features/
+│   └── users/
+│       └── usersSlice.ts
+│
+├── types/
+│   └── user.types.ts
+│
+├── App.tsx
+├── main.tsx
+└── index.css
+
+One particularly important production principle
+
+Keep these three things separate:
+
+types/
+   ↓
+"What does my data look like?"
+
+features/
+   ↓
+"How does my application manage that data?"
+
+components/
+   ↓
+"How do I display and interact with that data?"

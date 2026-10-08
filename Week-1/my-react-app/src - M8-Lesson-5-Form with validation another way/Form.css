@@ -1,0 +1,78 @@
+.form-container {
+    width: 500px;
+    margin: 20px auto;
+    padding: 25px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.radio-option {
+    margin-right: 15px;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+    display: block;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.result-table {
+    margin-top: 30px;
+}
+
+.result-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+.result-table th,
+.result-table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.result-table h3 {
+    margin-bottom: 10px;
+    color: #333;
+}

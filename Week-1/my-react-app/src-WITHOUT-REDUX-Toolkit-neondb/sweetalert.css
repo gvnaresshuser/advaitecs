@@ -1,0 +1,150 @@
+/* SweetAlert2 Custom Styles */
+
+.swal2-popup.custom-success-popup {
+    background: linear-gradient(135deg,
+            #020617 0%,
+            #172554 50%,
+            #312e81 100%) !important;
+
+    border: 2px solid #4f46e5 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+.custom-success-popup .swal2-title {
+    color: #ffffff !important;
+}
+
+.custom-success-popup .swal2-html-container {
+    color: #c7d2fe !important;
+}
+
+.custom-success-popup .swal2-confirm {
+    background: linear-gradient(135deg,
+            #4f46e5,
+            #7c3aed) !important;
+
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px 28px !important;
+    font-weight: 600 !important;
+}
+
+.custom-success-popup .swal2-confirm:hover {
+    background: linear-gradient(135deg,
+            #4338ca,
+            #6d28d9) !important;
+}
+
+/* ================================
+   UPDATE SUCCESS ALERT
+================================ */
+
+.swal2-popup.custom-update-popup {
+    background: linear-gradient(135deg,
+            #431407 0%,
+            #7c2d12 50%,
+            #c2410c 100%) !important;
+
+    border: 2px solid #f97316 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+.custom-update-popup .swal2-title {
+    color: #fff7ed !important;
+}
+
+.custom-update-popup .swal2-html-container {
+    color: #fed7aa !important;
+}
+
+/* Info icon */
+.custom-update-popup .swal2-icon.swal2-info {
+    border-color: #fb923c !important;
+    color: #fb923c !important;
+}
+
+/* Confirm button */
+.custom-update-popup .swal2-confirm {
+    background: linear-gradient(135deg,
+            #f97316,
+            #ea580c) !important;
+
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px 28px !important;
+    font-weight: 600 !important;
+}
+
+.custom-update-popup .swal2-confirm:hover {
+    background: linear-gradient(135deg,
+            #ea580c,
+            #c2410c) !important;
+}
+
+
+/* ================================
+   DELETE ALERT
+================================ */
+
+.swal2-popup.custom-delete-popup {
+    background: linear-gradient(135deg,
+            #450a0a 0%,
+            #7f1d1d 50%,
+            #b91c1c 100%) !important;
+
+    border: 2px solid #ef4444 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55) !important;
+}
+
+.custom-delete-popup .swal2-title {
+    color: #fef2f2 !important;
+}
+
+.custom-delete-popup .swal2-html-container {
+    color: #fecaca !important;
+}
+
+/* Warning icon */
+.custom-delete-popup .swal2-icon.swal2-warning {
+    border-color: #fbbf24 !important;
+    color: #fbbf24 !important;
+}
+
+/* Delete button */
+.custom-delete-popup .swal2-confirm {
+    background: linear-gradient(135deg,
+            #ef4444,
+            #dc2626) !important;
+
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px 24px !important;
+    font-weight: 600 !important;
+}
+
+.custom-delete-popup .swal2-confirm:hover {
+    background: linear-gradient(135deg,
+            #dc2626,
+            #b91c1c) !important;
+}
+
+/* Cancel button */
+.custom-delete-popup .swal2-cancel {
+    background: #475569 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px 24px !important;
+    font-weight: 600 !important;
+}
+
+.custom-delete-popup .swal2-cancel:hover {
+    background: #334155 !important;
+}
+

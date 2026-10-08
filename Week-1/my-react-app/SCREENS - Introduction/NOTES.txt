@@ -1,0 +1,129 @@
+Introduction to React.js and what is React.js?
+
+React.js, commonly referred to as React, is an open-source JavaScript library developed and maintained by Facebook. It is primarily used for building user interfaces (UIs) for web applications. React.js is particularly popular for its efficiency, simplicity, and flexibility in creating interactive UI components.
+
+
+Why use React.js?
+
+Here are some key advantages of using React.js:
+
+Component-Based Architecture: React.js is based on a component-based architecture, allowing developers to create modular, reusable UI components.
+
+Virtual DOM: React.js uses a virtual DOM (Document Object Model) to efficiently update the UI. 
+
+Declarative Syntax: React.js uses a declarative programming paradigm, where developers describe the desired UI state and React takes care of updating the DOM to match that state. 
+
+JSX (JavaScript XML): JSX is a syntax extension for JavaScript that allows developers to write HTML-like code directly within JavaScript. 
+
+Unidirectional Data Flow: React.js follows a unidirectional data flow pattern, where data flows in a single direction from parent to child components.
+
+React Hooks: Introduced in React 16.8, hooks are functions that enable developers to use state and other React features without writing class components. 
+
+Rich Ecosystem and Community: React.js has a vibrant ecosystem with a wide range of third-party libraries, tools, and resources available to developers.
+
+INSTALLATION REQUIREMENTS:
+=========================
+1. First, ensure you have Node.js and npm (Node Package Manager) installed on your system. You can download and install them from the official Node.js website: https://nodejs.org/
+
+2. Once Node.js and npm are installed, open your command-line interface (such as Terminal on macOS, Command Prompt on Windows, or your preferred terminal emulator on Linux).
+
+3.To create a new React.js app, run the following command:
+
+npx create-react-app my-react-app
+cd my-react-app
+npm start
+
+NOTE: npx is a package runner tool that comes with npm (Node Package Manager) version 5.2.0 and above. It allows you to execute packages directly from the npm registry without the need to install them globally or locally.
+
+TYPES OF PROJECTS THAT YOU CAN CREATE WITH REACT JS:
+====================================================
+
+1. React.js app
+
+npx create-react-app my-react-app
+
+This command initializes a new React.js project named my-react-app using the create-react-app tool. It sets up a basic React application with all the necessary configurations and dependencies to get started.
+
+
+2. Remix
+
+Remix is a full-stack React framework with nested routing. It lets you break your app into nested parts that can load data in parallel and refresh in response to the user actions. To create a new Remix project, run:
+
+npx create-remix
+
+3. Gatsby 
+
+Gatsby is a React framework for fast CMS-backed websites. Its rich plugin ecosystem and its GraphQL data layer simplify integrating content, APIs, and services into one website. To create a new Gatsby project, run:
+
+npx create-gatsby
+
+
+4. Next.js (Pages Router)
+
+Next.js’ Pages Router is a full-stack React framework. It’s versatile and lets you create React apps of any size—from a mostly static blog to a complex dynamic application. To create a new Next.js project, run in your terminal:
+
+npx create-next-app@latest my-next-app --example with-pages
+
+This will launch your Next.js application, and you can begin building pages and defining routes using the Pages Router system.
+
+5. Next.js (App Router) 
+Next.js’s App Router is a redesign of the Next.js APIs aiming to fulfill the React team’s full-stack architecture vision. It lets you fetch data in asynchronous components that run on the server or even during the build.
+
+npx create-next-app my-next-app
+
+This will launch your Next.js application, and you can begin building pages and defining routes using the built-in routing system.
+
+6. Expo (for native apps) 
+Expo is a React framework that lets you create universal Android, iOS, and web apps with truly native UIs. It provides an SDK for React Native that makes the native parts easier to use. To create a new Expo project, run:
+
+npx create-expo-app
+
+CHECK THE VERSIONS OF NODE,NPM AND NPX
+
+
+E:\>cd E:\REACT\REACT-JS-TRAINING
+
+INSTALL NVM USING "nvm-setup.exe"
+
+E:\REACT\REACT-JS-TRAINING>nvm list
+
+    20.10.0
+  * 18.18.0 (Currently using 64-bit executable)
+    18.16.1
+    18.12.1
+    18.7.0
+    16.20.2
+    16.20.0
+    16.13.2
+
+E:\REACT\REACT-JS-TRAINING>node --version
+v18.18.0
+
+E:\REACT\REACT-JS-TRAINING>npm --version
+9.8.1
+
+E:\REACT\REACT-JS-TRAINING>npx --version
+9.8.1
+
+E:\REACT\REACT-JS-TRAINING>
+=========================================================
+CREATE YOUR FIRST REACT APP:
+===========================
+npx create-react-app my-react-app
+cd my-react-app
+npm start
+http://localhost:3000/
+
+
+CREATE YOUR FIRST REACT APP WITH VITE:
+=====================================
+npm create vite@latest my-react-app -- --template react
+
+  VITE v6.3.5  ready in 3379 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+
+
+

@@ -1,0 +1,83 @@
+FILES AND FOLDERS LOCATION:
+===========================
+
+. Week-by-Week Training Plan
+Week	Module / Focus Area	Topics & Practical Coverage
+Week 1	Core React Fundamentals	• Introduction to React, SPA Architecture, JSX & Functional Components
+• Virtual DOM, Diffing Algorithm & Reconciliation
+• Props & State with useState
+• Event Handling, Conditional Rendering, Lists & Keys
+• Component Design & Reusability
+• Hands-on React exercises
+
+-----------------------------------------------
+E:\Advaitecs\Week-1\Core React Fundamentals.png
+-----------------------------------------------
+
+
+Week 2	React Hooks, Context &#38; State Management	• useEffect, useRef
+• Advanced Hooks: useMemo, useCallback, useReducer, useLayoutEffect
+• Custom Hooks: useFetch, useHttp, useToggle, useLocalStorage
+• Context API & useContext
+• Props Drilling vs Context API
+• Complex Component Interactions & Hands-on Practice
+
+
+Week 3	React Router, UI &#38; Hands-on Project	• React Router: BrowserRouter, Routes, Links, Dynamic & Protected Routes, Navigation
+• UI & State: Context API, Loading States, Toasts & Responsive Tailwind CSS
+• Project Development: Component Integration, Feature Completion, Debugging & UI Polish
+• 4-Day Hands-on React Project
+
+
+Week 4	Redux Toolkit + API Integration + UI Development	• Redux Store and Slices
+• Reducers and createAsyncThunk
+• Async API Calls and Global State
+• Axios Configuration and Environment Variables
+• API Integration and Error Handling
+• Tailwind CSS and Responsive Design
+• Loading Indicators, Toast Notifications and SweetAlert2
+• Hands-on integration of frontend, API and global state
+
+
+Week 5	Backend Development – Express JS & PostgreSQL	• Node.js and REST API concepts
+• Express Server Setup
+• PostgreSQL Database
+• CRUD Operations
+• Database Integration
+• Axios Communication
+• Build and consume REST APIs
+• Hands-on backend and database exercises
+
+
+Week 6	Authentication, Authorization & Real-World JWT	• User Registration and Login
+• JWT Authentication
+• Protected Routes
+• Role-Based Authorization
+• Admin & User Access Control
+• JWT Access Tokens and Refresh Tokens
+• Token Expiration and Axios Interceptors
+• Automatic Token Refresh and Session Management
+• Secure frontend/backend authentication flow
+• Protected APIs and hands-on authentication implementation
+
+
+Week 7	Advanced PostgreSQL	• Table Relationships
+• Primary Keys and Foreign Keys
+• INNER JOIN and LEFT JOIN
+• Related Relational Queries
+• Aggregate Functions, GROUP BY & HAVING
+• Indexes & Query Performance
+• Pagination & Efficient Data Retrieval
+• Real-World Relational Data
+• Hands-on PostgreSQL Query Practice
+
+
+Week 8	AI/LLM Integration + Testing & Debugging	• AI & LLM Fundamentals
+• LLM API & Prompt Integration
+• Gemini / OpenAI / NVIDIA API Integration
+• Secure Backend-based AI Integration
+• Multi-Provider AI Architecture
+• AI-Powered Feature Development
+• API Testing & Debugging
+• React, Express & Network Debugging
+

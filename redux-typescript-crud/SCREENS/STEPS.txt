@@ -1,0 +1,225 @@
+
+*******************************************************************
+npm create vite@latest redux-typescript-crud -- --template react-ts
+
+npm install @reduxjs/toolkit react-redux
+npm install tailwindcss @tailwindcss/vite
+*******************************************************************
+npm run dev
+http://localhost:5173/
+
+ctrl + c
+cd redux-typescript-crud
+code .
+
+TAILWIND CSS INSTALLATION:
+-------------------------
+https://tailwindcss.com/docs/installation/using-vite
+npm install tailwindcss @tailwindcss/vite
+
+
+Create the folders
+
+Inside src, create this structure:
+
+src/
+│
+├── app/
+│   ├── store.ts
+│   └── hooks.ts
+│
+├── features/
+│   └── users/
+│       └── usersSlice.ts
+│
+├── App.tsx
+├── App.css
+├── index.css
+└── main.tsx
+
+Final project structure:
+-----------------------
+
+redux-typescript-crud/
+│
+├── src/
+│   │
+│   ├── app/
+│   │   ├── store.ts
+│   │   └── hooks.ts
+│   │
+│   ├── features/
+│   │   └── users/
+│   │       └── usersSlice.ts
+│   │
+│   ├── App.tsx
+│   ├── App.css
+│   ├── index.css
+│   └── main.tsx
+│
+├── package.json
+├── tsconfig.json
+├── tsconfig.app.json
+└── vite.config.ts
+
+             React + TypeScript
+                    │
+                    ▼
+                 App.tsx
+                    │
+          ┌─────────┴─────────┐
+          │                   │
+   useAppSelector      useAppDispatch
+          │                   │
+          ▼                   ▼
+      Redux Store      usersSlice.ts
+                            │
+             ┌──────────────┼──────────────┐
+             │              │              │
+           GET            POST            PUT
+       fetchUsers()     addUser()      updateUser()
+             │              │              │
+             └──────────────┼──────────────┘
+                            │
+                          DELETE
+                       deleteUser()
+                            │
+                            ▼
+                       Fetch API
+                            │
+                            ▼
+                     Express Server
+                            │
+                            ▼
+                       PostgreSQL
+					   
+The main TypeScript additions
+
+| JavaScript              | TypeScript                            |
+| ----------------------- | ------------------------------------- |
+| `user`                  | `user: User`                          |
+| `id`                    | `id: number`                          |
+| `users: []`             | `users: User[]`                       |
+| `error: null`           | `error: string \| null`               |
+| `useState(null)`        | `useState<number \| null>(null)`      |
+| `createAsyncThunk(...)` | Typed `createAsyncThunk<...>`         |
+| untyped `dispatch`      | `AppDispatch`                         |
+| untyped `useSelector`   | `RootState`                           |
+| `e`                     | `React.ChangeEvent<HTMLInputElement>` |
+| `e` submit              | `React.FormEvent<HTMLFormElement>`    |
+
+
+Final production-style structure
+
+src/
+│
+├── app/
+│   ├── store.ts
+│   └── hooks.ts
+│
+├── components/
+│   └── users/
+│       │
+│       ├── UserHeader.tsx
+│       ├── UserForm.tsx
+│       ├── UserList.tsx
+│       └── UserCard.tsx
+│
+├── features/
+│   └── users/
+│       └── usersSlice.ts
+│
+├── types/
+│   └── user.types.ts
+│
+├── App.tsx
+├── main.tsx
+└── index.css
+
+One particularly important production principle
+
+Keep these three things separate:
+
+types/
+   ↓
+"What does my data look like?"
+
+features/
+   ↓
+"How does my application manage that data?"
+
+components/
+   ↓
+"How do I display and interact with that data?"
+
+
+
+E:\redux-typescript-crud>cd src
+
+E:\redux-typescript-crud\src>tree /F
+Folder PATH listing for volume DATA
+Volume serial number is 0ED0-D3D0
+E:.
+│   App.css
+│   App.tsx
+│   index.css
+│   main.tsx
+│   NOTES.txt
+│
+├───app
+│       hooks.ts
+│       store.ts
+│
+├───assets
+│       hero.png
+│       react.svg
+│       vite.svg
+│
+├───components
+│   └───users
+│           UserCard.tsx
+│           UserForm.tsx
+│           UserHeader.tsx
+│           UserList.tsx
+│
+├───features
+│   └───users
+│           usersSlice.ts
+│
+└───types
+        user.types.ts
+
+
+			   
+The important part is the separation
+
+types/
+    user.types.ts
+         ↓
+    Data definitions
+
+features/
+    usersSlice.ts
+         ↓
+    Redux + API + CRUD
+
+components/
+    users/
+         ↓
+    UI components
+
+App.tsx
+    ↓
+    Connect everything together
+
+
+--------------------------------------------------------------
+    1. .env
+
+Create .env in the project root:
+
+VITE_API_URL=http://localhost:5000/api/users
+2. Read it in React/TypeScript
+const API_URL = import.meta.env.VITE_API_URL;
+
+console.log(API_URL);

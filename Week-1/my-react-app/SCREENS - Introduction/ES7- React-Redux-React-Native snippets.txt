@@ -1,0 +1,337 @@
+ES7+ React/Redux/React-Native snippets
+
+The **ES7+ React/Redux/React-Native snippets** extension is one of the most popular VS Code extensions for React development. It saves time by generating commonly used React, Redux, and React Native code snippets.
+
+For someone teaching and building **ReactJS** applications like you, it's very useful.
+
+## Install
+
+Extension name:
+
+**ES7+ React/Redux/React-Native snippets**
+
+Publisher:
+
+**dsznajder**
+
+---
+
+# Some of the most useful snippets
+
+## 1. `rafce` ⭐⭐⭐⭐⭐ (Most Popular)
+
+Creates a React Arrow Function Component with export.
+
+Type:
+
+```text
+rafce
+```
+
+Press **Tab**.
+
+Generates:
+
+```jsx
+import React from 'react';
+
+const Home = () => {
+  return (
+    <div>Home</div>
+  );
+};
+
+export default Home;
+```
+
+---
+
+## 2. `rfce`
+
+Creates a normal function component.
+
+```jsx
+import React from 'react';
+
+function Home() {
+  return (
+    <div>Home</div>
+  );
+}
+
+export default Home;
+```
+
+---
+
+## 3. `rfc`
+
+Creates only the component.
+
+```jsx
+export default function Home() {
+  return (
+    <div>Home</div>
+  );
+}
+```
+
+---
+
+## 4. `useState`
+
+Type
+
+```text
+useState
+```
+
+Press **Tab**
+
+Generates
+
+```jsx
+const [state, setState] = useState(initialState);
+```
+
+---
+
+## 5. `useEffect`
+
+Type
+
+```text
+useEffect
+```
+
+Generates
+
+```jsx
+useEffect(() => {
+
+}, []);
+```
+
+---
+
+## 6. `useContext`
+
+```jsx
+const value = useContext(Context);
+```
+
+---
+
+## 7. `useReducer`
+
+```jsx
+const [state, dispatch] = useReducer(reducer, initialState);
+```
+
+---
+
+## 8. `useRef`
+
+```jsx
+const inputRef = useRef(null);
+```
+
+---
+
+## 9. `useMemo`
+
+```jsx
+const memoizedValue = useMemo(() => {
+
+}, []);
+```
+
+---
+
+## 10. `useCallback`
+
+```jsx
+const memoizedCallback = useCallback(() => {
+
+}, []);
+```
+
+---
+
+# React.memo
+
+Type
+
+```text
+memo
+```
+
+Generates
+
+```jsx
+export default memo(ComponentName);
+```
+
+---
+
+# Lazy Loading
+
+Type
+
+```text
+lazy
+```
+
+Generates
+
+```jsx
+const Home = lazy(() => import('./Home'));
+```
+
+---
+
+# Redux snippets
+
+## `redux`
+
+Creates a Redux store template.
+
+---
+
+## `useDispatch`
+
+```jsx
+const dispatch = useDispatch();
+```
+
+---
+
+## `useSelector`
+
+```jsx
+const data = useSelector(state => state);
+```
+
+---
+
+# Console log
+
+Type
+
+```text
+clg
+```
+
+Produces
+
+```javascript
+console.log(object);
+```
+
+---
+
+# Import React
+
+Type
+
+```text
+imr
+```
+
+Produces
+
+```jsx
+import React from 'react';
+```
+
+*(Note: In React 17+ with the new JSX transform, importing React isn't always required, so you may not use this as often.)*
+
+---
+
+# Import useState
+
+Type
+
+```text
+imrs
+```
+
+Produces
+
+```jsx
+import React, { useState } from 'react';
+```
+
+---
+
+# Export default
+
+Type
+
+```text
+exp
+```
+
+Produces
+
+```jsx
+export default Component;
+```
+
+---
+
+# Why this extension is useful
+
+Without the extension, creating a component means typing everything manually:
+
+```jsx
+import React from 'react';
+
+const Dashboard = () => {
+  return (
+    <div>
+      Dashboard
+    </div>
+  );
+};
+
+export default Dashboard;
+```
+
+With the extension:
+
+```text
+rafce
+```
+
+Press **Tab**, and it's generated instantly.
+
+---
+
+# Is it useful in 2026?
+
+**Yes.** Even though AI tools like ChatGPT and GitHub Copilot can generate code, this extension is still valuable because it:
+
+* Speeds up writing repetitive boilerplate.
+* Helps beginners learn common React patterns.
+* Works offline and is very lightweight.
+* Keeps your coding flow uninterrupted.
+
+---
+
+## My recommendation for your React training
+
+Since you're teaching **React 19**, I recommend these VS Code extensions:
+
+1. ✅ ES7+ React/Redux/React-Native snippets
+2. ✅ Prettier – Code formatter
+3. ✅ ESLint
+4. ✅ Auto Rename Tag
+5. ✅ Path Intellisense
+6. ✅ Error Lens
+7. ✅ GitLens
+8. ✅ Tailwind CSS IntelliSense
+9. ✅ Material Icon Theme
+10. ✅ Thunder Client (for testing REST APIs)
+
+This combination provides a productive setup for developing and teaching React, Vite, Tailwind CSS, Redux Toolkit, Node.js/Express, and related technologies.

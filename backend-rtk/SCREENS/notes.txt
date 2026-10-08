@@ -1,0 +1,149 @@
+mkdir backend-rtk
+cd backend-rtk
+npm init -y
+
+
+in package.json file change this 
+ "type": "commonjs"
+ to
+ "type": "module"
+
+npm install express
+
+Create server.js
+
+in package.json file change this 
+"main": "index.js",
+to
+"main": "server.js",
+
+in package.json file change this 
+
+
+start server
+node server.js
+
+E:\backend-rtk>node server.js
+Server running at http://localhost:5000
+
+Open chrome browser and keyin http://localhost:5000
+Output
+Hello Express!
+
+npm install --save-dev nodemon
+or:
+npm i -D nodemon
+======================================================================================
+nodemon is a development tool. It watches your files and automatically restarts the Node.js server whenever you make changes.
+
+Install it with:
+
+npm install --save-dev nodemon
+
+or:
+
+npm i -D nodemon
+
+Your package.json will contain:
+
+{
+  "devDependencies": {
+    "nodemon": "^3.x.x"
+  }
+}
+Typical setup
+{
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  }
+}
+
+Then:
+
+npm run dev
+
+During development:
+
+You modify server.js
+       ↓
+nodemon detects change
+       ↓
+Server automatically restarts
+
+For production:
+
+npm start
+
+which simply runs:
+
+node src/server.js
+One important point
+
+You do not need to install nodemon globally.
+
+Avoid:
+
+npm install -g nodemon
+
+Prefer the project-local installation:
+
+npm i -D nodemon
+
+This keeps the project's tooling and versions controlled by package.json and package-lock.json.
+
+So the rule of thumb is:
+
+express → dependencies
+nodemon → devDependencies ✅
+======================================================================================
+======================================================================================
+======================================================================================
+======================================================================================
+======================================================================================
+======================================================================================
+
+
+
+
+
+
+
+
+======================================================================================
+Microsoft Windows [Version 10.0.26100.8246]
+(c) Microsoft Corporation. All rights reserved.
+
+E:\>mkdir backend-rtk
+
+E:\>cd backend-rtk
+
+E:\backend-rtk>npm init -y
+Wrote to E:\backend-rtk\package.json:
+
+{
+  "name": "backend-rtk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
+
+
+
+E:\backend-rtk>
+======================================================================================
+
+
+======================================================================================
+======================================================================================
+======================================================================================
+======================================================================================
+======================================================================================
+======================================================================================

@@ -1,0 +1,33 @@
+import React, { useState } from 'react';
+
+function App() {
+  const [likes, setLikes] = useState(0);
+
+  // Direct updates (may not work as expected due to batching)
+  const handleClick1 = () => {
+    setLikes(likes + 1);
+    setLikes(likes + 1);
+    setLikes(likes + 1);
+  };
+
+  // Functional updates (reliable)
+  const handleClick2 = () => {
+    setLikes((prevLikes) => prevLikes + 1);
+    setLikes((prevLikes) => prevLikes + 1);
+    setLikes((prevLikes) => prevLikes + 1);
+  };
+
+  return (
+    <div>
+      <h1>React Likes Assignment</h1>
+      <button onClick={handleClick1}>
+        Add Likes (Direct): {likes}
+      </button>
+      <button onClick={handleClick2}>
+        Add Likes (Functional): {likes}
+      </button>
+    </div>
+  );
+}
+
+export default App;

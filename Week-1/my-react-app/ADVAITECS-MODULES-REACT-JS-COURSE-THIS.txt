@@ -1,0 +1,746 @@
+1.html-basics
+E:\MURALI\REACT-JS-CRASH-COURSE\html-basics
+E:\MURALI\REACT-JS-CRASH-COURSE\my-site
+-----------------
+**************************
+npm install -g http-server
+**************************
+E:\MURALI\REACT-JS-CRASH-COURSE\my-site>http-server
+Starting up http-server, serving ./
+
+http-server version: 14.1.1
+
+http-server settings:
+CORS: disabled
+Cache: 3600 seconds
+Connection Timeout: 120 seconds
+Directory Listings: visible
+AutoIndex: visible
+Serve GZIP Files: false
+Serve Brotli Files: false
+Default File Extension: none
+
+Available on:
+  http://192.168.1.13:8080
+  http://127.0.0.1:8080
+Hit CTRL-C to stop the server
+OR
+http://localhost:8080
+-----------------
+
+2.testapp
+E:\MURALI\REACT-JS-CRASH-COURSE\testapp
+E:\MURALI\REACT-JS-CRASH-COURSE\react-course\src-Installation
+
+Starter JSX Project
+Folders,Files,Naming Conventions,Project Flow - How React Appliction Starts
+
+E:\my-react-app
+*****************************
+Introductory screens
+VS Code Extenstions
+Chrome Extensions
+Functional Components Vs Class Components
+src-Lesson-1-basics
+src - M1-Lesson-1-ES6 - src - npm install -D sass-embedded
+src-Lesson-1-ES6-Fundamentals
+
+src - M1-Lesson-1-ES6
+src - M1-Lesson-1-FlexBox
+
+src - M1-Lesson-1-ImportExport
+src - M3-Lesson-2-Styling In React
+
+----------------------------------------------
+src - M4-Lesson-1-JSX Syntax Expressions Attributes 
+
+src - M5-Lesson-1-Event Handling in React 
+
+src - M6-Lesson-1-Conditional Rendering 
+src - M6-Lesson-2-Conditional Rendering with if statements 
+src - M6-Lesson-3-Conditional Rendering with logical && operator 
+src - M6-Lesson-3-Conditional Rendering with ternary operator 
+
+src - M7-Lesson-1-Rendering Lists 
+
+src - M8-Lesson-1-Controlled Components [BY USING useState]
+src - M8-Lesson-2-Uncontrolled Components [BY USING useRef]
+src - M8-Lesson-3-Form Submission 
+src - M8-Lesson-4-Form with validation 
+ASSIGNMENT - StudentRegistrationForm.jsx
+src - M8-Lesson-5-Form with validation another way [In their own COMPONENTS]
+
+REACT HOOK FORM + ZOD:
+---------------------
+React Hook Form with ZOD 
+E:\react-rhk-zod
+------------------------------------------------------
+
+****************************************
+LIFTING THE STATE UP
+COMMUNICATION BETWEEN COMPONENTS
+
+E:\Advaitecs\Week-1\my-react-app
+src - M9-1-Lesson-1
+----------------------------------------
+Concepts Covered:
+Lifting state up
+Child-to-parent communication
+Sibling component communication
+Controlled components
+Dynamic rendering of a list
+State management in parent component
+src - M9-1-Lesson-2
+----------------------------------------
+----------------------------------------------
+HOOKS
+
+REACT HOOKS - ONLY for Functional Components
+
+useState-useEffect-CONCEPTS
+src -M3-Lesson-4-useState and useEffect-IMP
+src - M3-Lesson-4-All Hooks-1
+src - M10-Lesson-4-Custom Hooks
+
+count = 10;
+count = 11;
+
+HOOKS
+useState
+
+state management - queue of all state updates and batches them
+
+Functional Components - state of the data + html content
+-----------------------
+NORMAL FUNCTION REPRESENTION
+function App(){
+return(
+<>
+</>
+)
+}
+-----------------------
+ES6 - ARROW FUNCTION REPRESENTION
+const App = () =>{
+return(
+<>
+</>
+)
+}
+-----------------------
+Class Components
+
+class App(){
+//LIFE CYCLE METHODS - 
+}
+-----------------------
+
+1111111111111111111111
+src -M3-Lesson-4-useState and useEffect-IMP
+
+2222222222222222222222
+src-Lesson-3-React-Hooks-NICE
+
+useState Hook
+useEffect Hook
+useRef Hook
+useMemo Hook
+useCallback Hook
+useContext Hook
+useReducer Hook
+useLayoutEffect Hook
+Custom React Hook
+
+
+33333333333333333
+CUSTOM HOOKS:
+============
+src - M10-Lesson-4-Custom Hooks 
+useFetch,useHttp,useToggle,useLocalStorage
+useLocalStorage - App-1.useLocalStorageCustomHook.jsx,Counter.jsx,Counter1.jsx,Counter2.jsx
+App-2.useCounterCustomHook.jsx - useCounter.js
+App-3.useToggleCustomHook.jsx - ToggleComponent.jsx,useToggle.js
+App-4.useFetchCustomHook.jsx - PostsList.jsx,useFetch.js
+App-5.useHttp-CRUDCustomHooks.jsx,UsersList.jsx,UpdateUser.jsx,DeleteUser.jsx,useHttp.js
+
+
+4444444444444444444
+
+OTHER HOOKS - [E:\my-react-app\src - M3-Lesson-4-All Hooks-1\other-hooks]
+
+useInsertionEffect - [ App-useInsertionEffect.jsx ]
+useId - [ App-useId.jsx, App-useId-2.jsx, NameInput.jsx]
+useTransition - [App-useTransition-Without-1.jsx,App-useTransition-With-2.jsx]
+useDeferredValue - [ App-useDeferredValue-Without-1.jsx, App-useDeferredValue-With-2.jsx ]
+useSyncExternalStore - [ App-useSyncExternalStore-Witout-1.jsx, App-useSyncExternalStore-With-2.jsx ]
+useDebugValue - [ App-useDebugValue.jsx, useOnlineStatus.js, useCounter.js]
+
+
+******** CURRENT USING ********
+src-Lesson-3-React-Hooks-NICE
+******** CURRENT USING ********
+HOOKS:
+-----
+src -M3-Lesson-4-useState and useEffect-IMP
+src-Lesson-3-React-Hooks-NICE
+src - M10-Lesson-3-Prop-Drilling-useContext() Hook
+useState
+useEffect
+useRef
+useMemo
+useCallback
+useContext
+useReducer
+useLayoutEffect
+custom hooks
+-------------------------------------------
+App-useState-1.jsx
+App-useState-2.jsx
+App-useState-3.jsx
+
+App-useEffect.jsx
+
+App-useRef-1.jsx
+App-useRef-2.jsx
+App-useRef-3.jsx
+App-useRef-4.jsx
+App-useRef-5.jsx - ImperativeHandleExample.jsx,CustomInput.jsx - useImperativeHandle Hook, forwardRef
+REFS AND PORTALS 
+useRef / createPortal - [ App-useRefCreatePortals.jsx,ModalPortal.jsx ] - Assignment-Exploring useRef in React
+IN index.html have this entry
+<body>
+  <div id="root"></div>
+  <div id="modal-root"></div> <!-- 👈 For portal -->
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+App-useRefCreatePortals.jsx
+App-useRefCreatePortalsPersonalInfo.jsx
+
+App-Reusable-Modal-Component-In-body.jsx
+App-Reusable-Modal-Component-In-modal-container.jsx
+
+App-useMemo-WITHOUT.jsx
+App-useMemo-WITH.jsx
+App-useMemo-Vs-useEffect.jsx
+
+App-useCallback-WITHOUT.jsx
+App-useCallback-WITH.jsx
+App-useCallback-1.jsx
+
+App-useContext.jsx - DO THIS FIRST - src - M10-Lesson-3-Prop-Drilling-useContext() Hook
+
+App-useReducer-1.jsx
+App-useReducer-2.jsx
+App-useReducer-3.jsx
+App-useReducer-4.jsx
+App-useReducer-5-EXAMPLE
+App-useReducer-6-COMBINED-useContext-useReducer
+
+App-useLayoutEffect-1.jsx
+App-useLayoutEffect-2.jsx
+
+App-CustomHook-1.jsx
+App-CustomHook-2.jsx
+App-useLocalStorage.jsx
+
+App-6-Controlled-Component.jsx - useState
+App-6-Uncontrolled-Component.jsx - useRef
+App-7-HOC-Higherordercomponents-1.jsx
+App-7-HOC-Higherordercomponents-2.jsx
+App-7-HOC-Higherordercomponents-3.jsx
+App-7-HOC-Higherordercomponents-4.jsx
+
+
+CUSTOM HOOKS:
+============
+src - M10-Lesson-4-Custom Hooks 
+useFetch,useHttp,useToggle,useLocalStorage
+useLocalStorage - App-1.useLocalStorageCustomHook.jsx,Counter.jsx,Counter1.jsx,Counter2.jsx
+App-2.useCounterCustomHook.jsx - useCounter.js
+App-3.useToggleCustomHook.jsx - ToggleComponent.jsx,useToggle.js
+App-4.useFetchCustomHook.jsx - PostsList.jsx,useFetch.js
+App-5.useHttp-CRUDCustomHooks.jsx,UsersList.jsx,UpdateUser.jsx,DeleteUser.jsx,useHttp.js
+-------------------------------------------
+BACKEND-EXPRESS JS AND NODE JS BASICS:
+-------------------------------------
+
+BACKEND SERVER:
+==============
+E:\Advaitecs\test-node-api
+111111111111
+BACKEND NODE EXPRESS JS Server
+mkdir backend-rtk
+cd backend-rtk
+npm init -y
+
+E:\Advaitecs\backend-rtk
+server-1-simple-endpoint.js - Hello Express
+server-2-users-endpoints.js - jsonplaceholder - users
+
+FRONTEND:[SIMPLE]
+--------
+E:\Advaitecs\Week-1\my-react-app\src-backendapi
+
+--------------------------------------------------
+BACKEND NODE EXPRESS JS Server - CONNECTING TO NEON DB
+E:\Advaitecs\users-api
+DATABASE_URL=postgresql://neondb_owner:npg_e8piHMrYL0wy@ep-noisy-sea-aexpfwkt-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require	
+
+FRONTEND
+E:\Advaitecs\Week-1\my-react-app\src-WITHOUT-REDUX-Toolkit-neondb - App-WITH-SWEETALERT-ICONS.jsx - sweetalert2 & licide-react
+//https://sweetalert2.github.io/#icons
+//npm i sweetalert2
+//npm i lucide-react
+//https://lucide.dev/icons/
+
+
+FRONTEND
+E:\Advaitecs\Week-1\my-react-app\src-REDUX-Toolkit-neondb
+
+E:\Advaitecs\Week-1\my-react-app\src-LoadingSpinner-Toast-SweetAlert-Icons
+• Loading Indicators, Toast Notifications and SweetAlert2
+****************************************************
+npm install lucide-react react-hot-toast sweetalert2
+****************************************************
+Loading Indicators with Lucide React
+src/components/common/LoadingSpinner.jsx
+--------------------------------------------------
+
+FRONTEND:[REDUX TOOLKIT]
+E:\Advaitecs\Week-1\my-react-app\src-REDUX-Toolkit 
+
+npm install @reduxjs/toolkit react-redux
+
+import { Provider } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+-------------------------------------------------------
+import { configureStore } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+
+There are two different DevTools extensions:chrome
+
+React Developer Tools → gives you the Components and Profiler tabs.
+Redux DevTools → gives you the Redux state, actions, action history, and state changes.
+----------------------------------------
+****************************************
+npm install @reduxjs/toolkit react-redux
+npm install @reduxjs/toolkit 
+npm install react-redux
+****************************************
+----------------------------------------
+222222222222222
+BACKEND NODE EXPRESS JS Server - CONNECTING TO NEON DB
+E:\Advaitecs\users-api
+DATABASE_URL=postgresql://neondb_owner:npg_e8piHMrYL0wy@ep-noisy-sea-aexpfwkt-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require	
+
+postgresql://neondb_owner:npg_e8piHMrYL0wy@ep-noisy-sea-aexpfwkt-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+
+FRONTEND
+E:\Advaitecs\Week-1\my-react-app\src-WITHOUT-REDUX-Toolkit-neondb
+
+FRONTEND
+E:\Advaitecs\Week-1\my-react-app\src-REDUX-Toolkit-neondb
+
+----------------------
+App-COUNTER-USERS.jsx
+App-COUNTER.jsx
+App-USERS.jsx
+----------------------
+YOU CAN REFER TO THIS AS WELL
+E:\Advaitecs\Week-1\my-react-app\src-redux-toolkit-createAsyncThunk
+E:\Advaitecs\Week-1\my-react-app\src-redux-toolkit-createAsyncThunk-Assignment
+
+---------------------------------------------------------------
+
+
+REACT ROUTER:
+------------
+ROUTING: [ https://reactrouter.com/home ]
+========
+****************************
+npm install react-router-dom
+****************************
+
+src - M11-Lesson-1-Setting up React Router 
+src - M11-Lesson-1-Deeply Nested Routes with Siblings 
+PAGE V/S COMPONENT - IMPORTANT
+E:\Advaitecs\Week-1\pagecomponent-app
+
+src - M11-Lesson-2-Route Parameters - 5 ways to send parameters
+
+src - M11-Lesson-3-Nested Routes 
+src - M11-Lesson-4-Redirects 
+src - M11-Lesson-4-PrivateProtectedRoutes
+TERMS IN ROUTING
+Router,Routes,Route,path,element,Link,NavLink,useParams,
+
+ROUTING-Assignment.png
+E:\Advaitecs\Week-1\my-react-app\src-ROUTING-Assignment
+
+---------------------------------------------------------------
+
+ZUSTAND - STATE MANAGEMENT TOOLKIT
+FRONTEND
+E:\my-react-app\src-Zustand-neondb
+
+++++++++++++++++++++++++++++++ TYPESCRIPT INTRODUCTION +++++++++++++++++++++++++++++++++++++++++++
+TYPESCRIPT INTRODUCTION:
+-----------------------
+E:\react-typescript-demo
+
+----------------------------------------------------
+Modern Vite templates have evolved. 
+Depending on the template/version, some TypeScript checks may be configured through individual options rather than relying only on:
+
+"strict": true
+
+In your current file, for example, you already have:
+
+"noUnusedLocals": true,
+"noUnusedParameters": true,
+"noFallthroughCasesInSwitch": true
+
+These are explicit TypeScript checks.
+----------------------------------------------------
+
+
+TYPESCRIPT REACT JS APP:
+-----------------------
+BACKEND NODE EXPRESS JS Server - CONNECTING TO NEON DB
+E:\Advaitecs\users-api
+FRONTEND
+E:\redux-typescript-crud
+
+
+
+
+Week 6	Authentication, Authorization & Real-World JWT	• User Registration and Login
+• JWT Authentication
+• Protected Routes
+• Role-Based Authorization
+• Admin & User Access Control
+• JWT Access Tokens and Refresh Tokens
+• Token Expiration and Axios Interceptors
+• Automatic Token Refresh and Session Management
+• Secure frontend/backend authentication flow
+• Protected APIs and hands-on authentication implementation
+--------------------------------------------
+E:\Advaitecs\jwt-cookies
+E:\Advaitecs\advanced-fullstack-app
+--------------------------------------------
+
+Week 7	Advanced PostgreSQL	• Table Relationships
+• Primary Keys and Foreign Keys
+• INNER JOIN and LEFT JOIN
+• Related Relational Queries
+• Aggregate Functions, GROUP BY & HAVING
+• Indexes & Query Performance
+• Pagination & Efficient Data Retrieval
+• Real-World Relational Data
+• Hands-on PostgreSQL Query Practice
+--------------------------------------------
+E:\Advaitecs\JOINS
+E:\Advaitecs\Week_7_Advanced_PostgreSQL
+--------------------------------------------
+
+Week 8	AI/LLM Integration + Testing & Debugging	• AI & LLM Fundamentals
+• LLM API & Prompt Integration
+• Gemini / OpenAI / NVIDIA API Integration
+• Secure Backend-based AI Integration
+• Multi-Provider AI Architecture
+• AI-Powered Feature Development
+• API Testing & Debugging
+• React, Express & Network Debugging
+--------------------------------------------
+E:\Advaitecs\ai-fullstack-demo
+--------------------------------------------
+
+-----------------
+FRONTEND
+E:\my-react-app\src-ReduxToolkitMultiSlices
+BACKEND
+E:\backendMultiSlicesPostgresql
+-----------------
+npm start is a special npm command. It automatically looks for,start in scripts section
+-------------------------------------------------------------------------
+
+
+React Hook Form with ZOD 
+ROUTING
+JWT - AUTHENTICATION + AUTHORIZATION - Http-cookies only (SECURITY)
+PROJECT WITH - PAYMENT GATEWAY
+ALL TOPICS BRUSH UP
+
+
+
+REACT ROUTER:
+-------------
+E:\MURALI\REACT-JS-CRASH-COURSE\usa-reactjs\reactrouterapp
+
+src-1-OLD-Routing-Method
+src-2 -Link
+src-3-NavLink
+src-4-useNavigateHook
+src-5-NestedRoutes
+src-6-404-Page
+src-7-ReactRouterLoader
+src-8-RouteParameters
+src-9-ReactRouterErrorElement
+src-10-PrivateProtectedRoutes
+src-11-Redirects
+
+Form Libraries (e.g. React Hook Form with ZOD, Formik with yup)
+
+React Hook Form with ZOD & Formik with yup
+E:\MURALI\REACT-JS-CRASH-COURSE\usa-reactjs\react-zod-formik-app
+
+
+ERROR HANDLING:[ E:\my-react-app\src - M15-Lesson-1-ErrorHandling ]
+==============
+********************************
+npm install react-error-boundary
+npm install axios
+********************************
+
+src - M15-Lesson-1-ErrorHandling 
+
+
+Error handling concepts in React (function components) 
+
+1. try...catch inside Event Handlers or Functions
+App-1-TryCatchExample
+
+2. Error Boundary using Wrapper with react-error-boundary
+App-2-ErrorBoundary.jsx
+App-2-1-useErrorBoundaryHook.jsx - USING useErrorBoundary Hook
+npm install react-error-boundary
+
+3. useEffect with try...catch for async errors
+App-3-useEffectWithTryCatch.jsx
+
+4. Custom Error Handling using useReducer
+App-4-CustomErrorHandlingusinguseReducer.jsx
+
+5. Conditional Rendering for Error Messages
+App-5-FormValidationExample.jsx
+
+6.Global Error Handling with Axios Interceptors
+App-6-GlobalErrorHandlingwithAxiosInterceptors.jsx
+npm install axios
+npm install react-toastify
+
+// axiosConfig.js
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    // Handle all errors globally
+    console.error("API Error:", error);
+    return Promise.reject(error);
+  }
+);
+
+7. Boundary for Suspense & Lazy Loading
+App-7-BoundaryForSuspenseLazyLoading.jsx
+const LazyComponent = React.lazy(() => import('./MyComponent'));
+<Suspense fallback={<div>Loading...</div>}>
+  <LazyComponent />
+</Suspense>
+
+******
+
+BACKEND DEVELOPMENT:
+-------------------
+
+
+
+RTK
+
+
+
+
+
+
+
+
+src -M3-Lesson-4-useState and useEffect-IMP
+src-Lesson-3-React-Hooks-NICE
+src - M3-Lesson-4-All Hooks-1
+src - M10-Lesson-4-Custom Hooks 
+
+[CONTEXT AND REDUCER] - FIRST SEE THIS
+src - M10-Lesson-3-Prop-Drilling-useContext() Hook - IMPORTANT
+src - M10-Lesson-3-Pop-Drilling-useContext() Hook
+--------------------------------------------------------------
+src - M3-Lesson-4-All Hooks-1
+
+useRef      - [ App-UseRef-1.jsx,InputWithEvent.jsx,InputWithRef.jsx,InputWithRefOnly.jsx,NoRerenderComponent.jsx ]
+            - [ App-UseRef-2.jsx,UseRefHtmlElements.jsx ]
+
+1. Storing a DOM element reference - [ FocusInput.jsx ]
+2. Storing setInterval ID - [ Timer.jsx ]
+3. Storing a previous value - [ PreviousValue.jsx, PreviousValueDemo.jsx ] - Assignment-Exploring useRef in React			
+			
+REFS AND PORTALS 
+useRef / createPortal - [ App-useRefCreatePortals.jsx,ModalPortal.jsx ] - Assignment-Exploring useRef in React
+
+useMemo     - [ App-useMemo.jsx,ParentComponent.jsx,ChildDisplay.jsx ] - VALUE 
+				with calculations App-useMemoCalculations.JSX,ParentWithCalculationsUseMemo.jsx
+				
+useCallback - [ App-useCallback.jsx,CounterWithCallback.jsx,ChildButton.jsx ] - FUNCTION		
+		
+useImperativeHandle - [ App-useImperativeHandle.jsx,FancyInput.jsx,CustomInput.jsx,Modal.jsx ]
+useLayoutEffect - [ App-useLayoutEffect.jsx,LayoutEffectDemo.jsx,ChatWindow.jsx ]
+				   App-useLayoutEffect-2-PERFECT.jsx(THIS IS SUFFICIENT)
+
+Assignments:
+memo - App-memo-Assignment.jsx,ParentMemoComponent.jsx,ChildMemoComponent.jsx
+useCallback - App-useCallback-Assignment.jsx,SearchBox.jsx (Child Component),ParentWithSearch.jsx (Parent Component)
+useImperativeHandle: App-useImperativeHandle-Assignment.jsx (Parent Component),Timer.jsx (Child Component)
+
+
+
+OTHER HOOKS - [E:\my-react-app\src - M3-Lesson-4-All Hooks-1\other-hooks]
+
+useInsertionEffect - [ App-useInsertionEffect.jsx ]
+useId - [ App-useId.jsx, App-useId-2.jsx, NameInput.jsx]
+useTransition - [App-useTransition-Without-1.jsx,App-useTransition-With-2.jsx]
+useDeferredValue - [ App-useDeferredValue-Without-1.jsx, App-useDeferredValue-With-2.jsx ]
+useSyncExternalStore - [ App-useSyncExternalStore-Witout-1.jsx, App-useSyncExternalStore-With-2.jsx ]
+useDebugValue - [ App-useDebugValue.jsx, useOnlineStatus.js, useCounter.js]
+
+CUSTOM HOOKS:
+============
+src - M10-Lesson-4-Custom Hooks 
+useFetch,useHttp,useToggle,useLocalStorage
+useLocalStorage - App-1.useLocalStorageCustomHook.jsx,Counter.jsx,Counter1.jsx,Counter2.jsx
+App-2.useCounterCustomHook.jsx - useCounter.js
+App-3.useToggleCustomHook.jsx - ToggleComponent.jsx,useToggle.js
+App-4.useFetchCustomHook.jsx - PostsList.jsx,useFetch.js
+App-5.useHttp-CRUDCustomHooks.jsx,UsersList.jsx,UpdateUser.jsx,DeleteUser.jsx,useHttp.js
+--------------------------------------------------------------
+
+The Complete Hook Cheat Sheet
+
+| Hook                   | Main purpose                       | Nice use case        |
+| ---------------------- | ---------------------------------- | -------------------- |
+| `useState`             | Manage component state             | Counter / form       |
+| `useEffect`            | Perform side effects               | API call             |
+| `useRef`               | Keep mutable value / DOM reference | Focus input          |
+| `useMemo`              | Cache calculated value             | Filter large list    |
+| `useCallback`          | Cache function reference           | Memoized child       |
+| `useContext`           | Share data without prop drilling   | Theme / user         |
+| `useReducer`           | Manage complex state               | Shopping cart        |
+| `useImperativeHandle`  | Expose child methods               | Custom input focus   |
+
+| `useLayoutEffect`      | Work with DOM before paint         | Measure element      |
+
+| `useInsertionEffect`   | Insert styles before layout        | CSS-in-JS            | 
+| `useId`                | Generate unique IDs                | Form accessibility   |
+| `useTransition`        | Mark update as non-urgent          | Large list filtering |
+| `useDeferredValue`     | Defer a value                      | Search results       |
+| `useSyncExternalStore` | Connect external store to React    | Online status        |
+| `useDebugValue` 		 | Display custom Hook debug information | React DevTools 	 |
+
+CUSTOM HOOKS
+| `useFetch`             | Reuse fetch logic                  | GET API              |
+| `useHttp`              | Reuse HTTP logic                   | CRUD API             |
+| `useToggle`            | Reuse boolean state logic          | Modal/menu           |
+| `useLocalStorage`      | Persist state                      | Theme/preferences    |
+
+
+
+[CONTEXT AND REDUCER] - FIRST SEE THIS
+src - M10-Lesson-3-Prop-Drilling-useContext() Hook - IMPORTANT
+
+
+Naressh -> Test
+Test -> Test
+
+useState = "Store data and update the UI when the data changes."
+useEffect = "After rendering, do something."					  
+
+useState
+React receives the state update and re-renders the component.
+When you process this update, give me the most recent state value at that point.
+
+
+src - M3-Lesson-1-Functional Component - rafce - due to extension ES7+ installed in VS Code Editor
+src - M3-Lesson-2-Class Component - NOT USING CURRENTLY - NO NEED
+src - M3-Lesson-2-Styling In React
+src - M3-Lesson-3-Props and PropTypes-NOT SUPPORT IN V19-USE TYPESCRIPT - NO NEED
+
+src - M3-Lesson-4-useState and useEffect-IMP - VERY IMPORTANT [src -M3-Lesson-4-useState and useEffect-IMP]
+useState,useEffect - [App-1.useState-useEffect-Counter-Timer.jsx,
+                      App-2.UseState-UseEffect.jsx,
+					  App-3.UseEffect-FetchData.jsx
+                      App-4.Multiple UseEffects-MyComponent.jsx
+					  App-AllStateTypesDemo.jsx
+					  App-StateUpdateDemo.jsx
+					  ]
+Most Frequently Used Hooks in Real-World Projects
+1. useState
+2. useEffect
+3. useContext
+4. useRef
+5. useMemo
+6. useCallback
+7. useReducer
+8. useLayoutEffect
+
+CUSTOM HOOKS:
+============
+src - M10-Lesson-4-Custom Hooks 
+useFetch,useHttp,useToggle,useLocalStorage
+
+
+VS CODE EDITOR
+Windows key + Left Arrow
+CHROME BROWSER
+Windows key + Right Arrow
+
+jsonplaceholder.typicode.com
+https://jsonplaceholder.typicode.com/
+
+
+REACT ROUTER:
+------------
+E:\MURALI\PERN-ADVANCED-APPLICATION-GREAT-STACK\reactrouterapp
+
+
+usa-reactjs - FOR GIT PUSH
+E:\MURALI\REACT-JS-CRASH-COURSE\usa-reactjs
+git add .
+git status
+git commit -m "date"
+git push
+E:\MURALI\REACT-JS-CRASH-COURSE\usa-reactjs\my-react-app
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IN CHROME BROWSER INSTALL THESE 2 EXTENSIONS
+React Developer Tools - Chrome Web Store
+You will get two new tabs in your Chrome DevTools: "Components ⚛" and "Profiler ⚛".
+
+chrome extension for redux
+Redux DevTools - Chrome Web Store
+Redux DevTools for debugging application's state changes."Redux"
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+What is Hydration?
+Hydration is the process where React takes HTML that was already generated on the server and makes it interactive in the browser.
+A simple way to remember it:
+Server gives you HTML → Browser displays it → React "hydrates" it with JavaScript and behavior.
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+    
+}
+.reset-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    background: #c1d6f3;
+    color: rgb(92, 10, 150);
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid rgb(202, 146, 241);
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.reset-btn:hover {
+    background: #79daa0;
+}

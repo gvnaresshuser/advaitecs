@@ -1,0 +1,122 @@
+.product-inventory-container {
+    width: 100%;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.product-inventory-container .title {
+    margin-bottom: 20px;
+    color: #1f2937;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.product-inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.product-inventory-table th {
+    padding: 14px;
+    text-align: left;
+    background: #2563eb;
+    color: white;
+}
+
+.product-inventory-table td {
+    padding: 14px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.product-inventory-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.status-message {
+    padding: 20px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.error-message {
+    padding: 12px;
+    border-radius: 8px;
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.in-stock {
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.out-of-stock {
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #fee2e2;
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* -------------------------------------- */
+/* Header */
+
+.product-inventory-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+/* Remove bottom margin from title
+   because header controls the spacing */
+
+.product-inventory-header .title {
+    margin-bottom: 0;
+}
+
+/* Small Refresh Button */
+
+.refresh-btn {
+    width: 34px;
+    height: 34px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #2563eb;
+    color: white;
+
+    font-size: 22px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s ease;
+}
+
+/* Hover */
+
+.refresh-btn:hover {
+    background: #1d4ed8;
+    transform: rotate(180deg);
+}
+
+/* Disabled while loading */
+
+.refresh-btn:disabled {
+    background: #93c5fd;
+    cursor: not-allowed;
+    transform: none;
+}

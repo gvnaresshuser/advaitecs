@@ -1,0 +1,101 @@
+npm install react-router-dom
+
+App.jsx
+
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Layout from './components/Layout';
+import HomePage from './components/HomePage';
+import Company from './components/Company';
+import Leadership from './components/Leadership';
+import Vision from './components/Vision';
+import Products from './components/Products';
+import WebApp from './components/WebApp';
+import MobileApp from './components/MobileApp';
+import ContactUs from './components/ContactUs';
+import Profile from './components/Profile';
+import SearchResults from './components/SearchResults';
+import Details from './components/Details';
+import Dashboard from './components/Dashboard';
+import { AppContext } from './context/AppContext';
+
+function App() {
+  return (
+    <AppContext.Provider value={{ user: 'John Doe' }}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+
+            <Route path="company" element={<Company />}>
+              <Route index element={<Navigate to="leadership" replace />} />
+              <Route path="leadership" element={<Leadership />} />
+              <Route path="vision" element={<Vision />} />
+            </Route>
+
+            <Route path="products" element={<Products />}>
+              <Route path="webapp" element={<WebApp />} />
+              <Route path="mobileapp" element={<MobileApp />} />
+            </Route>
+
+            <Route path="contact" element={<ContactUs />} />
+            <Route path="profile/:username" element={<Profile />} />
+            <Route path="search" element={<SearchResults />} />
+            <Route path="details" element={<Details />} />
+            <Route path="dashboard" element={<Dashboard />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AppContext.Provider>
+  );
+}
+
+export default App;
+------------------------------------------------------------------------------------------
+
+Example Code Snippets
+=====================
+Profile.js (Route Params)
+-------------------------
+
+import { useParams } from 'react-router-dom';
+export default function Profile() {
+  const { username } = useParams();
+  return <h2>Welcome, {username}!</h2>;
+}
+
+------------------------------------------------------------------------------------------
+SearchResults.js (Search Params)
+--------------------------------
+import { useSearchParams } from 'react-router-dom';
+export default function SearchResults() {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query');
+  return <p>Showing results for: {query}</p>;
+}
+
+------------------------------------------------------------------------------------------
+Details.js (State Passing)
+--------------------------
+import { useLocation } from 'react-router-dom';
+export default function Details() {
+  const location = useLocation();
+  const { id, title } = location.state || {};
+  return <p>Details for {title} (ID: {id})</p>;
+}
+
+------------------------------------------------------------------------------------------
+Dashboard.js (Context API)
+--------------------------
+
+import { useContext } from 'react';
+import { AppContext } from '../context/AppContext';
+export default function Dashboard() {
+  const { user } = useContext(AppContext);
+  return <h3>Welcome to your Dashboard, {user}!</h3>;
+}
+------------------------------------------------------------------------------------------
+
+🎁 Bonus (Optional)
+Style the navbar and footer nicely
+Highlight active links with CSS
+Add a “NotFound” page (path="*")

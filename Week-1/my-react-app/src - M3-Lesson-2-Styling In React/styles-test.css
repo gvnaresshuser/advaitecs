@@ -1,0 +1,17 @@
+.main-heading {
+    color: green;
+    font-size: 28px;
+    text-align: center;
+}
+
+.buttonCls {
+    background-color: coral;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+}
+
+.buttonCls:hover {
+    background-color: red;
+}

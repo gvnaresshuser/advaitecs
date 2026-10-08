@@ -1,0 +1,76 @@
+/* Overlay that covers the entire screen */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    /* semi-transparent black */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    /* on top of everything */
+}
+
+/* Modal box */
+.modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    position: relative;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease;
+}
+
+/* Close button */
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: crimson;
+    border: none;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s ease;
+}
+
+.modal-close:hover {
+    background: darkred;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Styling the open button */
+button {
+    padding: 10px 15px;
+    margin: 20px;
+    font-size: 16px;
+    background: royalblue;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: dodgerblue;
+}

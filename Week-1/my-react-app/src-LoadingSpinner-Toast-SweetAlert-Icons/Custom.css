@@ -1,0 +1,36 @@
+/* Custom Gradient Toast */
+.gradient-toast {
+  background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  color: white !important;
+  border-radius: 12px !important;
+  padding: 14px 18px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+}
+/* ------------------------------------------- */
+
+/* Custom Gradient SweetAlert */
+.gradient-swal-popup {
+    background: linear-gradient(135deg, #ff6a00, #ee0979) !important;
+    color: white !important;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25) !important;
+}
+
+.gradient-swal-title {
+    color: white !important;
+    font-size: 24px !important;
+}
+
+.gradient-swal-text {
+    color: white !important;
+    font-size: 15px !important;
+}
+
+.gradient-swal-button {
+    background: white !important;
+    color: #ee0979 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 10px 22px !important;
+}

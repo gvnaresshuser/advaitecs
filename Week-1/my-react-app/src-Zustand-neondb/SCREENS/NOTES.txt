@@ -1,0 +1,32 @@
+Install Zustand
+
+Inside your React/Vite project:
+
+npm install zustand
+2. Suggested frontend structure
+src/
+│
+├── api/
+│   └── userApi.js
+│
+├── store/
+│   └── userStore.js
+│
+├── components/
+│   ├── UserForm.jsx
+│   └── UserList.jsx
+│
+├── App.jsx
+└── main.jsx
+
+The important concept is:
+
+React Component
+       ↓
+Zustand Store
+       ↓
+User API
+       ↓
+Express Backend
+       ↓
+PostgreSQL

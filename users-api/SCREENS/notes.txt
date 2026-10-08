@@ -1,0 +1,136 @@
+
+mkdir users-api
+cd users-api
+
+npm init -y
+npm install express pg dotenv cors
+npm install --save-dev nodemon
+
+package.json
+
+Change the scripts to:
+
+{
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  }
+}
+
+
+4. .env
+
+Get your Neon connection string from the Neon dashboard and put it here:
+
+PORT=5000
+
+DATABASE_URL=postgresql://username:password@your-neon-host/neondb?sslmode=require
+
+For example:
+
+PORT=5000
+DATABASE_URL=postgresql://neondb_owner:xxxxx@ep-xxxxx.us-east-2.aws.neon.tech/neondb?sslmode=require
+
+NEON DB POSTGRESQL:
+===================
+https://console.neon.tech/	 
+gvnaressh@gmail.com
+Database: Testproj
+
+| Column       | Type          | Description       |
+| ------------ | ------------- | ----------------- |
+| `id`         | SERIAL / INT  | Primary key       |
+| `name`       | VARCHAR(100)  | User name         |
+| `email`      | VARCHAR(150)  | Email address     |
+| `mobile`     | VARCHAR(15)   | Mobile number     |
+| `city`       | VARCHAR(100)  | City              |
+| `occupation` | VARCHAR(100)  | Occupation        |
+| `salary`     | NUMERIC(10,2) | Salary            |
+| `created_at` | TIMESTAMP     | Registration date |
+******************************************************************************************
+CREATE TABLE users_new (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    mobile VARCHAR(15),
+    city VARCHAR(100),
+    occupation VARCHAR(100),
+    salary NUMERIC(10, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+******************************************************************************************
+INSERT INTO users_new
+(name, email, mobile, city, occupation, salary)
+VALUES
+('Ravi Kumar', 'ravi@gmail.com', '9876543210', 'Hyderabad', 'Software Engineer', 75000),
+('Priya Sharma', 'priya@gmail.com', '9876543211', 'Bangalore', 'UI Designer', 68000),
+('Arun Reddy', 'arun@gmail.com', '9876543212', 'Hyderabad', 'Accountant', 52000),
+('Sneha Rao', 'sneha@gmail.com', '9876543213', 'Chennai', 'HR Manager', 72000),
+('Vikram Singh', 'vikram@gmail.com', '9876543214', 'Delhi', 'Software Developer', 85000),
+('Anita Patel', 'anita@gmail.com', '9876543215', 'Mumbai', 'Marketing Manager', 65000),
+('Kiran Kumar', 'kiran@gmail.com', '9876543216', 'Pune', 'Data Analyst', 70000),
+('Meena Reddy', 'meena@gmail.com', '9876543217', 'Hyderabad', 'Teacher', 45000),
+('Rahul Verma', 'rahul@gmail.com', '9876543218', 'Delhi', 'Web Developer', 78000),
+('Divya Nair', 'divya@gmail.com', '9876543219', 'Kochi', 'Business Analyst', 82000);
+******************************************************************************************
+=============================================================================
+E:\>mkdir users-api
+
+E:\>cd users-api
+
+E:\users-api>
+E:\users-api>npm init -y
+Wrote to E:\users-api\package.json:
+
+{
+  "name": "users-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
+
+
+
+E:\users-api>
+=============================================================================
+| Method   | Endpoint         | Purpose       |
+| -------- | ---------------- | ------------- |
+| `GET`    | `/api/users`     | Get all users |
+| `GET`    | `/api/users/:id` | Get one user  |
+| `POST`   | `/api/users`     | Create user   |
+| `PUT`    | `/api/users/:id` | Update user   |
+| `DELETE` | `/api/users/:id` | Delete user   |
+
+Request flow is:
+
+                    React / Postman
+                          │
+                          ▼
+                  Express Server
+                          │
+                          ▼
+                       Routes
+                          │
+                          ▼
+                     Controller
+                          │
+                          ▼
+                        Model
+                          │
+                          ▼
+                     PostgreSQL
+                        (Neon)
+						
+Start the backend
+npm run dev
+
+You should get:
+
+Server running at http://localhost:5000						

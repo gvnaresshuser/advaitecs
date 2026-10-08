@@ -1,0 +1,97 @@
+/* user.css */
+
+.user-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fdfdfd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.user-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.form-input {
+    flex: 1 1 45%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+.user-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fafafa;
+    border-left: 4px solid #e72309;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.user-info {
+    font-size: 16px;
+    color: #333;
+}
+
+.action-buttons .btn {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.edit-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #1e7e34;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #bd2130;
+}

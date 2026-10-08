@@ -1,0 +1,24 @@
+✅ Pages (HomePage, AboutPage, ContactPage)
+✅ Components (Header, Footer, Card)
+✅ Shared Layout (MainLayout)
+✅ Routing setup (App.jsx)
+
+🗂️ Folder Structure
+
+src/
+├── components/
+│   ├── Header.jsx
+│   ├── Footer.jsx
+│   └── Card.jsx
+│
+├── layout/
+│   └── MainLayout.jsx
+│
+├── pages/
+│   ├── HomePage.jsx
+│   ├── AboutPage.jsx
+│   └── ContactPage.jsx
+│
+├── App.jsx
+├── index.css
+└── main.jsx

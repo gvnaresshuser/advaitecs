@@ -1,0 +1,180 @@
+/* =========================================
+   Global
+   ========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+
+    background: linear-gradient(135deg,
+            #eef2ff,
+            #f5f3ff,
+            #faf5ff);
+
+    color: #1f2937;
+}
+
+/* =========================================
+   Main App
+   ========================================= */
+
+.app {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px 50px;
+}
+
+/* =========================================
+   Main Heading
+   ========================================= */
+
+.app>h1 {
+    margin: 0 0 30px;
+    padding: 18px 20px;
+
+    text-align: center;
+
+    color: white;
+
+    background: linear-gradient(135deg,
+            #4338ca,
+            #7c3aed,
+            #9333ea);
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 20px rgba(79, 70, 229, 0.25);
+}
+
+/* =========================================
+   Sections
+   ========================================= */
+
+section {
+    margin-bottom: 25px;
+    padding: 25px;
+
+    background: rgba(255, 255, 255, 0.9);
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Section Heading */
+
+section h2 {
+    margin: 0 0 20px;
+    padding: 10px 15px;
+
+    color: #3730a3;
+
+    background: linear-gradient(135deg,
+            #e0e7ff,
+            #ede9fe);
+
+    border-left: 5px solid #7c3aed;
+    border-radius: 8px;
+}
+
+/* =========================================
+   Component Output
+   ========================================= */
+
+section h3 {
+    margin: 12px 0;
+    padding: 15px 20px;
+
+    font-size: 17px;
+
+    background: linear-gradient(135deg,
+            #f0fdf4,
+            #ecfdf5);
+
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+
+    color: #166534;
+}
+
+/* =========================================
+   Loading Message
+   ========================================= */
+
+section:first-of-type h2+h3 {
+    color: #1d4ed8;
+
+    background: linear-gradient(135deg,
+            #eff6ff,
+            #dbeafe);
+
+    border-color: #bfdbfe;
+}
+
+/* =========================================
+   Note
+   ========================================= */
+
+.note {
+    margin-top: 15px;
+
+    font-size: 14px;
+    font-style: italic;
+
+    color: #6b7280;
+}
+
+/* =========================================
+   Code Block
+   ========================================= */
+
+pre {
+    margin: 0;
+    padding: 20px;
+
+    overflow-x: auto;
+
+    background: #111827;
+    color: #e5e7eb;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+    line-height: 1.6;
+
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
+
+@media (max-width: 600px) {
+    .app {
+        padding: 20px 15px 40px;
+    }
+
+    .app>h1 {
+        font-size: 24px;
+    }
+
+    section {
+        padding: 18px;
+    }
+
+    section h2 {
+        font-size: 18px;
+    }
+
+    pre {
+        font-size: 12px;
+    }
+}

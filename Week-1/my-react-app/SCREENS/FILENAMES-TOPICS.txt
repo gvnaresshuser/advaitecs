@@ -1,0 +1,521 @@
+*****************************
+src - M1-Lesson-1-ES6
+src-Lesson-1-ES6-Fundamentals
+*****************************
+
+# 🔰 JavaScript (ES6+) Fundamentals
+
+* `let`, `const`, arrow functions
+* Template literals
+* Destructuring (arrays & objects)
+* Spread & rest operators
+* Modules (import/export)
+* Promises & async/await
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+***********************************
+src-Lesson-2-React-JS-Core-Concepts
+***********************************
+
+# ⚛️ React JS Core Concepts
+
+* Introduction to React & SPA
+* JSX & Components
+* Functional Components
+* Props & State
+* Event Handling
+* Conditional Rendering
+* Lists & Keys
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+************************
+src-Lesson-3-React-Hooks
+E:\MURALI\REACT-JS-CRASH-COURSE\react-course\src-Lesson-3-React-Hooks-NICE
+************************
+
+# 🔄 React Hooks
+
+* `useState`
+* `useEffect`
+* `useRef`
+* `useMemo`
+* `useCallback`
+* `useContext`
+* `useReducer`
+* `useLayoutEffect`
+* Custom Hooks (basics)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*************************
+src-Lesson-4-React-Router
+*************************
+
+# 🧭 Routing (React Router)
+
+* BrowserRouter setup
+* Navigation using `Link`
+* Dynamic Routing (`/orders/:id`)
+* Programmatic navigation
+
+🔷 1. Install React Router
+npm install react-router-dom
+
+BrowserRouter Setup
+📁 main.jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { BrowserRouter } from "react-router-dom";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*****************************************
+src-Lesson-5-Authentication-Authorization
+*****************************************
+
+├── App.jsx
+├── pages/
+│   ├── Login.jsx
+│   ├── Register.jsx
+│   ├── Dashboard.jsx
+│   └── Admin.jsx
+├── components/
+│   ├── ProtectedRoute.jsx
+│   └── RoleRoute.jsx
+├── utils/
+│   └── fakeAuth.js
+# 🔐 Authentication & Authorization
+
+* Login & Register
+* JWT Token handling
+* Protected Routes
+* Role-based access (Admin/User)
+
+
+****************************
+BACKEND-ExpressJS-Postgresql -- backend [ E:\MURALI\REACT-JS-CRASH-COURSE\backend ]
+****************************
+mkdir backend
+cd backend
+npm init -y
+npm install express pg cors dotenv
+npm install nodemon --save-dev
+
+BACKEND EXPRESS JS SERVER: E:\MURALI\REACT-JS-CRASH-COURSE\backend
+
+DATABASE_URL=postgresql://pern_store_user:NsaWhmupwHKzJfkKH4MhX2ls2n3ZbJng@dpg-d7gnn8v7f7vs73d7h050-a.singapore-postgres.render.com/pern_store_fab5?sslmode=verify-full
+
+reactjs_crash_course_products 
+
+CREATE TABLE reactjs_crash_course_products (
+  product_id serial PRIMARY KEY,
+  name varchar(100) NOT NULL UNIQUE,
+  slug varchar(100) NOT NULL UNIQUE,
+  price real NOT NULL,
+  description text NOT NULL,
+  image_url varchar(255),
+  created_at timestamp DEFAULT now()
+);
+
+🧠 Architecture
+React → Express API → PostgreSQL
+
+E:\MURALI\REACT-JS-CRASH-COURSE\backend>
+
+🚀 Step 1: Backend Setup (Express)
+mkdir backend
+cd backend
+npm init -y
+npm install express pg cors dotenv
+npm install nodemon --save-dev
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*****************************************
+src-Lesson-6-CRUD-ExpressJS-Postgresql
+*****************************************
+📁 Folder Structure (Frontend)
+src/
+ ├── api.js
+ ├── App.jsx
+ └── components/
+      ├── ProductForm.jsx
+      └── ProductList.jsx
+
+npm install axios
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+***********************************
+src-Lesson-7-Real-Login-System-JWT
+**********************************
+npm install sweetalert2 jwt-decode
+
+👉 “Next: Protected Routes (Real Login System + JWT)”
+src-Lesson-7-Real-Login-System-JWT/
+ ├── api.js
+ ├── App.jsx
+ ├── Login.jsx
+ ├── Dashboard.jsx
+
+👉 Step-by-step flow
+1. Login → access token generated (15s)
+2. Go to dashboard → /profile works ✅
+3. Wait 15 seconds → token expires ❌
+4. Refresh page → /profile fails (403)
+5. Interceptor triggers
+6. SweetAlert → "Session Expired"
+7. /auth/refresh called
+8. New access token generated ✅
+9. Original request retried
+10. Dashboard works again 😎
+
+👉 This is exact real-world JWT flow 
+ 
+****************************
+BACKEND-ExpressJS-Postgresql -- backend-jwt [ E:\MURALI\REACT-JS-CRASH-COURSE\backend-jwt ]
+****************************
+mkdir backend-jwt
+cd backend-jwt
+npm init -y
+npm install express pg cors dotenv
+npm install nodemon --save-dev
+npm install jsonwebtoken bcryptjs cookie-parser
+
+
+*******************************************
+src-Lesson-8-State-Management-Redux-Toolkit
+*******************************************
+
+npm install @reduxjs/toolkit react-redux axios
+
+# 🧠 State Management (Redux Toolkit)
+
+* Store setup
+* Slices & reducers
+* `createAsyncThunk`
+* Global state handling
+
+****************************
+BACKEND-ExpressJS-Postgresql -- backend-jwt [ E:\MURALI\REACT-JS-CRASH-COURSE\backend-auth-jwt ]
+****************************
+mkdir backend-auth-jwt
+cd backend-auth-jwt
+npm init -y
+npm install express pg cors dotenv
+npm install nodemon --save-dev
+npm install jsonwebtoken bcryptjs cookie-parser
+
+reactjs_crash_course_users
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+************************
+src-Lesson-9-UI-Related
+***********************
+npm install react-hot-toast
+npm install sweetalert2
+--------------------------------
+1. Folder Structure
+src/
+│
+├── api/
+│   └── axios.js
+│
+├── components/
+│   ├── Loader.jsx
+│   ├── Navbar.jsx
+│   ├── ProductCard.jsx
+│   ├── ProductForm.jsx
+│   ├── ConfirmModal.jsx
+│
+├── pages/
+│   ├── Products.jsx
+│   ├── AddProduct.jsx
+│   ├── EditProduct.jsx
+│
+├── hooks/
+│   └── useProducts.js
+│
+├── utils/
+│   └── toast.js
+│
+├── App.jsx
+└── main.jsx
+--------------------------------
+# 🌐 API Integration
+
+* Axios setup
+* Environment variables (`.env`)
+* Backend communication
+
+---
+
+# 🎨 UI & Styling
+
+* Tailwind CSS
+* Responsive design
+* Modern UI components
+
+---
+
+# 🔔 User Experience
+
+* Toast notifications
+* Loading indicators
+* Error handling
+
+USING SAME BACKEND EXPRESS JS SERVER
+****************************
+BACKEND-ExpressJS-Postgresql -- backend [ E:\MURALI\REACT-JS-CRASH-COURSE\backend ]
+****************************
+mkdir backend
+cd backend
+npm init -y
+npm install express pg cors dotenv
+npm install nodemon --save-dev
+
+BACKEND EXPRESS JS SERVER: E:\MURALI\REACT-JS-CRASH-COURSE\backend
+
+DATABASE_URL=postgresql://pern_store_user:NsaWhmupwHKzJfkKH4MhX2ls2n3ZbJng@dpg-d7gnn8v7f7vs73d7h050-a.singapore-postgres.render.com/pern_store_fab5?sslmode=verify-full
+
+reactjs_crash_course_products 
+
+CREATE TABLE reactjs_crash_course_products (
+  product_id serial PRIMARY KEY,
+  name varchar(100) NOT NULL UNIQUE,
+  slug varchar(100) NOT NULL UNIQUE,
+  price real NOT NULL,
+  description text NOT NULL,
+  image_url varchar(255),
+  created_at timestamp DEFAULT now()
+);
+-------------------------------------------
+CREATE TABLE reactjs_crash_course_products (
+  product_id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  slug VARCHAR(150) NOT NULL UNIQUE, -- increased size slightly
+  price REAL NOT NULL CHECK (price > 0),
+  description TEXT NOT NULL,
+  image_url TEXT, -- ✅ FIX: no length limit (important)
+  created_at TIMESTAMP DEFAULT NOW()
+);
+-------------------------------------------
+ALTER TABLE reactjs_crash_course_products
+ALTER COLUMN image_url TYPE TEXT;
+-------------------------------------------
+http://localhost:3000/create-table
+http://localhost:3000/seed-products
+http://localhost:3000/create-table
+
+🧠 Architecture
+React → Express API → PostgreSQL
+
+E:\MURALI\REACT-JS-CRASH-COURSE\backend>
+
+🚀 Step 1: Backend Setup (Express)
+mkdir backend
+cd backend
+npm init -y
+npm install express pg cors dotenv
+npm install nodemon --save-dev
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*******************
+react-ecommerce-app - [ E:\MURALI\REACT-JS-CRASH-COURSE\react-ecommerce-app ]
+*******************
+---------------------------
+npm install react-hot-toast
+npm install sweetalert2
+npm install tailwindcss @tailwindcss/vite
+npm install axios react-router-dom
+---------------------------
+## 🎯 Capstone Project
+
+# 🛒 **E-Commerce Application (Live Project)**
+
+You will build a complete real-world application with:
+
+* 🔐 User Authentication (Login/Register)
+* 🛍️ Product Listing
+* 🛒 Shopping Cart
+* 💳 Razorpay Payment Gateway Integration
+* 📦 Orders Management
+* 🧑‍💼 Admin Panel (Order Control)
+* 🔑 JWT Token Handling
+* 📱 Fully Responsive UI
+
+.env
+VITE_RAZORPAY_KEY_ID=rzp_test_7loOYJatPLp2HD
+VITE_API_URL=http://localhost:3000
+
+✅ CORRECT FLOW (Industry Standard)
+1. User clicks Pay
+2. Create Razorpay order
+3. Open payment popup
+4. Payment SUCCESS
+5. Verify payment (backend)
+6. Insert into:
+   - orders table
+   - order_items table
+7. Clear cart
+8. Redirect to /orders
+
+******************
+ecommerce-backend
+******************
+****************************
+BACKEND-ExpressJS-Postgresql -- ecommerce-backend [ E:\MURALI\REACT-JS-CRASH-COURSE\ecommerce-backend ]
+****************************
+mkdir ecommerce-backend
+cd ecommerce-backend
+npm init -y
+npm install express pg cors dotenv
+npm install nodemon --save-dev
+npm install jsonwebtoken bcryptjs cookie-parser
+🚀 Razorpay Backend Integration
+👉 Install:
+npm install razorpay
+
+reactjs_crash_course_users
+
+DATABASE_URL=postgresql://pern_store_user:NsaWhmupwHKzJfkKH4MhX2ls2n3ZbJng@dpg-d7gnn8v7f7vs73d7h050-a.singapore-postgres.render.com/pern_store_fab5?sslmode=verify-full
+
+.env
+# 🌐 Server
+PORT=3000
+
+# 🗄️ PostgreSQL (Render)
+#DATABASE_URL=postgresql://pern_store_user:vKYBVwPxADEKfk5ibKG0fieFsSGm2IE2@dpg-d6slnslm5p6s73atcljg-a.singapore-postgres.render.com/perns_store_r9l1?sslmode=verify-full
+#17-04-2026
+DATABASE_URL=postgresql://pern_store_user:NsaWhmupwHKzJfkKH4MhX2ls2n3ZbJng@dpg-d7gnn8v7f7vs73d7h050-a.singapore-postgres.render.com/pern_store_fab5?sslmode=verify-full
+
+# 🔐 JWT - https://jwtsecrets.com/#generate
+JWT_SECRET=6cdadfa020cb901e7579a0da6f6fae70b735348462a65e7aeceb4f0886decf26
+
+RAZORPAY_KEY_ID=rzp_test_7loOYJatPLp2HD
+RAZORPAY_KEY_SECRET=eUO2oYhFEu7XlbzOopp6UYGL
+
+FRONTEND_URL=http://localhost:5173
+
+COOKIE_HTTP_ONLY=true
+COOKIE_SECURE=false
+COOKIE_SAME_SITE=lax
+COOKIE_MAX_AGE=86400000
+
+
+-------------------------------------------
+CREATE TABLE reactjs_crash_course_products (
+  product_id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  slug VARCHAR(150) NOT NULL UNIQUE, -- increased size slightly
+  price REAL NOT NULL CHECK (price > 0),
+  description TEXT NOT NULL,
+  image_url TEXT, -- ✅ FIX: no length limit (important)
+  created_at TIMESTAMP DEFAULT NOW()
+);
+-------------------------------------------
+
+app.get("/create-users-table", async (req, res) => {
+    try {
+        await pool.query(`
+      CREATE TABLE IF NOT EXISTS reactjs_crash_course_users (
+        user_id SERIAL PRIMARY KEY,
+        name VARCHAR(100),
+        email VARCHAR(100) UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        role VARCHAR(20) DEFAULT 'USER',
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+	
+	🚀 STEP 12 — Orders Table (Backend)
+CREATE TABLE reactjs_crash_course_orders (
+  order_id SERIAL PRIMARY KEY,
+  user_id INT,
+  amount REAL,
+  payment_id TEXT,
+  status VARCHAR(20),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+app.get("/create-orders-table", async (req, res) => {
+    try {
+        await pool.query(`
+      CREATE TABLE IF NOT EXISTS reactjs_crash_course_orders (
+        order_id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES reactjs_crash_course_users(user_id) ON DELETE CASCADE,
+        amount REAL NOT NULL CHECK (amount > 0),
+        payment_id TEXT,
+        status VARCHAR(20) DEFAULT 'PENDING',
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+
+app.get("/create-order-items-table", async (req, res) => {
+    try {
+        await pool.query(`
+      CREATE TABLE IF NOT EXISTS reactjs_crash_course_order_items (
+        item_id SERIAL PRIMARY KEY,
+        order_id INT REFERENCES reactjs_crash_course_orders(order_id) ON DELETE CASCADE,
+        product_id INT REFERENCES reactjs_crash_course_products(product_id),
+        quantity INT NOT NULL,
+        price REAL NOT NULL
+      );
+    `);
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+🔹 All Updated API Paths
+🔐 Auth Routes
+| Old         | New                  |
+| ----------- | -------------------- |
+| `/register` | `/api/auth/register` |
+| `/login`    | `/api/auth/login`    |
+| `/logout`   | `/api/auth/logout`   |
+| `/me`       | `/api/auth/me`       |
+
+📦 Product Routes
+| Old         | New             |
+| ----------- | --------------- |
+| `/products` | `/api/products` |
+
+📦 Order Routes
+| Old       | New           |
+| --------- | ------------- |
+| `/orders` | `/api/orders` |
+
+💳 Payment Routes
+| Old               | New                           |
+| ----------------- | ----------------------------- |
+| `/create-order`   | `/api/payment/create-order`   |
+| `/verify-payment` | `/api/payment/verify-payment` |
+
+
+
+
+
+20-05-2026
+https://dashboard.render.com/
+----------------------- LATEST RENDER.COM PostgreSQL ---------------------------------
+20-05-2026 - Your database will expire on February 28, 2026. The database will be deleted unless you upgrade to a paid instance type.
+Name:Perns Ecommerce
+Hostname : dpg-d86hh1rtqb8s73figphg-a
+Port : 5432
+Database : pern_store_qe8z
+Username : pern_store_user
+Password : CdnMEwFDwA8S03AkelLhJyx2WYzaqzgU
+Internal Database URL : postgresql://pern_store_user:CdnMEwFDwA8S03AkelLhJyx2WYzaqzgU@dpg-d86hh1rtqb8s73figphg-a/pern_store_qe8z
+External Database URL : postgresql://pern_store_user:CdnMEwFDwA8S03AkelLhJyx2WYzaqzgU@dpg-d86hh1rtqb8s73figphg-a.singapore-postgres.render.com/pern_store_qe8z
+
+DATABASE_URL="postgresql://pern_store_user:CdnMEwFDwA8S03AkelLhJyx2WYzaqzgU@dpg-d86hh1rtqb8s73figphg-a.singapore-postgres.render.com/pern_store_qe8z?sslmode=require"
+----------------------- LATEST RENDER.COM PostgreSQL ---------------------------------
+
+19-06-2026
+https://dashboard.render.com/
+----------------------- LATEST RENDER.COM PostgreSQL ---------------------------------
+19-06-2026 - Your database will expire on February 28, 2026. The database will be deleted unless you upgrade to a paid instance type.
+Name:Perns Ecommerce
+Hostname : dpg-d8qbm11194ac73dkbsqg-a
+Port : 5432
+Database : perns_ecommerce
+Username : perns_ecommerce_user
+Password : 5vsx7TDdJdxNv6R2p4CyWNSDqbqvr4fU
+Internal Database URL : postgresql://perns_ecommerce_user:5vsx7TDdJdxNv6R2p4CyWNSDqbqvr4fU@dpg-d8qbm11194ac73dkbsqg-a/perns_ecommerce
+External Database URL : postgresql://perns_ecommerce_user:5vsx7TDdJdxNv6R2p4CyWNSDqbqvr4fU@dpg-d8qbm11194ac73dkbsqg-a.singapore-postgres.render.com/perns_ecommerce
+
+DATABASE_URL="postgresql://perns_ecommerce_user:5vsx7TDdJdxNv6R2p4CyWNSDqbqvr4fU@dpg-d8qbm11194ac73dkbsqg-a.singapore-postgres.render.com/perns_ecommerce?sslmode=require"
+----------------------- LATEST RENDER.COM PostgreSQL ---------------------------------

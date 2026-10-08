@@ -1,0 +1,35 @@
+.about-container {
+    padding: 20px;
+    margin-top: -40px;
+}
+
+.about-title {
+    margin-bottom: 20px;
+}
+.nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.link-btn {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.link-btn:hover {
+    background-color: #e2e6ea;
+}
+
+.active-link {
+    background-color: green;
+    color: #fff;
+    border-color: #007bff;
+}
