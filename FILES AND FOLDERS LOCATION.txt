@@ -81,3 +81,120 @@ Week 8	AI/LLM Integration + Testing & Debugging	• AI & LLM Fundamentals
 • API Testing & Debugging
 • React, Express & Network Debugging
 
+
+
+
+
+
+xxxxxxxxxxxxxtra
+Module 14 – Testing & Debugging
+Learn how to test your code and find and fix common problems.
+Topics Covered
+•	Introduction to Testing
+•	Testing frontend and backend functionality
+•	API Testing
+•	Debugging React applications
+•	Debugging Express.js APIs
+•	Browser DevTools and Network debugging
+•	Identifying and fixing common application errors
+✔ Test, debug and troubleshoot full-stack applications systematically.
+
+
+-----------------------------------------------------------------------------
+1. Testing tools and frameworks
+
+1. Unit Testing — Vitest
+You already know this
+Test individual functions, utilities, React components, and business logic.
+Example: Test a form validation function or a utility that calculates a total.
+
+2. React Testing Library
+Test React components as users interact with them.
+Example: Test form inputs, button clicks, validation messages, and rendered API data. Commonly used with Vitest.
+
+3. Playwright
+Perform end-to-end (E2E) testing in a real browser.
+Example: Register → Login → Create a project → Edit a task → Logout.
+
+4. Postman
+Test backend REST APIs independently of the React frontend.
+Example: Test GET, POST, PUT/PATCH, and DELETE endpoints, authentication, validation, and error responses.
+
+2. Other important testing and debugging options
+
+Tool / technique	Purpose	Practical demonstration
+Chrome DevTools — Elements	Inspect HTML and CSS	Fix incorrect styling or layout
+Chrome DevTools — Console	Find JavaScript errors and warnings	Fix undefined variables and runtime errors
+Chrome DevTools — Network	Inspect HTTP requests and responses	Debug 400, 401, 403, 404, and 500 errors
+React Developer Tools	Inspect components, props, and state	Identify incorrect React state or props
+VS Code Debugger	Set breakpoints and step through code	Debug TypeScript frontend and backend code
+Node.js Inspector	Debug backend execution	Investigate controller and service logic
+Thunder Client / Postman	Test APIs without the frontend	Inspect request bodies, headers, and responses
+ESLint	Detect code-quality issues and common mistakes	Fix unused variables, incorrect hooks usage, and problematic code
+TypeScript Compiler (tsc)	Detect type errors before runtime	Fix incorrect types, missing properties, and invalid function arguments
+Supertest	Automated HTTP endpoint testing	Test Express routes, status codes, and response bodies
+MSW (Mock Service Worker)	Mock API responses during frontend tests	Test loading, success, empty, and error states without a live backend
+PostgreSQL tools	Investigate database errors	Debug SQL syntax, constraints, missing records, and failed queries
+Pino / Winston	Structured backend logging	Track errors and request processing
+Sentry	Monitor errors in deployed applications	Investigate production exceptions and stack traces
+3. Debugging React applications
+Teach students how to investigate these common problems:
+- Component not rendering.
+- Incorrect props or state.
+- useEffect running unexpectedly.
+- Infinite rendering or repeated API calls.
+- Incorrect form validation.
+- API data not appearing in the UI.
+- Incorrect React Query cache or stale data.
+- Loading indicators that never stop.
+- TypeScript errors during build.
+- CSS and responsive layout problems.
+Tools: Chrome DevTools, React Developer Tools, VS Code breakpoints, console logging, and TypeScript compiler.
+4. Debugging Express.js and PostgreSQL
+Cover the backend debugging workflow as well:
+- Incorrect route paths and HTTP methods.
+- Middleware execution order.
+- Request body parsing issues.
+- Authentication and authorization failures.
+- JWT and cookie problems.
+- Request validation errors.
+- Incorrect status codes and error responses.
+- Async/await and rejected promises.
+- SQL syntax errors and database constraint violations.
+- Connection pool and environment variable issues.
+- Centralized error-handling middleware.
+- Logging and tracing requests across controllers, services, and repositories.
+Tools: VS Code Debugger, Node.js Inspector, Postman, Supertest, backend logging, and PostgreSQL query tools.
+5. Recommended tools for your training project
+For your React + TypeScript + Vite + Tailwind frontend and Express + TypeScript + PostgreSQL backend, I would prioritize these tools:
+Essential — teach hands-on
+1. Vitest — unit testing
+2. React Testing Library — component testing
+3. Postman — API testing
+4. Chrome DevTools — Console and Network debugging
+5. React Developer Tools — component inspection
+6. VS Code Debugger — frontend and backend breakpoints
+7. ESLint and TypeScript compiler — static analysis
+8. PostgreSQL query debugging
+
+
+
+Advanced — introduce or demonstrate
+1. Playwright — end-to-end testing
+2. Supertest — automated Express API tests
+3. MSW — frontend API mocking
+4. Pino or Winston — backend logging
+5. Sentry — production error monitoring
+
+
+
+
+
+
+
+
+
+
+5. Jest
+An alternative JavaScript testing framework, especially common in existing Node.js projects.
+Recommendation: Introduce it briefly, but avoid teaching Jest and Vitest in equal depth in the same introductory module.

@@ -1,0 +1,37 @@
+                 GitHub
+                    │
+                    │ push
+                    ▼
+              ┌───────────┐
+              │  Vercel   │
+              │           │
+              │ Next.js   │
+              │ Frontend  │
+              │ + Server  │
+              └─────┬─────┘
+                    │
+                    │ DATABASE_URL
+                    ▼
+              ┌───────────┐
+              │   Neon    │
+              │ PostgreSQL│
+              └───────────┘
+			  
+			  
+==================================
+User
+ │
+ │ HTTPS
+ ▼
+Vercel
+ │
+ │ Next.js
+ │
+ ├── React Components
+ ├── Server Components
+ ├── Route Handlers
+ └── Server-side DB queries
+             │
+             │ DATABASE_URL
+             ▼
+         Neon PostgreSQL			  
