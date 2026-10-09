@@ -1,0 +1,684 @@
+npm create vite@latest
+testdebugapp
+React
+Typescript
+Eslint
+Yes
+
+https://tailwindcss.com/docs/installation/using-vite
+
+npm install tailwindcss @tailwindcss/vite
+
+
+Scenarios we should implement
+
+#	Scenario												Main debugging tool
+1	Component crashes because data is undefined				Console
+2	Button click handler is missing or incorrect			Console + Sources
+3	API request returns 404									Network
+4	API returns data, but the UI displays nothing			Network + Console
+5	API request fails and loading never stops				Network + Sources
+6	Incorrect Tailwind class or overridden CSS				Elements
+7	Element is hidden or covered by another element			Elements
+8	Incorrect variable or calculation in an event handler	Sources
+9	Incorrect React props									React Developer Tools
+10	State updates incorrectly								React Developer Tools
+11	useEffect executes after every render					Console + Network
+12	Repeated API calls or an infinite render loop			Console + Network
+13	Stale React Query data after creating a record			React Query Devtools
+14	Mobile layout overflows horizontally					Device Toolbar + Elements
+15	Form validation displays the wrong message				React DevTools + Sources
+16	TypeScript compilation error							Terminal + TypeScript
+17	Incorrect loading and error states						Network + React DevTools
+18	React component renders unnecessarily					React DevTools Profiler
+
+
+react-debugging-lab/
+├── src/
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── AppLayout.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── ScenarioHeader.tsx
+│   │   └── common/
+│   │       ├── CodePanel.tsx
+│   │       ├── DebugInstructions.tsx
+│   │       └── SolutionToggle.tsx
+│   ├── scenarios/
+│   │   ├── console/
+│   │   │   ├── ProblemComponent.tsx
+│   │   │   └── SolutionComponent.tsx
+│   │   ├── network/
+│   │   ├── elements/
+│   │   ├── sources/
+│   │   ├── react-devtools/
+│   │   ├── use-effect/
+│   │   ├── responsive/
+│   │   ├── forms/
+│   │   └── react-query/
+│   ├── data/
+│   │   └── scenarios.ts
+│   ├── pages/
+│   │   ├── Dashboard.tsx
+│   │   └── ScenarioPage.tsx
+│   ├── types/
+│   │   └── scenario.types.ts
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+├── package.json
+└── vite.config.ts
+
+
+---------------------------------------------------------------
+mkdir react-debugging-lab
+cd react-debugging-lab
+
+mkdir src
+mkdir src\components
+mkdir src\components\layout
+mkdir src\components\common
+
+mkdir src\scenarios
+mkdir src\scenarios\console
+mkdir src\scenarios\network
+mkdir src\scenarios\elements
+mkdir src\scenarios\sources
+mkdir src\scenarios\react-devtools
+mkdir src\scenarios\use-effect
+mkdir src\scenarios\responsive
+mkdir src\scenarios\forms
+mkdir src\scenarios\react-query
+
+mkdir src\data
+mkdir src\pages
+mkdir src\types
+
+type nul > src\components\layout\AppLayout.tsx
+type nul > src\components\layout\Sidebar.tsx
+type nul > src\components\layout\ScenarioHeader.tsx
+
+type nul > src\components\common\CodePanel.tsx
+type nul > src\components\common\DebugInstructions.tsx
+type nul > src\components\common\SolutionToggle.tsx
+
+type nul > src\scenarios\console\ProblemComponent.tsx
+type nul > src\scenarios\console\SolutionComponent.tsx
+
+type nul > src\data\scenarios.ts
+
+type nul > src\pages\Dashboard.tsx
+type nul > src\pages\ScenarioPage.tsx
+
+type nul > src\types\scenario.types.ts
+---------------------------------------------------------------
+
+E:\Advaitecs\TESTING-DEBUGGING\testdebugapp\react-debugging-lab\src>tree /F
+Folder PATH listing for volume DATA
+Volume serial number is 0ED0-D3D0
+E:.
+├───components
+│   ├───common
+│   │       CodePanel.tsx
+│   │       DebugInstructions.tsx
+│   │       SolutionToggle.tsx
+│   │
+│   └───layout
+│           AppLayout.tsx
+│           ScenarioHeader.tsx
+│           Sidebar.tsx
+│
+├───data
+│       scenarios.ts
+│
+├───pages
+│       Dashboard.tsx
+│       ScenarioPage.tsx
+│
+├───scenarios
+│   ├───console
+│   │       ProblemComponent.tsx
+│   │       SolutionComponent.tsx
+│   │
+│   ├───elements
+│   ├───forms
+│   ├───network
+│   ├───react-devtools
+│   ├───react-query
+│   ├───responsive
+│   ├───sources
+│   └───use-effect
+└───types
+        scenario.types.ts
+		
+------------------------------------------		
+		FILES AND SCENARIOS
+------------------------------------------		
+Scenario 01: Console — Undefined Data Error.
+===========================================
+src/
+└── scenarios/
+    └── console/
+        ├── ProblemComponent.tsx
+        └── SolutionComponent.tsx
+Create the scenario demonstration page
+	src/scenarios/console/ConsoleScenario.tsx.
+
+import ConsoleScenario from "./scenarios/console/ConsoleScenario";
+
+function App() {
+  return <ConsoleScenario />;
+}
+
+export default App;	
+------------------------------------------	
+Open the local URL shown in the terminal, press F12, and select Console.
+Expected observations
+Problem Code
+Click Show User Details.
+- Button clicked
+- User data: undefined
+- A red TypeError mentioning undefined and name
+
+
+
+Solution
+Click View Solution, then Show User Details.
+- Button clicked
+- User data: null
+- A warning: User details are not available.
+- No runtime exception from accessing user.name
+
+
+
+One important teaching point: This scenario demonstrates a runtime JavaScript error, not a TypeScript compilation error. TypeScript catches many invalid property accesses when types are declared correctly, but the same kind of problem can still occur when runtime data is missing or incorrectly typed.	
+------------------------------------------		
+Scenario 02: Network — API Returns 404
+======================================
+
+backend/
+├── package.json
+├── tsconfig.json
+└── src/
+    └── server.ts
+	
+src/scenarios/network/ProblemComponent.tsx	
+src/scenarios/network/SolutionComponent.tsx
+src/scenarios/network/NetworkScenario.tsx
+
+Replace src/App.tsx temporarily:
+import NetworkScenario from "./scenarios/network/NetworkScenario";
+
+function App() {
+  return <NetworkScenario />;
+}
+
+export default App;
+
+Test the exercise
+Make sure both servers are running:
+- Frontend: http://localhost:5173
+- Backend: http://localhost:5000
+
+Then click Fetch Users in Problem Code.
+
+Expected results:
+Version	Request	Expected status
+Problem		/api/user	404
+Solution	/api/users	200
+
+In Chrome DevTools, inspect the request's Headers, Preview, and Response tabs. The problem component should display the HTTP error, while the solution should display the three users.
+
+------------------------------------------
+------------------------------------------
+Scenario 03: Network — API returns data, but React displays nothing
+
+src/scenarios/network/ResponseProblemComponent.tsx
+src/scenarios/network/ResponseSolutionComponent.tsx
+src/scenarios/network/ResponseScenario.tsx
+
+Test			Problem version							Solution version
+HTTP status		200										200
+API response	Object containing users					Same response
+State update	Entire object assigned to array state	data.users assigned to array state
+UI result		Runtime error when .map() is called		Three users displayed
+
+Important teaching point: TypeScript interfaces don't validate JSON received at runtime. In this deliberately faulty example, response.json() is not runtime-validated, so the incorrect assignment can still execute and fail when React tries to call .map().
+------------------------------------------
+------------------------------------------
+Scenario 04: Elements — Incorrect CSS and Tailwind Styling.
+
+src/scenarios/elements/ProblemComponent.tsx
+There are three deliberate styling issues:
+- The heading is white on a white background.
+- The button has red text on a red background.
+- The information panel has excessive top margin.
+
+src/scenarios/elements/SolutionComponent.tsx
+src/scenarios/elements/ElementsScenario.tsx
+
+Try the following exercises in Chrome DevTools:
+
+Exercise			What students should discover
+
+Heading				text-white makes the heading invisible against its white background.
+Button				text-red-600 conflicts with bg-red-600.
+Information panel	mt-20 creates unnecessary vertical spacing.
+Temporary fix		Editing CSS in Styles changes the page immediately.
+Permanent fix		The corrected Tailwind classes belong in the component source.
+------------------------------------------
+------------------------------------------
+Scenario 05: Sources — Debug JavaScript with Breakpoints.
+
+src/scenarios/sources/ProblemComponent.tsx
+The intended calculation is a 10% discount on ₹3,000. The problem code subtracts just ₹10 instead.
+
+src/scenarios/sources/SolutionComponent.tsx
+src/scenarios/sources/SourcesScenario.tsx
+
+Test the exercise
+Run the application and click Calculate Total.
+Version			Calculation			Expected total
+Problem			₹3,000 − ₹10		₹2,990
+Solution		3,000 − ₹300		₹2,700
+
+Teaching tip: Set the breakpoint on the calculation line before clicking the button. If the original .tsx file is not immediately visible in Sources, expand the Vite source tree and look for the authored source under src/scenarios/sources/.
+------------------------------------------
+------------------------------------------
+Scenario 06: React Developer Tools — Debug Incorrect Props and State
+
+src/scenarios/react-devtools/ProblemComponent.tsx
+
+Expected problem: The User Name field displays ravi@example.com instead of Ravi Kumar.
+Notice that TypeScript does not report an error. Both values are strings, 
+so the compiler cannot determine that the wrong string was passed.
+
+src/scenarios/react-devtools/SolutionComponent.tsx
+src/scenarios/react-devtools/ReactDevToolsScenario.tsx
+
+Install React Developer Tools
+If you have not installed the extension, open the official React Developer Tools extension page.
+After installation, reload your application and open Chrome DevTools. 
+
+You should see a Components tab.
+
+Test the exercise
+Run your frontend using npm run dev.
+Expected results
+Problem Code
+UserCard → props → name
+The name prop contains ravi@example.com.
+
+Solution
+UserCard → props → name
+The name prop contains Ravi Kumar.
+
+Teaching distinction: Chrome's Elements panel shows the rendered DOM, while React Developer Tools' Components panel shows the React component tree and props. Both are useful, but they answer different debugging questions.
+------------------------------------------
+------------------------------------------
+Scenario 07: React State Debugging — Incorrect State Updates and Stale Values
+
+Students will learn how to inspect state using React Developer Tools, identify a missing state update, and understand why calling a state setter does not immediately change the current state variable.
+
+src/scenarios/react-devtools/StateProblemComponent.tsx
+
+This example deliberately uses a normal variable instead of React state. Clicking the button changes the variable, but React does not re-render the component.
+
+Expected problem: The console logs 1, 2, 3 as you click, but the displayed counter remains 0. The separate render count increases.
+This happens because count is a local variable that gets initialized again on every render.
+
+src/scenarios/react-devtools/StateSolutionComponent.tsx
+src/scenarios/react-devtools/StateScenario.tsx
+
+Test			Problem version						Solution version
+Click Increment	Display stays at 0					Display increments
+Console			Local variable increases			State-driven UI updates
+React DevTools	Only renderCount is state			count is visible in Hooks
+Root cause		Local variable resets on render		React state persists
+
+Teaching tip: This scenario demonstrates a missing state update. After it works, a useful follow-up is the stale-state problem: calling setCount(count + 1) multiple times in one handler can produce a different result from using the functional updater setCount(previous => previous + 1).
+------------------------------------------
+------------------------------------------
+Scenario 08: useEffect Debugging — Repeated API Calls and Missing Dependencies
+
+This is especially useful for your React full-stack training because students will learn to connect three things: React rendering, useEffect dependencies, and repeated requests in Chrome DevTools → Network.
+We'll use your existing Express backend on port 5000 and Vite proxy, so no additional backend is required.
+
+src/scenarios/use-effect/ProblemComponent.tsx
+This component deliberately omits the dependency array. To keep the classroom demonstration safe, it caps the repeated requests at five.
+
+What is wrong?
+The effect runs after every render because it has no dependency array.
+Each successful request calls setUsers(), causing another render. The effect then runs again, triggering another request until the five-request limit is reached.
+The useRef counter limits this teaching example without introducing another state dependency into the effect.
+
+src/scenarios/use-effect/SolutionComponent.tsx
+Here, the effect uses an empty dependency array and an AbortController to cancel the request if the component unmounts.
+
+The empty dependency array expresses that this effect doesn't need to respond to changing props or state. The cleanup cancels an in-flight request when necessary.
+Important: In React Strict Mode, development may perform an additional effect setup-and-cleanup cycle. This can result in an extra request attempt, so don't assume that two requests automatically indicate an infinite loop.
+
+rc/scenarios/use-effect/UseEffectScenario.tsx
+
+Expected observations:
+Observation			Problem							Solution
+Dependency array	Missing	Empty array
+API requests		Repeated, capped at five		Initial effect execution, with possible Strict Mode development replay
+Console				Repeated effect logs			Effect execution logs
+UI					Users may be loaded repeatedly	Users loaded with a cleanup function
+Cleanup				None							Aborts an in-flight request
+------------------------------------------
+------------------------------------------
+Scenario 09: Responsive Design — Debug Mobile Layout Overflow.
+
+src/scenarios/responsive/ProblemComponent.tsx.
+
+Expected problem: On a narrow viewport, the 900-pixel container extends beyond the available screen width, causing horizontal overflow.
+
+src/scenarios/responsive/SolutionComponent.tsx
+We will use responsive widths and wrap the table in an overflow-x-auto container. This keeps the overall page responsive while allowing the table to scroll horizontally when necessary.
+
+src/scenarios/responsive/ResponsiveScenario.tsx
+
+Open Chrome DevTools and press Ctrl + Shift + M. Test the layout at widths of 375 px, 768 px, and 1280 px.
+
+Test				Problem						Solution
+
+Mobile container	Fixed 900 px width			Responsive full width
+Table				Extends beyond its parent	Scrollable table wrapper
+Button				Fixed content sizing		Full width on mobile
+Desktop layout		Wide fixed dimensions		Responsive layout
+
+Important: The corrected layout intentionally allows horizontal scrolling inside the table wrapper. That is different from allowing the entire page to overflow.
+
+------------------------------------------
+------------------------------------------
+Scenario 10: Forms — Debug Incorrect Form Validation, with deliberately incorrect validation rules and a corrected implementation.
+
+Students will learn how to identify a validation bug, use Chrome DevTools to debug it, and compare the problem component with the corrected solution.
+
+rc/scenarios/forms/ProblemComponent.tsx
+This component contains an intentional bug: the form accepts an invalid email address because the validation condition is incorrect.
+
+Understand the bug
+The incorrect condition is:
+if (!email.includes("@") && password.length < 6)
+
+
+The && operator means both conditions must be true before validation fails.
+For example, if the email is invalid but the password is long enough, the form incorrectly reports success.
+
+src/scenarios/forms/SolutionComponent.tsx
+
+The corrected component validates the email and password independently.
+
+Teaching note: The example uses basic client-side validation for debugging practice. Real applications should use stronger validation on the backend too.
+
+src/scenarios/forms/FormsScenario.tsx
+
+Test these cases:
+
+Input										Problem version		Solution version
+
+Invalid email + valid-length password		Incorrectly 		accepts	Rejects
+Valid email + short password				Incorrectly 		accepts	Rejects
+Valid email + password of 6+ characters		Accepts				Accepts
+
+When the problem version is running, the incorrect behavior should be easy for students to reproduce. Switch to Solution to verify the fix.
+------------------------------------------
+------------------------------------------
+Scenario 11: React Query debugging — stale data and cache invalidation, using a simple example suitable for your students.
+
+In this scenario, students will learn why a UI can continue showing old data after an update, how to inspect network requests, and how to correct the cache invalidation logic using TanStack React Query.
+We'll keep the implementation beginner-friendly and use your existing React + TypeScript + Vite + Tailwind CSS project.
+Step 1: Check React Query installation
+From your project root, run:
+*******************************
+npm list @tanstack/react-query
+*******************************
+E:\Advaitecs\TESTING-DEBUGGING\testdebugapp>npm list @tanstack/react-query
+testdebugapp@0.0.0 E:\Advaitecs\TESTING-DEBUGGING\testdebugapp
+`-- (empty)
+
+If it is not installed, install it:
+**********************************
+npm install @tanstack/react-query
+**********************************
+E:\Advaitecs\TESTING-DEBUGGING\testdebugapp>npm list @tanstack/react-query
+testdebugapp@0.0.0 E:\Advaitecs\TESTING-DEBUGGING\testdebugapp
+`-- @tanstack/react-query@5.104.1
+
+Your existing Express backend at http://localhost:5000 can be reused. We'll first check whether the existing /api/users endpoint is sufficient for this scenario.
+
+Update the backend API
+To demonstrate stale data properly, we'll use a small in-memory users collection that supports both fetching and updating users.
+Open backend/src/server.ts and replace its contents with:
+
+Important: These users are stored in memory, not a database. Restarting the backend resets their names.
+Restart your backend if necessary:
+
+Verify http://localhost:5000/api/users in your browser. You should see the three users in the response.
+http://localhost:5000/api/users
+{
+  "success": true,
+  "users": [
+    {
+      "id": 1,
+      "name": "Rahul Sharma",
+      "email": "rahul@example.com"
+    },
+    {
+      "id": 2,
+      "name": "Priya Reddy",
+      "email": "priya@example.com"
+    },
+    {
+      "id": 3,
+      "name": "Arjun Kumar",
+      "email": "arjun@example.com"
+    }
+  ]
+}
+
+Create ProblemComponent.tsx
+Path: src/scenarios/react-query/ProblemComponent.tsx
+This version fetches users through React Query, but its mutation does not refresh or update the cached users list after a successful edit.
+
+Create SolutionComponent.tsx
+Path: src/scenarios/react-query/SolutionComponent.tsx
+The fix uses useQueryClient() and invalidateQueries() to mark the cached users data as stale after the update succeeds.
+
+Create ReactQueryScenario.tsx
+Path: src/scenarios/react-query/ReactQueryScenario.tsx
+This page provides the Problem/Solution switch and debugging instructions.
+
+You only need one QueryClientProvider around the app. When you later restore the dashboard, keep the provider at the app's top level rather than creating a new one for every scenario.
+
+Test the following cases:
+
+Test					Problem												Solution
+
+Fetch users				Displays cached users								Displays cached users
+Update a user's name	Backend changes, list remains stale					Backend changes, list refreshes
+Inspect Network tab		PUT request, no automatic GET from invalidation		PUT followed by GET for the active query
+
+One detail for teaching: invalidateQueries() marks matching queries stale and normally refetches active matching queries. It does not itself directly replace the cached data.
+
+Inspect the React Query Devtools, if installed, or use the browser Network panel to investigate the cached data.
+
+
+npm install @tanstack/react-query-devtools
+
+E:\Advaitecs\TESTING-DEBUGGING\testdebugapp>npm list @tanstack/react-query
+testdebugapp@0.0.0 E:\Advaitecs\TESTING-DEBUGGING\testdebugapp
++-- @tanstack/react-query-devtools@5.104.1
+| `-- @tanstack/react-query@5.104.1 deduped
+`-- @tanstack/react-query@5.104.1
+------------------------------------------
+------------------------------------------
+Scenario 12: TypeScript build errors and debugging.
+
+Learning objectives:
+- Understand TypeScript compile-time errors.
+- Identify errors using npm run build.
+- Understand the difference between Vite development and TypeScript type checking.
+- Debug TS2322, TS2339, and TS2345.
+- Fix incorrect types, property names, and function arguments.
+
+src/scenarios/typescript/ProblemComponent.tsx
+
+
+Understand the errors
+
+Error	Cause					Explanation
+
+TS2322	age: "25"				String assigned to a number property
+TS2345	calculateNextAge("25")	String passed to a function expecting a number
+TS2339	user.email				Property does not exist in the User interface
+
+Important: We should not import this intentionally broken component into our normal application. Otherwise, it will prevent the entire project from building successfully.
+Instead, we'll keep it as a separate debugging exercise and use a dedicated TypeScript configuration to demonstrate its errors.
+
+src/scenarios/typescript/SolutionComponent.tsx
+src/scenarios/typescript/TypeScriptScenario.tsx
+
+This page will display the working solution and explain how students can debug the intentionally broken source file.
+
+Create a dedicated TypeScript configuration
+Create this file at the project root:
+
+tsconfig.debugging.json
+
+{
+  "extends": "./tsconfig.app.json",
+  "include": [
+    "src/scenarios/typescript/ProblemComponent.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
+
+This lets students check the broken component independently.
+Run:
+**************************************************
+npx tsc --project tsconfig.debugging.json --noEmit
+**************************************************
+
+
+You should see the three TypeScript errors.
+Note: Since ProblemComponent.tsx is inside src, your normal npm run build may also fail because the standard Vite TypeScript configuration usually includes all source files, even if they are not imported. For this exercise, that's intentional.
+If you want the regular application build to remain successful while retaining the debugging exercise, add this file to the exclude array in tsconfig.app.json:
+"exclude": [
+  "src/scenarios/typescript/ProblemComponent.tsx"
+]
+
+
+Keep the dedicated tsconfig.debugging.json for checking the problem file.
+---------------
+
+E:\Advaitecs\TESTING-DEBUGGING\testdebugapp>npx tsc --project tsconfig.debugging.json --noEmit
+src/scenarios/typescript/ProblemComponent.tsx:12:5 - error TS2322: Type 'string' is not assignable to type 'number'.
+
+12     age: "25",
+       ~~~
+
+  src/scenarios/typescript/ProblemComponent.tsx:4:3
+    4   age: number;
+        ~~~
+    The expected type comes from property 'age' which is declared here on type 'User'
+
+src/scenarios/typescript/ProblemComponent.tsx:20:36 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
+
+20   const nextAge = calculateNextAge("25");
+                                      ~~~~
+
+src/scenarios/typescript/ProblemComponent.tsx:31:54 - error TS2339: Property 'email' does not exist on type 'User'.
+
+31       <p className="mb-2 text-gray-700">Email: {user.email}</p>
+                                                        ~~~~~
+
+
+Found 3 errors in the same file, starting at: src/scenarios/typescript/ProblemComponent.tsx:12
+
+
+E:\Advaitecs\TESTING-DEBUGGING\testdebugapp>
+---------------
+
+The browser should display the corrected component.
+Step 8: Student testing
+
+Activity							Expected result
+
+Open ProblemComponent in VS Code	Three TypeScript errors
+Run dedicated TypeScript check		Compilation fails
+Read compiler messages				TS2322, TS2345, TS2339
+Compare with SolutionComponent		Correct types and properties
+Fix ProblemComponent				Dedicated TypeScript check passes
+
+One teaching tip: After students fix the three errors, ask them to explain why age + 1 is safe when age is typed as number, and 
+what could happen if it were a string.
+
+------------------------------------------
+------------------------------------------
+------------------------------------------
+------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+E:\Advaitecs\TESTING-DEBUGGING\testdebugapp\react-debugging-lab\src>
+---------------------------------------------------------------
+
+Each scenario can have its own files and its own debugging instructions. We won't put every example into one enormous component.
+4. How each scenario will work
+For example, the API Data Not Displaying scenario will contain:
+Problem Code
+The API returns { users: [...] }, but the component assigns the complete response object to a state variable expected to contain an array.
+
+Student Investigation
+Open Network → Fetch/XHR → Response. Confirm that the API response contains a users property. Then inspect the component in Sources or React Developer Tools.
+
+Solution Code
+Extract the array from response.data.users and update the state with the correct value.
+
+Important implementation decisions
+- Console scenarios: Use deliberate runtime errors and meaningful diagnostic messages.
+- Network scenarios: I recommend a small Express mock API alongside the frontend. This lets us reliably demonstrate 200, 400, 401, 404, 500, delayed responses, and incorrect response structures.
+- Sources scenarios: Keep the actual .tsx files easy to locate through Vite source maps.
+- React Developer Tools: Use real component props, state, and hooks rather than simulated inspector data.
+- useEffect scenarios: Demonstrate missing dependencies, incorrect dependencies, cleanup, and repeated requests separately.
+- Responsive scenarios: Provide deliberately broken and corrected Tailwind layouts that students can test at different viewport widths.
+- Safe demonstrations: Isolate intentional runtime errors so one broken component doesn't bring down the entire lab.
+5. Suggested development order
+Implementation checklist
+0 of 6
+
+[ ] Create the dashboard and navigation
+App layout, sidebar, scenario list, and responsive Tailwind styling.
+
+[ ] Build the Console exercises
+Undefined data, event-handler errors, and runtime debugging.
+
+[ ] Build the Network exercises
+Mock Express API, failed requests, incorrect responses, and loading states.
+
+[ ] Build the Elements and Sources exercises
+CSS problems, layout issues, breakpoints, and step-by-step execution.
+
+[ ] Build the React debugging exercises
+Props, state, useEffect, and repeated API calls.
+
+[ ] Add advanced exercises
+Forms, React Query cache, TypeScript build errors, and Profiler.
+
+My recommendation: Let's build this step by step, starting with the dashboard and navigation, then implement and test each scenario before moving to the next. That way, you'll have a working training project throughout development instead of receiving a large amount of code that is difficult to troubleshoot.

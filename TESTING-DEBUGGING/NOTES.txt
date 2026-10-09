@@ -1,0 +1,537 @@
+# Chrome DevTools for Debugging React Applications
+
+For your Module 14 – Testing & Debugging, let's cover how to use Chrome Developer Tools practically with your React + TypeScript + Vite application.
+
+The goal is to teach students how to identify a problem, investigate its cause, and fix it systematically instead of changing code randomly.
+
+## 1. Open Chrome Developer Tools
+
+[자바스크립트 디버그  |  Chrome DevTools  |  Chrome for Developers](https://images.openai.com/static-rsc-4/PnmHC8r8agq4qIip4xIBidDrJYxQ0B_TShtB-cfp3hI25ZTE6hB-ZhGLOQOVdN8wXvAndYUvLP4M-6Fiza-e-1TW18uQaqyF64uiD8EmsSMmvAUvBvCguoMOqN8zfLAM6qcNN_7Uqtjs4mTcvG1tTBXrO0quz9PzIN_ww5SZeWA?purpose=inline)
+
+[developer.chrome.com](https://developer.chrome.com/docs/devtools/javascript?hl=ko)
+
+Start your React application:
+
+```
+npm run dev
+```
+
+Open `http://localhost:5173` in Chrome.
+
+You can open DevTools using any of these methods:
+
+- Press `F12`.
+- Press `Ctrl + Shift + I`.
+- Right-click the page and select Inspect.
+
+The main tabs you will use are:
+
+Console
+
+Find JavaScript errors, warnings, and debug messages.
+
+Network
+
+Investigate API requests, response data, status codes, and failed requests.
+
+Elements
+
+Inspect HTML, CSS styles, visibility, and responsive layout issues.
+
+Sources
+
+Set breakpoints and execute code step by step.
+
+You can also install React Developer Tools to inspect React components, props, and hooks.
+
+## 2. Console — debug JavaScript errors
+
+[ブラウザの「コンソール」でエラーを確認する方法は？ | ドキュメント / アクション / 配信トラブルシュート | KARTEサポートサイト](https://images.openai.com/static-rsc-4/yn_7soEyQMaR87tsGdTHXCRpfk9k15LkID7Z0pvL-ldIHjPqL0UnFdJUH7q9hTXIVq00dZd-a8aEcK1ZW3YrkAkamOSYYJIpdxe4KnQv38stkACQG9p5nQs-CcP_4JlAioCpCdnNKgecRg3RIRjdp3NXLWhr0D5Gl8_OaDhXXME?purpose=inline)
+
+[support.karte.io](https://support.karte.io/faq/1eRR9IsiOBBgyhWsXgkfiz)
+
+Problem: A React component crashes, a button does not work, or data is undefined.
+
+### Practical example
+
+Create a component with a deliberate error:
+
+```
+function UserProfile() {
+  const user = undefined;
+
+  return <h2>{user.name}</h2>;
+}
+
+export default UserProfile;
+```
+
+When you render this component, the browser Console displays an error similar to:
+
+```
+TypeError: Cannot read properties of undefined
+(reading 'name')
+```
+
+### How to debug it
+
+1. Open DevTools and select Console.
+2. Reproduce the error by loading the page.
+3. Find the red error message.
+4. Click the linked filename and line number, when available.
+5. Inspect the variable responsible for the error.
+6. Fix the underlying data issue.
+
+For this example, you could prevent the crash with a null check:
+
+```
+function UserProfile() {
+  const user = undefined;
+
+  if (!user) {
+    return <p>User details are not available.</p>;
+  }
+
+  return <h2>{user.name}</h2>;
+}
+```
+
+In a real application, the `user` value would normally come from props, React state, or an API response.
+
+### Use console logging
+
+When the component renders incorrectly, inspect the values being passed into it:
+
+```
+console.log("Current user:", user);
+console.log("Form data:", formData);
+console.table(users);
+console.error("Unable to save user");
+console.count("Handler executed");
+```
+
+For example, if a button is not working, add a `console.log()` inside its event handler. If the message does not appear, investigate whether the handler is connected and whether the button is actually being clicked.
+
+Remember: Console errors reveal symptoms. You still need to identify and fix the underlying cause.
+
+## 3. Network — debug API requests
+
+[Начало работы | N2O Framework](https://images.openai.com/static-rsc-4/y2HwPL23L2hCfXt2WIRmmh4i88E3NnyzSCbelZc5tDDLmbVlsaE2jdd_iNQzw45DkvUuhK-16xjYudzGOgvE8xmtCveVskjTDh7maqk-vjG1fPAnLgerq13QpuZ_4apLH0yODKnZg0mkhfRcozIhJ1ewD_uuuH2gxznheycgz_4?purpose=inline)
+
+[n2o.i-novus.ru](https://n2o.i-novus.ru/docs/guides/manual/getstarted)
+
+This is one of the most useful tools for your React + Express.js + PostgreSQL projects.
+
+Problem: The users page opens, but no users appear on the screen.
+
+### Step-by-step procedure
+
+1. Open DevTools and select Network.
+2. Click Fetch/XHR to filter API requests.
+3. Enable Preserve log if you need requests to remain visible during navigation.
+4. Reload the page or click the button that loads users.
+5. Find a request such as `GET /api/users`.
+6. Click the request and inspect its details.
+
+The important sections are:
+
+| Section  | What to investigate                                |
+| -------- | -------------------------------------------------- |
+| Headers  | URL, method, status code, request headers, cookies |
+| Payload  | Data sent to the backend                           |
+| Preview  | Formatted response data                            |
+| Response | Actual response body                               |
+| Timing   | How long the request takes                         |
+
+### Understand common errors
+
+| Status / symptom              | What to check                                                           |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| No request appears            | Is the event handler or data-fetching function running?                 |
+| `400 Bad Request`             | Is the request payload valid?                                           |
+| `401 Unauthorized`            | Is authentication missing or expired?                                   |
+| `403 Forbidden`               | Does the user have permission?                                          |
+| `404 Not Found`               | Is the endpoint URL correct?                                            |
+| `500 Internal Server Error`   | Inspect the Express backend and database logs                           |
+| `200 OK`, but no data appears | Compare the response structure with the React code                      |
+| Request remains pending       | Investigate a slow API, database query, or stalled request              |
+| CORS error                    | Inspect Console and Network, then verify the backend CORS configuration |
+
+### Practical example: API data not appearing
+
+Suppose the API returns:
+
+```
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Ravi"
+    }
+  ]
+}
+```
+
+But your React code is:
+
+```
+const response = await axios.get("/api/users");
+
+setUsers(response.data);
+```
+
+The problem is that `response.data` is an object containing the `users` array. If your state expects an array, update it with:
+
+```
+setUsers(response.data.users);
+```
+
+Use Network to inspect the response before modifying your frontend code.
+
+Classroom exercise: Deliberately change the API URL to `/api/user`. Reload the page, find the failed request, inspect its status, and correct the URL.
+
+## 4. Elements — debug CSS and layout problems
+
+[Chrome DevTools: The Complete Use Case Guide for Developers - DEV Community](https://images.openai.com/static-rsc-4/RTnLY5-zniPg0w8b6ktXMXw83WIXmxTNg2Ijop-g9gkP1H9rEbEzxQ4bPouEu3mGTpmlyhdAxHTPWzp4vQNJ0G55tLGKtaqtr1bw_WWc5p2aVRboCf6tOvSUsJZdZswnJ324ec5fT2lNJwhJ4NB-k0Lma40qKXtiUCpzFFYVQzw?purpose=inline)
+
+[dev.to](https://dev.to/gaw/chrome-devtools-the-complete-use-case-guide-for-developers-20la)
+
+Problem: A button is invisible, Tailwind CSS styles are not applied, or a form looks incorrect.
+
+### Step-by-step procedure
+
+1. Open your React page.
+2. Right-click the problematic element and choose Inspect.
+3. Chrome opens the Elements tab and highlights the corresponding DOM element.
+4. Inspect the Styles panel to see its CSS rules.
+5. Open Computed to inspect the final calculated CSS values.
+
+Suppose you have this Tailwind button:
+
+```
+<button className="bg-blue-600 text-white p-3">
+  Save User
+</button>
+```
+
+If the button does not look blue, check whether:
+
+- The expected class appears in the DOM.
+- Another CSS rule overrides the background.
+- The element is hidden or covered by another element.
+- The relevant stylesheet is loaded correctly.
+
+### Test a CSS fix temporarily
+
+In the Styles panel, add:
+
+```
+background-color: red;
+```
+
+If the button becomes red, you have confirmed that you are inspecting the correct element and can investigate its original styles.
+
+Changes made in DevTools are temporary. Apply the permanent fix in your React component or stylesheet.
+
+### Useful Computed properties
+
+- `display`
+- `visibility`
+- `opacity`
+- `width` and `height`
+- `margin` and `padding`
+- `position`
+- `overflow`
+- `background-color`
+
+This is especially useful when debugging Tailwind classes, flexbox, grid, overlapping elements, and unexpected spacing.
+
+## 5. Sources — debug code using breakpoints
+
+[DevTools Debugging Tips And Shortcuts (Chrome, Firefox, Edge) — Smashing Magazine](https://images.openai.com/static-rsc-4/xw4gYTk4oeluPp6NMISfplwfCq78rjBsBaQZPUIOTjCUo8ilHJ_p3gcJcOXxBg5Hn3nuSm0OBWE7xy5wdW4VDpKhs6WIews2v8MCnjC5Sl-2Z9SzdCYoA_lrxJxYCzcHrFJSR_ZygdrQxwUmC7YH33W4Go16zaJQSwoM3ZdWFV0?purpose=inline)
+
+[smashingmagazine.com](https://www.smashingmagazine.com/2021/02/useful-chrome-firefox-devtools-tips-shortcuts/)
+
+A breakpoint pauses code execution at a specific line so you can inspect variables and follow the program step by step.
+
+### Practical example
+
+```
+function UserForm() {
+  const handleSave = () => {
+    const name = "Ravi";
+    const age = 25;
+
+    const user = { name, age };
+
+    console.log(user);
+  };
+
+  return (
+    <button onClick={handleSave}>
+      Save User
+    </button>
+  );
+}
+
+export default UserForm;
+```
+
+### How to set a breakpoint
+
+1. Open DevTools and select Sources.
+2. Find `UserForm.tsx` in the source navigator, if the authored source is available.
+3. Click the line number beside `const user = { name, age };`.
+4. Return to the application and click Save User.
+5. Execution pauses at the breakpoint.
+6. Inspect `name`, `age`, and `user` in the Scope panel.
+
+If the original `.tsx` file is not visible, check that source maps are available and locate the authored source rather than the generated JavaScript.
+
+### Learn the debugging controls
+
+Resume
+
+Continue execution until the next breakpoint.
+
+Step over
+
+Execute the current line without entering a called function.
+
+Step into
+
+Enter a function called on the current line.
+
+Step out
+
+Finish the current function and return to its caller.
+
+Use breakpoints to investigate event handlers, form submissions, unexpected variable values, and code that does not execute as expected.
+
+You can also enable Pause on exceptions in Sources to pause when a JavaScript exception occurs.
+
+## 6. React Developer Tools — debug props and state
+
+React Developer Tools is a separate browser extension that adds Components and Profiler panels to Chrome DevTools.
+
+Install it here: [React Developer Tools — Chrome Web Store](https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljfkapdkoienihi)
+
+[Optimizing apps using React Developer Tools | Uploadcare](https://images.openai.com/static-rsc-4/fN2tPdUxWGH_DaVORX-6yBmgPA6F7J3MA4qipqg9FJksPkT_VdmwYA_sgSYZJ3DsUHg2hnbVe5DcTDdXzDjjy20rMtJWubdcavROFgndilDORsoxV2VHEPZm0bhzozgFD58wYn-nsV-Sr5nTA-gipAmiR4EhqLPHw8At3tREeWU?purpose=inline)
+
+[uploadcare.com](https://uploadcare.com/blog/react-devtools/)
+
+Problem: A child component displays the wrong username or does not update when expected.
+
+Consider this example:
+
+```
+type UserCardProps = {
+  name: string;
+};
+
+function UserCard({ name }: UserCardProps) {
+  return <h2>{name}</h2>;
+}
+
+function App() {
+  return <UserCard name="Ravi" />;
+}
+```
+
+### How to investigate
+
+1. Open Chrome DevTools.
+2. Select the Components tab.
+3. Find `UserCard` in the component tree.
+4. Select it and inspect its props.
+5. Confirm that `name` is `"Ravi"`.
+6. If the value is incorrect, inspect the parent component to determine where it was passed incorrectly.
+
+React Developer Tools also lets you inspect hook values, including state and effect-related information.
+
+Important difference:
+
+- Elements shows the HTML DOM and CSS.
+- Components shows the React component tree, props, and hooks.
+
+Use Components when you need to understand React data flow rather than the generated HTML.
+
+## 7. Debug `useEffect` and repeated API calls
+
+Problem: The same API request executes repeatedly, or the component keeps rendering.
+
+Consider:
+
+```
+useEffect(() => {
+  console.count("Fetching users");
+
+  fetchUsers();
+});
+```
+
+Because there is no dependency array, this effect runs after every render. If `fetchUsers()` updates state, it can trigger another render and repeat the request.
+
+### How to investigate
+
+1. Open Console and observe the count.
+2. Open Network → Fetch/XHR and look for repeated requests.
+3. Open Sources and set a breakpoint inside the effect.
+4. Inspect the values that change between executions.
+5. Check the effect's dependencies and whether the function updates state.
+
+If the intended behavior is to fetch once when the component mounts, a common pattern is:
+
+```
+useEffect(() => {
+  fetchUsers();
+}, []);
+```
+
+This is appropriate only if the effect does not need to respond to changing dependencies. React Strict Mode may also run an extra setup-and-cleanup cycle in development, so duplicate requests do not automatically mean an infinite loop.
+
+For effects that depend on props or state, specify the appropriate dependencies and clean up subscriptions or requests when necessary.
+
+## 8. Debug responsive design
+
+[Chrome教程（二）使用ChromeDevTools命令菜单运行命令_toggle device toolbar-CSDN博客](https://images.openai.com/static-rsc-4/HEu9M2i-e6TIHEgO5fSyF6-g9l2XpPBGJponcv50wlOuMKxPp2YLCv8z5FmaQlHY7jLYohbh5d_r64A1xeN9kWs9xfF6CZnzMedHZZkY8i3kHXtuqrH7vhqbRBTZHoO1c-BWQ9A2n2_qz92jhj8jtucD9E1OoYhHKEz_JR99Oc8?purpose=inline)
+
+[blog.csdn.net](https://blog.csdn.net/hcrw01/article/details/107450029)
+
+Problem: Your Tailwind application looks good on a desktop but the table overflows on a mobile screen.
+
+### How to investigate
+
+1. Open DevTools.
+2. Click the device toolbar icon, or press `Ctrl + Shift + M`.
+3. Choose a device preset or enter a custom viewport width.
+4. Reproduce the layout issue.
+5. Use Elements to inspect the overflowing container.
+
+For example, wrap a wide table in a horizontally scrollable container:
+
+```
+<div className="overflow-x-auto">
+  <table className="min-w-full">
+    {/* Table rows */}
+  </table>
+</div>
+```
+
+Test at several viewport sizes, especially for tables, forms, navigation menus, dialogs, and buttons.
+
+## 9. Debug React Query cache and stale data
+
+For your projects using TanStack Query, suppose a user is created successfully but the users list does not refresh.
+
+### How to investigate
+
+1. Open Network and verify that the POST request succeeds.
+2. Check whether the users list makes another GET request.
+3. Inspect the query key used by `useQuery()`.
+4. Verify that the mutation invalidates the correct query key.
+5. Use TanStack Query Devtools to inspect cached data and query status.
+
+Example:
+
+```
+const queryClient = useQueryClient();
+
+const createUserMutation = useMutation({
+  mutationFn: createUser,
+  onSuccess: () => {
+    queryClient.invalidateQueries({
+      queryKey: ["users"],
+    });
+  },
+});
+```
+
+Install the corresponding Devtools package:
+
+```
+npm install @tanstack/react-query-devtools
+```
+
+Documentation: [TanStack Query Devtools](https://tanstack.com/query/latest/docs/framework/react/devtools)
+
+Chrome Network helps you see whether requests occurred. TanStack Query Devtools helps you understand query state and cache behavior.
+
+## 10. Debug TypeScript errors during build
+
+Chrome DevTools helps with runtime JavaScript errors, but it does not replace TypeScript's compiler.
+
+From your Vite frontend directory, run:
+
+```
+npx tsc -b
+```
+
+Or run your project's build command:
+
+```
+npm run build
+```
+
+For example, TypeScript may report:
+
+```
+Property 'name' does not exist on type 'User'.
+```
+
+Use the reported file and line number to inspect the type definition and the code accessing that property.
+
+Remember: Use the terminal for compile-time type errors and Chrome DevTools for runtime errors. Both are essential.
+
+## 11. Classroom practice checklist
+
+Use this checklist while students debug your React application.
+
+## Student exercises
+
+0/8 completed
+
+Component not rendering
+
+Console + Sources — Find the runtime error and fix the cause.
+
+Incorrect props or state
+
+React Developer Tools — Inspect component props and hook values.
+
+Repeated API calls
+
+Console + Network — Find the repeated requests and investigate useEffect.
+
+API data missing
+
+Network — Inspect the response and compare it with the frontend code.
+
+CSS not working
+
+Elements — Inspect Styles and Computed properties.
+
+Mobile layout broken
+
+Device toolbar + Elements — Reproduce and fix the responsive layout.
+
+TypeScript build failure
+
+Terminal — Run npx tsc -b and fix the reported error.
+
+Stale React Query data
+
+TanStack Query Devtools — Inspect the query key, cached data, and invalidation.
+
+Reset checklist
+
+## Official documentation
+
+- [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
+- [JavaScript debugging](https://developer.chrome.com/docs/devtools/javascript/)
+- [Network debugging](https://developer.chrome.com/docs/devtools/network/)
+- [Responsive testing](https://developer.chrome.com/docs/devtools/device-mode/)
+- [React Developer Tools](https://react.dev/learn/react-developer-tools)
+- [TanStack Query Devtools](https://tanstack.com/query/latest/docs/framework/react/devtools)
+
+My recommendation for your training: Teach Console, Network, Elements, Sources, and React Developer Tools first. Then ask students to debug three deliberate problems in their own project: an API returning an error, a component receiving incorrect data, and a responsive layout issue. This gives them practical debugging skills they can apply immediately to their full-stack applications.

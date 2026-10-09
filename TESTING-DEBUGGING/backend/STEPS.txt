@@ -1,0 +1,87 @@
+Microsoft Windows [Version 10.0.26100.8246]
+(c) Microsoft Corporation. All rights reserved.
+
+E:\Advaitecs\TESTING-DEBUGGING>mkdir backend
+
+E:\Advaitecs\TESTING-DEBUGGING>cd backend
+
+E:\Advaitecs\TESTING-DEBUGGING\backend>npm init -y
+Wrote to E:\Advaitecs\TESTING-DEBUGGING\backend\package.json:
+
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
+
+
+
+E:\Advaitecs\TESTING-DEBUGGING\backend>
+------------------------------------------
+npm install -D typescript
+npx tsc --init
+
+npm install express cors
+npm install -D typescript tsx @types/node @types/express @types/cors
+
+npm run dev
+
+
+backend/tsconfig.json
+
+
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
+
+
+E:\Advaitecs\TESTING-DEBUGGING\testdebugapp\vite.config.ts
+
+Configure the Vite proxy
+In the frontend's vite.config.ts, add the API proxy to your existing configuration. Preserve any Tailwind or React plugins already configured.
+server: {
+  proxy: {
+    "/api": {
+      target: "http://localhost:5000",
+      changeOrigin: true,
+    },
+  },
+},
+-------------------------------
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react(),tailwindcss()],
+  server: {
+  proxy: {
+    "/api": {
+      target: "http://localhost:5000",
+      changeOrigin: true,
+    },
+  },
+}
+})
+
+------------------------------
+npm run dev
+

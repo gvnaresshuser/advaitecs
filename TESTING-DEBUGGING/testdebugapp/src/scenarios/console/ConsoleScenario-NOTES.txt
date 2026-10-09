@@ -1,0 +1,20 @@
+Open the local URL shown in the terminal, press F12, and select Console.
+Expected observations
+
+Problem Code
+Click Show User Details.
+- Button clicked
+- User data: undefined
+- A red TypeError mentioning undefined and name
+
+Solution
+Click View Solution, then Show User Details.
+- Button clicked
+- User data: null
+- A warning: User details are not available.
+- No runtime exception from accessing user.name
+
+One important teaching point: This scenario demonstrates a runtime JavaScript error, 
+not a TypeScript compilation error. TypeScript catches many invalid property 
+accesses when types are declared correctly, but the same kind of problem can still 
+occur when runtime data is missing or incorrectly typed.
